@@ -1,4 +1,4 @@
-package com.rightit;
+package com.rightit.taxibook.api;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
