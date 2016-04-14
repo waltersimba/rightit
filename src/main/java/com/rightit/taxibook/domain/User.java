@@ -53,9 +53,33 @@ public class User extends DomainObject {
 	}
 
 	public enum Role {
-		ADMINISTRATOR,
-		DRIVER,
-		OWNER,
-		OWNER_DRIVER		
+		ADMINISTRATOR("Administrator"),
+		DRIVER("Driver"),
+		OWNER("Owner"),
+		OWNER_DRIVER("Owner/Driver");
+		
+		private String name;
+		
+		private Role(String name) {
+			this.name = name;
+		};
+		
+		public Role fromString(String roleString) {
+			Role roleFound = null;
+			for(Role role : values()) {
+				if(role.name.equals(roleString)) {
+					roleFound = role;
+					break;
+				}
+			}
+			if(roleFound == null) {
+				throw new IllegalArgumentException("Invalid role speficified");
+			}
+			return roleFound;
+		}
+		
+		public String getName() {
+			return name;
+		}
 	}
 }

@@ -16,7 +16,7 @@ import com.rightit.taxibook.domain.User;
 import com.rightit.taxibook.repository.specs.MongoSpecification;
 import com.rightit.taxibook.repository.specs.Specification;
 
-public class UseRepositoryImpl implements MongoRepository<User> {
+public class UseRepositoryImpl implements UserRepository {
 	
 	private Logger logger = Logger.getLogger(UseRepositoryImpl.class);
 	private Provider<MongoDatabase> mongoDatabaseProvider;

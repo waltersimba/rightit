@@ -1,5 +1,7 @@
 package com.rightit.taxibook;
 
+import javax.validation.Validator;
+
 import org.apache.commons.configuration.Configuration;
 
 import com.google.inject.Guice;
@@ -9,8 +11,9 @@ import com.google.inject.servlet.ServletModule;
 import com.mongodb.client.MongoDatabase;
 import com.rightit.taxibook.provider.ConfigurationProvider;
 import com.rightit.taxibook.provider.MongoProvider;
-import com.rightit.taxibook.repository.Repository;
+import com.rightit.taxibook.provider.ValidatorProvider;
 import com.rightit.taxibook.repository.UseRepositoryImpl;
+import com.rightit.taxibook.repository.UserRepository;
 import com.rightit.taxibook.service.UserService;
 import com.rightit.taxibook.service.UserServiceImpl;
 import com.sun.jersey.api.core.PackagesResourceConfig;
@@ -24,8 +27,9 @@ public class Application extends GuiceServletContextListener {
 		return Guice.createInjector(new ServletModule() {
 			@Override
 			protected void configureServlets() {
-				bind(Repository.class).to(UseRepositoryImpl.class);
+				bind(UserRepository.class).to(UseRepositoryImpl.class);
 				bind(UserService.class).to(UserServiceImpl.class);
+				bind(Validator.class).toProvider(ValidatorProvider.class).asEagerSingleton();
 				bind(Configuration.class).toProvider(ConfigurationProvider.class).asEagerSingleton();
 				bind(MongoDatabase.class).toProvider(MongoProvider.class).asEagerSingleton();
 				
