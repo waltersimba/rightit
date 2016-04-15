@@ -1,4 +1,4 @@
-package com.rightit.taxibook.exception;
+package com.rightit.taxibook.validation.exception;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.rightit.taxibook.exception;
+package com.rightit.taxibook.validation.exception;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;

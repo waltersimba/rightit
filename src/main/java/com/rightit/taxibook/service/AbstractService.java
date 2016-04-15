@@ -5,7 +5,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
-import com.rightit.taxibook.exception.ValidationException;
+import com.rightit.taxibook.validation.exception.ValidationException;
 
 public abstract class AbstractService {
 	
