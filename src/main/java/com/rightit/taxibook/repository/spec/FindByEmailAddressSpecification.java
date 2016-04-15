@@ -1,4 +1,4 @@
-package com.rightit.taxibook.repository.specs;
+package com.rightit.taxibook.repository.spec;
 
 import static com.mongodb.client.model.Filters.eq;
 

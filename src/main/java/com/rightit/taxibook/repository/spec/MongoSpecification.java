@@ -1,4 +1,4 @@
-package com.rightit.taxibook.repository.specs;
+package com.rightit.taxibook.repository.spec;
 
 import org.bson.conversions.Bson;
 
