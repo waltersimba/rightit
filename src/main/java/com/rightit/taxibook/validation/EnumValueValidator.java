@@ -24,8 +24,8 @@ public class EnumValueValidator implements ConstraintValidator<Enum, String>
         {
             for(Object enumValue:enumValues)
             {
-                if(valueForValidation.equals(enumValue.toString()) 
-                   || (this.annotation.ignoreCase() && valueForValidation.equalsIgnoreCase(enumValue.toString())))
+                if(enumValue.toString().equals(valueForValidation) 
+                   || (this.annotation.ignoreCase() && enumValue.toString().equalsIgnoreCase(valueForValidation)))
                 {
                     result = true; 
                     break;

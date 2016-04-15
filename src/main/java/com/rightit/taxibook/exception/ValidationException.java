@@ -49,6 +49,7 @@ public class ValidationException extends WebApplicationException {
 
     public ErrorResponse getErrorResponse() {
         ErrorResponse response = new ErrorResponse();
+        response.setErrorCode(Integer.toString(status));
         response.setApplicationMessage(developerMessage);
         response.setConsumerMessage(errorMessage);
         response.setValidationErrors(errors);
