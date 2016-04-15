@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.rightit.taxibook.domain.User;
-import com.rightit.taxibook.repository.specs.MongoSpecification;
-import com.rightit.taxibook.repository.specs.Specification;
+import com.rightit.taxibook.repository.spec.MongoSpecification;
+import com.rightit.taxibook.repository.spec.Specification;
 
 public class UseRepositoryImpl implements UserRepository {
 	

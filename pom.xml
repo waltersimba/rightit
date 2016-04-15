@@ -31,6 +31,10 @@
 					<!-- Refer to the server settings in your ~/.m2/settings.xml -->
 					<server>tomcat-localhost</server>
 					<path>/${project.build.finalName}</path>
+					<systemProperties>
+						<JAVA_OPTS>-Xmx1024m -Xms256m -XX:MaxPermSize=256m -Xnoagent
+							-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000</JAVA_OPTS>
+					</systemProperties>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -100,4 +104,8 @@
 		<mongo.version>3.2.2</mongo.version>
 		<hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
 	</properties>
+	<organization>
+		<name>Rightit</name>
+		<url>www.rightit.co.za</url>
+	</organization>
 </project>

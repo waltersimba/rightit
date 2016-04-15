@@ -11,18 +11,18 @@ import com.rightit.taxibook.validation.Enum;
 
 @XmlRootElement
 public class CreateUserRequest {
-	@Length(min=8, max=30)
-    @NotNull
+	@Length(min=8, max=30, message = "The password must be between {min} and {max} characters")
+    @NotNull(message = "The password must not be null")
 	private String password;
 	
-	@NotNull
+	@NotNull(message = "The email address must not be null")
     @Email
 	private String emailAddress;
 	
-	@Length(max=50)
+	@Length(max=50, message = "First name shoud not be higher than {max}")
 	private String firstName;
 	
-	@Length(max=50)
+	@Length(max=50, message = "Last name shoud not be higher than {max}")
 	private String lastName;
 	
 	@Enum(enumClass=User.Role.class, ignoreCase=true) 
