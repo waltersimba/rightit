@@ -12,14 +12,12 @@ import javax.ws.rs.core.Response;
 public class ValidationException extends WebApplicationException {
 
 	private static final long serialVersionUID = 1L;
-
-	private final int status = 400;
     
 	private String errorMessage;
     
 	private String developerMessage;
     
-	private List<ValidationError> errors = new ArrayList<ValidationError>();
+	private List<ValidationError> errors = null;
 
     public ValidationException() {
         errorMessage = "Validation Error";
@@ -29,6 +27,7 @@ public class ValidationException extends WebApplicationException {
     public ValidationException(String message) {
         super();
         errorMessage = message;
+        errors = new ArrayList<ValidationError>();
     }
 
     public ValidationException(Set<? extends ConstraintViolation<?>> violations) {
@@ -44,12 +43,12 @@ public class ValidationException extends WebApplicationException {
 
     @Override
     public Response getResponse() {
-        return Response.status(status).type(MediaType.APPLICATION_JSON_TYPE).entity(getErrorResponse()).build();
+        return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON_TYPE).entity(getErrorResponse()).build();
     }
 
     public ErrorResponse getErrorResponse() {
         ErrorResponse response = new ErrorResponse();
-        response.setErrorCode(Integer.toString(status));
+        response.setErrorCode(Integer.toString(Response.Status.BAD_REQUEST.getStatusCode()));
         response.setApplicationMessage(developerMessage);
         response.setConsumerMessage(errorMessage);
         response.setValidationErrors(errors);

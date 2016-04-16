@@ -85,8 +85,14 @@
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
-			<version>1.10</version>
+			<version>${apache.commons.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${apache.commons.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -103,6 +109,7 @@
 		<joda.time.version>2.9.3</joda.time.version>
 		<mongo.version>3.2.2</mongo.version>
 		<hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
+		<apache.commons.version>1.10</apache.commons.version>
 	</properties>
 	<organization>
 		<name>Rightit</name>

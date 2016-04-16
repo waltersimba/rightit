@@ -14,6 +14,8 @@ import com.rightit.taxibook.provider.MongoProvider;
 import com.rightit.taxibook.provider.ValidatorProvider;
 import com.rightit.taxibook.repository.UseRepositoryImpl;
 import com.rightit.taxibook.repository.UserRepository;
+import com.rightit.taxibook.service.DefaultPasswordHashService;
+import com.rightit.taxibook.service.PasswordHashService;
 import com.rightit.taxibook.service.UserService;
 import com.rightit.taxibook.service.UserServiceImpl;
 import com.sun.jersey.api.core.PackagesResourceConfig;
@@ -29,6 +31,7 @@ public class Application extends GuiceServletContextListener {
 			protected void configureServlets() {
 				bind(UserRepository.class).to(UseRepositoryImpl.class);
 				bind(UserService.class).to(UserServiceImpl.class);
+				bind(PasswordHashService.class).to(DefaultPasswordHashService.class);
 				bind(Validator.class).toProvider(ValidatorProvider.class).asEagerSingleton();
 				bind(Configuration.class).toProvider(ConfigurationProvider.class).asEagerSingleton();
 				bind(MongoDatabase.class).toProvider(MongoProvider.class).asEagerSingleton();

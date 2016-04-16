@@ -12,6 +12,15 @@ public class User extends DomainObject {
 	
 	private Role role;
 	
+	public User(UserBuilder builder) {
+		super();
+		this.firstName = builder.firstName;
+		this.lastName = builder.lastName;
+		this.emailAddress = builder.emailAddress;
+		this.hashedPassword = builder.hashedPassword;
+		this.role = builder.role;
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -51,6 +60,44 @@ public class User extends DomainObject {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+		
+	public static class UserBuilder {
+		private String hashedPassword;
+		private String emailAddress;
+		private String firstName;
+		private String lastName;
+		private Role role;
+		
+		public UserBuilder withHashedPassword(String hashedPassword) {
+			this.hashedPassword = hashedPassword;
+			return this;
+		}
+		
+		public UserBuilder withEmailAddress(String emailAddress) {
+			this.emailAddress = emailAddress;
+			return this;
+		}
+		
+		public UserBuilder withFirstName(String firstName) {
+			this.firstName = firstName;
+			return this;
+		}
+		
+		public UserBuilder withLastName(String lastName) {
+			this.lastName = lastName;
+			return this;
+		}
+		
+		public UserBuilder withRole(Role role) {
+			this.role = role;
+			return this;
+		}
+		
+		public User build() {
+			return new User(this);
+		}
+	
+	}
 
 	public enum Role {
 		ADMINISTRATOR("Administrator"),
@@ -64,9 +111,9 @@ public class User extends DomainObject {
 			this.name = name;
 		};
 		
-		public Role fromString(String roleString) {
+		public static Role fromString(String roleString) {
 			Role roleFound = null;
-			for(Role role : values()) {
+			for(Role role : Role.values()) {
 				if(role.name.equals(roleString)) {
 					roleFound = role;
 					break;

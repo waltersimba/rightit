@@ -6,4 +6,6 @@ import com.rightit.taxibook.repository.spec.Specification;
 public interface Repository<T extends Identifiable> {
 
 	T findOne(Specification specification);
+	
+	void save(T obj);
 }

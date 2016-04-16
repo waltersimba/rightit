@@ -4,7 +4,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class AbstractWebApplicationException extends WebApplicationException {
+public class BaseWebApplicationException extends WebApplicationException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,7 +16,7 @@ public class AbstractWebApplicationException extends WebApplicationException {
     
 	private final String developerMessage;
 
-    public AbstractWebApplicationException(int httpStatus, String errorCode, String errorMessage, String developerMessage) {
+    public BaseWebApplicationException(int httpStatus, String errorCode, String errorMessage, String developerMessage) {
         this.status = httpStatus;
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;

@@ -9,7 +9,9 @@ import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.rightit.taxibook.domain.User;
@@ -34,6 +36,20 @@ public class UseRepositoryImpl implements UserRepository {
 		final Bson query = mongoSpecification.toMongoQuery();
 		final Document document = getCollection().find(query).first();
 		return document != null ? map(document) : null;
+	}
+	
+	@Override
+	public void save(User obj) {
+		try {
+			Document document = Document.parse(getObjectMapper().writeValueAsString(obj));
+			getCollection().insertOne(document);
+		} catch (JsonProcessingException ex) {
+			logger.error(ex);
+			throw new RuntimeException(ex);
+		} catch(MongoException ex) {
+			logger.error(ex);
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override

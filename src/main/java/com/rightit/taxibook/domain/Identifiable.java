@@ -9,8 +9,9 @@ public class Identifiable {
 	protected ObjectId id;
 
 	public Identifiable() {
+		this(null);
 	}
-
+	
 	public Identifiable(ObjectId id) {
 		this.id = id;
 	}

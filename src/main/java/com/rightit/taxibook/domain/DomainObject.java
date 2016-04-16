@@ -11,6 +11,7 @@ public class DomainObject extends Identifiable {
 	private DateTime modified;
 
 	public DomainObject() {
+		super();
 		this.created = new DateTime();
 	}
 	
