@@ -36,7 +36,6 @@ public class ValidationException extends WebApplicationException {
             ValidationError error = new ValidationError();
             error.setMessage(constraintViolation.getMessage());
             error.setPropertyName(constraintViolation.getPropertyPath().toString());
-            error.setPropertyValue(constraintViolation.getInvalidValue() != null ? constraintViolation.getInvalidValue().toString() : null);
             errors.add(error);
         }
     }
