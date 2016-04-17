@@ -68,6 +68,7 @@ public class UseRepositoryImpl implements UserRepository {
 			user = getObjectMapper().readValue(document.toJson(), User.class);
 		} catch (IOException ex) {
 			logger.error(ex);
+			throw new RuntimeException(ex);
 		}
 		return user;
 	}

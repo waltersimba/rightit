@@ -4,6 +4,7 @@ import javax.validation.Validator;
 
 import org.apache.commons.configuration.Configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -11,6 +12,7 @@ import com.google.inject.servlet.ServletModule;
 import com.mongodb.client.MongoDatabase;
 import com.rightit.taxibook.provider.ConfigurationProvider;
 import com.rightit.taxibook.provider.MongoProvider;
+import com.rightit.taxibook.provider.ObjectMapperProvider;
 import com.rightit.taxibook.provider.ValidatorProvider;
 import com.rightit.taxibook.repository.UseRepositoryImpl;
 import com.rightit.taxibook.repository.UserRepository;
@@ -32,6 +34,7 @@ public class Application extends GuiceServletContextListener {
 				bind(UserRepository.class).to(UseRepositoryImpl.class);
 				bind(UserService.class).to(UserServiceImpl.class);
 				bind(PasswordHashService.class).to(DefaultPasswordHashService.class);
+				bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class).asEagerSingleton();
 				bind(Validator.class).toProvider(ValidatorProvider.class).asEagerSingleton();
 				bind(Configuration.class).toProvider(ConfigurationProvider.class).asEagerSingleton();
 				bind(MongoDatabase.class).toProvider(MongoProvider.class).asEagerSingleton();

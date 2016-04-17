@@ -22,12 +22,12 @@ public class ValidationException extends WebApplicationException {
     public ValidationException() {
         errorMessage = "Validation Error";
         developerMessage = "The data passed in the request was invalid. Please check and resubmit";
+        errors = new ArrayList<ValidationError>();
     }
 
     public ValidationException(String message) {
         super();
         errorMessage = message;
-        errors = new ArrayList<ValidationError>();
     }
 
     public ValidationException(Set<? extends ConstraintViolation<?>> violations) {

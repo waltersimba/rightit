@@ -14,7 +14,7 @@ public class FindByEmailAddressSpecification implements MongoSpecification {
 	
 	@Override
 	public Bson toMongoQuery() {
-		return eq("email_address", emailAddress);
+		return eq("emailAddress", emailAddress);
 	}
 
 }

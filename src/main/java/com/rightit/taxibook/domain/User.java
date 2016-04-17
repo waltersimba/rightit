@@ -12,8 +12,12 @@ public class User extends DomainObject {
 	
 	private Role role;
 	
+	public User() {
+		super("user");
+	}
+	
 	public User(UserBuilder builder) {
-		super();
+		super("user");
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
 		this.emailAddress = builder.emailAddress;
@@ -125,7 +129,8 @@ public class User extends DomainObject {
 			return roleFound;
 		}
 		
-		public String getName() {
+		@Override
+		public String toString() {
 			return name;
 		}
 	}
