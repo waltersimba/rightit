@@ -35,4 +35,5 @@ public class MongoProvider implements Provider<MongoDatabase> {
 	private Configuration getConfiguration() {
 		return configurationProvider.get();
 	}
+
 }

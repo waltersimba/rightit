@@ -1,5 +1,7 @@
 package com.rightit.taxibook.service;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.validation.Validator;
@@ -9,7 +11,7 @@ import org.jboss.logging.Logger;
 import com.rightit.taxibook.domain.User;
 import com.rightit.taxibook.domain.User.Role;
 import com.rightit.taxibook.domain.User.UserBuilder;
-import com.rightit.taxibook.repository.UserRepository;
+import com.rightit.taxibook.repository.Repository;
 import com.rightit.taxibook.repository.spec.FindByEmailAddressSpecification;
 import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 import com.rightit.taxibook.validation.exception.DuplicateEmailAddressException;
@@ -17,14 +19,14 @@ import com.rightit.taxibook.validation.exception.DuplicateEmailAddressException;
 public class UserServiceImpl extends AbstractService implements UserService {
 	
 	private Logger logger = Logger.getLogger(UserServiceImpl.class);
-	private UserRepository userRepository;
+	private Repository<User> repository;
 	@Inject
 	private PasswordHashService passwordHashService;
 
 	@Inject
-	public UserServiceImpl(UserRepository userRepository, Provider<Validator> validatorProvider) {
+	public UserServiceImpl(Repository<User> repository, Provider<Validator> validatorProvider) {
 		super(validatorProvider.get());
-		this.userRepository = userRepository;
+		this.repository = repository;
 	};
 
 	@Override
@@ -35,12 +37,16 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		if (hasUserWithSameEmail(request.getEmailAddress())) {
 			throw new DuplicateEmailAddressException();
 		} else {
-			final User newUser = new UserBuilder().withFirstName(request.getFirstName())
-					.withLastName(request.getLastName()).withRole(Role.fromString(request.getRole()))
+			final User newUser = new UserBuilder()
+					.withFirstName(request.getFirstName())
+					.withLastName(request.getLastName())
+					.withRole(Role.fromString(request.getRole()))
 					.withHashedPassword(passwordHashService.hashPassword(request.getPassword()))
-					.withEmailAddress(request.getEmailAddress()).build();
+					.withEmailAddress(request.getEmailAddress())
+					.withVerified(Boolean.FALSE)
+					.build();
 			try {
-				userRepository.save(newUser);
+				repository.save(newUser);
 			} catch (Exception ex) {
 				logger.error(ex);
 				throw new ApplicationRuntimeException("Failed to persist new user: " + ex.getMessage());
@@ -49,14 +55,15 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	}
 
 	private boolean hasUserWithSameEmail(String emailAddress) {
-		User existingUser = null;
+		boolean userWithSameEmailFound = false;
 		try {
-			existingUser = userRepository.findOne(new FindByEmailAddressSpecification(emailAddress));
+			Optional<User> optional = repository.findOne(new FindByEmailAddressSpecification(emailAddress));
+			userWithSameEmailFound = optional.isPresent();
 		} catch(Exception ex) {
 			logger.error(ex);
 			throw new ApplicationRuntimeException("Failed to get user by email address: " + ex.getMessage());
 		}	
-		return existingUser != null;
+		return userWithSameEmailFound;
 	}
 
 }

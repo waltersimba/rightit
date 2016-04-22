@@ -12,8 +12,10 @@ public class User extends DomainObject {
 	
 	private Role role;
 	
+	private boolean verified;
+	
 	public User() {
-		super("user");
+		super();
 	}
 	
 	public User(UserBuilder builder) {
@@ -65,12 +67,21 @@ public class User extends DomainObject {
 		this.role = role;
 	}
 		
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
+
 	public static class UserBuilder {
 		private String hashedPassword;
 		private String emailAddress;
 		private String firstName;
 		private String lastName;
 		private Role role;
+		private boolean verified;
 		
 		public UserBuilder withHashedPassword(String hashedPassword) {
 			this.hashedPassword = hashedPassword;
@@ -94,6 +105,11 @@ public class User extends DomainObject {
 		
 		public UserBuilder withRole(Role role) {
 			this.role = role;
+			return this;
+		}
+		
+		public UserBuilder withVerified(boolean verified) {
+			this.verified = verified;
 			return this;
 		}
 		
@@ -134,4 +150,12 @@ public class User extends DomainObject {
 			return name;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "User [firstName=" + firstName + ", lastName=" + lastName + ", emailAddress=" + emailAddress
+				+ ", hashedPassword=" + hashedPassword + ", role=" + role + ", verified=" + verified + ", getId()="
+				+ getId() + "]";
+	}
+		
 }

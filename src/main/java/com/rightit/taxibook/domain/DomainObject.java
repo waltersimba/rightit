@@ -9,13 +9,12 @@ public class DomainObject extends Identifiable {
 	private DateTime created;
 
 	private DateTime modified;
-
-	public DomainObject() {
-		this(null);
-	}
 	
-	public DomainObject(String type) {
+	public DomainObject() {
 		super();
+	}
+
+	public DomainObject(String type) {
 		this.type = type;
 		this.created = new DateTime();
 	}
