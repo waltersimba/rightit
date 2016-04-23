@@ -13,6 +13,7 @@ import com.rightit.taxibook.repository.UseRepository;
 import com.rightit.taxibook.repository.VerificationTokenRepository;
 import com.rightit.taxibook.repository.spec.FindActiveVerificationTokenSpecification;
 import com.rightit.taxibook.repository.spec.FindByEmailAddressSpecification;
+import com.rightit.taxibook.repository.spec.Specification;
 import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 import com.rightit.taxibook.validation.exception.UserAlreadyVerified;
 import com.rightit.taxibook.validation.exception.UserNotFoundException;
@@ -73,12 +74,17 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 	}
 	
 	private Optional<VerificationToken> fetchActiveVerificationToken(String userId, VerificationTokenType tokenType) {
-		Optional<VerificationToken> optionalToken = verificationTokenRepository.findOne(new FindActiveVerificationTokenSpecification(userId, tokenType));
-		if(optionalToken.isPresent()) {
-			VerificationToken token = optionalToken.get();
-			if(token.hasExpired()) {
-				optionalToken = Optional.empty();
+		Optional<VerificationToken> optionalToken = Optional.empty();
+		try {
+			final Specification findActiveTokenSpec = new FindActiveVerificationTokenSpecification(userId, tokenType);
+			for(VerificationToken token : verificationTokenRepository.findSome(findActiveTokenSpec)) {
+				if(!token.hasExpired()) {
+					optionalToken = Optional.of(token);
+					break;
+				}
 			}
+		} catch(Exception ex) {
+			throw new ApplicationRuntimeException("Failed to find active verification token for user: " + ex.getMessage());
 		}
 		return optionalToken;
 	}
