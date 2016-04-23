@@ -1,4 +1,4 @@
-package com.rightit.taxibook.service;
+package com.rightit.taxibook.service.password;
 
 public interface PasswordHashService {
 	

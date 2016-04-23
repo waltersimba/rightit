@@ -8,8 +8,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.rightit.taxibook.service.EmailVerificationRequest;
-import com.rightit.taxibook.service.VerificationTokenService;
+import com.rightit.taxibook.service.token.EmailVerificationRequest;
+import com.rightit.taxibook.service.token.VerificationTokenService;
 
 @Path("verify")
 @Produces({MediaType.APPLICATION_JSON})

@@ -122,6 +122,11 @@
 			<artifactId>velocity</artifactId>
 			<version>${velocity.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>${commons.email.version}</version>
+		</dependency>
 	</dependencies>
 
 	<properties>
@@ -135,6 +140,7 @@
 		<hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
 		<apache.commons.version>1.10</apache.commons.version>
 		<velocity.version>1.7</velocity.version>
+		<commons.email.version>1.4</commons.email.version>
 	</properties>
 	<organization>
 		<name>Rightit</name>

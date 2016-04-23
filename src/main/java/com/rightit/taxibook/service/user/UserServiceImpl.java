@@ -1,4 +1,4 @@
-package com.rightit.taxibook.service;
+package com.rightit.taxibook.service.user;
 
 import java.util.Optional;
 
@@ -13,6 +13,8 @@ import com.rightit.taxibook.domain.User.Role;
 import com.rightit.taxibook.domain.User.UserBuilder;
 import com.rightit.taxibook.repository.Repository;
 import com.rightit.taxibook.repository.spec.FindByEmailAddressSpecification;
+import com.rightit.taxibook.service.AbstractService;
+import com.rightit.taxibook.service.password.PasswordHashService;
 import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 import com.rightit.taxibook.validation.exception.DuplicateEmailAddressException;
 

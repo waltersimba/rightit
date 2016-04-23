@@ -8,8 +8,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.rightit.taxibook.service.CreateUserRequest;
-import com.rightit.taxibook.service.UserService;
+import com.rightit.taxibook.service.user.CreateUserRequest;
+import com.rightit.taxibook.service.user.UserService;
 
 @Path("users")
 @Produces({MediaType.APPLICATION_JSON})
