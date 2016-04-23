@@ -12,18 +12,17 @@ import com.rightit.taxibook.service.token.EmailVerificationRequest;
 import com.rightit.taxibook.service.token.VerificationTokenService;
 
 @Path("verify")
-@Produces({MediaType.APPLICATION_JSON})
-@Consumes({MediaType.APPLICATION_JSON})
+@Produces({ MediaType.APPLICATION_JSON })
+@Consumes({ MediaType.APPLICATION_JSON })
 public class VerificationResource {
-	
+
 	@Inject
 	VerificationTokenService verificationTokenService;
-	
+
 	@Path("tokens")
-    @POST
-    public Response sendEmailToken(EmailVerificationRequest request) {
-        verificationTokenService.generateEmailVerificationToken(request);
-        return Response.ok().build();
-    }
-	
+	@POST
+	public Response sendEmailToken(EmailVerificationRequest request) {
+		verificationTokenService.generateEmailVerificationToken(request);
+		return Response.ok().build();
+	}
 }
