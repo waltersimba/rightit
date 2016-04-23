@@ -6,8 +6,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.rightit.taxibook.TestDir;
-
 public class VelocityTemplateMergerTest {
 
 	public static void main(String[] args) throws MergeException, URISyntaxException {
@@ -18,7 +16,7 @@ public class VelocityTemplateMergerTest {
 		model.put("generateEmailTokenUrl", "www.taxibook.co.za/verify/tokens/d6087c23-3197-42f7-a6a4-a309b95ef2b6");
 		model.put("helpEmailAddress", "support@rightit.co.za");
 		
-		URL y = TestDir.class.getResource("/META-INF/velocity");
+		URL y = VelocityTemplateMergerTest.class.getResource("/META-INF/velocity");
 		File x = new File(y.toURI());
 		String path = x.getAbsolutePath();
 		System.out.println(new VelocityTemplateMerger(path).mergeTemplateIntoString("VerifyMail", model));
