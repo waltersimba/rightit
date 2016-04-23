@@ -112,11 +112,15 @@
 			<artifactId>commons-codec</artifactId>
 			<version>${apache.commons.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>${velocity.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -130,6 +134,7 @@
 		<mongo.version>3.2.2</mongo.version>
 		<hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
 		<apache.commons.version>1.10</apache.commons.version>
+		<velocity.version>1.7</velocity.version>
 	</properties>
 	<organization>
 		<name>Rightit</name>
