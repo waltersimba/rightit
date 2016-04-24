@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Provider;
 
@@ -34,11 +35,20 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	}
 
 	@Override
-	public Optional<T> findOne(Specification specification) {
-		final MongoSpecification mongoSpecification = (MongoSpecification) specification;
-		final Bson query = mongoSpecification.toMongoQuery();
-		final Document document = getCollection().find(query).first();
-		return document == null ? Optional.empty() : Optional.of(map(document));
+	public CompletableFuture<Optional<T>> findOne(Specification specification) {
+		CompletableFuture<Optional<T>> future = new CompletableFuture<>();
+		try {
+			final MongoSpecification mongoSpecification = (MongoSpecification) specification;
+			final Bson query = mongoSpecification.toMongoQuery();
+			final Document document = getCollection().find(query).first();
+			future.complete(document == null ? Optional.empty() : Optional.of(map(document)));
+		} catch (Throwable ex) {
+			CompletableFuture<Optional<T>> failedFuture = new CompletableFuture<>();
+			failedFuture.completeExceptionally(ex);
+			return failedFuture;
+		}
+
+		return future;
 	}
 
 	@Override

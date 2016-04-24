@@ -3,6 +3,8 @@ package com.rightit.taxibook.service.token;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -120,10 +122,17 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 	}
 
 	private User fetchUserByEmailAddress(String emailAddress) {
-		Optional<User> optionalUser = userRepostory.findOne(new FindByEmailAddressSpecification(emailAddress));
-		if (!optionalUser.isPresent()) {
+		CompletableFuture<Optional<User>> futureUser = userRepostory.findOne(new FindByEmailAddressSpecification(emailAddress)); 
+		Optional<User> optionalUser = null;
+		try {
+			optionalUser = futureUser.get();
+			if (!optionalUser.isPresent()) {
+				throw new UserNotFoundException("Failed to find user with a given email address");
+			}
+		} catch (InterruptedException | ExecutionException ex) {
+			logger.error(ex);
 			throw new UserNotFoundException("Failed to find user with a given email address");
-		}
+		} 		
 		return optionalUser.get();
 	}
 	

@@ -1,6 +1,7 @@
 package com.rightit.taxibook.service.user;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -59,8 +60,9 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	private boolean hasUserWithSameEmail(String emailAddress) {
 		boolean userWithSameEmailFound = false;
 		try {
-			Optional<User> optional = repository.findOne(new FindByEmailAddressSpecification(emailAddress));
-			userWithSameEmailFound = optional.isPresent();
+			CompletableFuture<Optional<User>> futureUser = repository.findOne(new FindByEmailAddressSpecification(emailAddress));
+			Optional<User> optionalUser = futureUser.get();
+			userWithSameEmailFound = optionalUser.isPresent();
 		} catch(Exception ex) {
 			logger.error(ex);
 			throw new ApplicationRuntimeException("Failed to get user by email address: " + ex.getMessage());
