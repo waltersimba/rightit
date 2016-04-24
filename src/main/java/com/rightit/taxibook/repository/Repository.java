@@ -10,7 +10,7 @@ public interface Repository<T> {
 
 	CompletableFuture<Optional<T>> findOne(Specification specification);
 	
-	List<T> findSome(Specification specification);	
+	CompletableFuture<List<T>> findSome(Specification specification);	
 	
 	void save(T obj);
 }

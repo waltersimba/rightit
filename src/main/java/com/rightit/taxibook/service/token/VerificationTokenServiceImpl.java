@@ -1,6 +1,7 @@
 package com.rightit.taxibook.service.token;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -140,13 +141,15 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		Optional<VerificationToken> optionalToken = Optional.empty();
 		try {
 			final Specification findActiveTokenSpec = new FindActiveVerificationTokenSpecification(userId, tokenType);
-			for(VerificationToken token : verificationTokenRepository.findSome(findActiveTokenSpec)) {
+			final CompletableFuture<List<VerificationToken>> futureTokens = verificationTokenRepository.findSome(findActiveTokenSpec); 
+			for(VerificationToken token : futureTokens.get()) {
 				if(!token.hasExpired()) {
 					optionalToken = Optional.of(token);
 					break;
 				}
 			}
 		} catch(Exception ex) {
+			logger.error(ex);
 			throw new ApplicationRuntimeException("Failed to find active verification token for user: " + ex.getMessage());
 		}
 		return optionalToken;

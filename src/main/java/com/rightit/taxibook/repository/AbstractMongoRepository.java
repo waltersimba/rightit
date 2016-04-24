@@ -52,19 +52,27 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	}
 
 	@Override
-	public List<T> findSome(Specification specification) {
-		final MongoSpecification mongoSpecification = (MongoSpecification) specification;
-		final Bson query = mongoSpecification.toMongoQuery();
-		final MongoCursor<Document> cursor = getCollection().find(query).iterator();
-		final List<T> items = new ArrayList<>();
+	public CompletableFuture<List<T>> findSome(Specification specification) {
+		CompletableFuture<List<T>> future = new CompletableFuture<>();
 		try {
-			while (cursor.hasNext()) {
-				items.add(map(cursor.next()));
+			final MongoSpecification mongoSpecification = (MongoSpecification) specification;
+			final Bson query = mongoSpecification.toMongoQuery();
+			final MongoCursor<Document> cursor = getCollection().find(query).iterator();
+			final List<T> items = new ArrayList<>();
+			try {
+				while (cursor.hasNext()) {
+					items.add(map(cursor.next()));
+				}
+			} finally {
+				cursor.close();
 			}
-		} finally {
-			cursor.close();
-		}
-		return items;
+			future.complete(items);
+		} catch(Throwable ex) {
+			CompletableFuture<List<T>> failedFuture = new CompletableFuture<>();
+			failedFuture.completeExceptionally(ex);
+			return failedFuture;
+		}		
+		return future;
 	}
 
 	@Override

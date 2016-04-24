@@ -40,21 +40,25 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		if (hasUserWithSameEmail(request.getEmailAddress())) {
 			throw new DuplicateEmailAddressException();
 		} else {
-			final User newUser = new UserBuilder()
-					.withFirstName(request.getFirstName())
-					.withLastName(request.getLastName())
-					.withRole(Role.fromString(request.getRole()))
-					.withHashedPassword(passwordHashService.hashPassword(request.getPassword()))
-					.withEmailAddress(request.getEmailAddress())
-					.withVerified(Boolean.FALSE)
-					.build();
 			try {
-				repository.save(newUser);
+				repository.save(createUser(request));
 			} catch (Exception ex) {
 				logger.error(ex);
 				throw new ApplicationRuntimeException("Failed to persist new user: " + ex.getMessage());
 			}
 		}
+	}
+
+	private User createUser(CreateUserRequest request) {
+		final User newUser = new UserBuilder()
+				.withFirstName(request.getFirstName())
+				.withLastName(request.getLastName())
+				.withRole(Role.fromString(request.getRole()))
+				.withHashedPassword(passwordHashService.hashPassword(request.getPassword()))
+				.withEmailAddress(request.getEmailAddress())
+				.withVerified(Boolean.FALSE)
+				.build();
+		return newUser;
 	}
 
 	private boolean hasUserWithSameEmail(String emailAddress) {
