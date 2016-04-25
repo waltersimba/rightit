@@ -7,8 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.validation.Validator;
 
-import org.jboss.logging.Logger;
-
 import com.rightit.taxibook.domain.User;
 import com.rightit.taxibook.domain.User.Role;
 import com.rightit.taxibook.domain.User.UserBuilder;
@@ -21,7 +19,6 @@ import com.rightit.taxibook.validation.exception.DuplicateEmailAddressException;
 
 public class UserServiceImpl extends AbstractService implements UserService {
 	
-	private Logger logger = Logger.getLogger(UserServiceImpl.class);
 	private Repository<User> repository;
 	@Inject
 	private PasswordHashService passwordHashService;
@@ -33,45 +30,55 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	};
 
 	@Override
-	public void createNewUser(CreateUserRequest request) {
+	public CompletableFuture<Optional<User>> createUser(CreateUserRequest request) {
 
 		validate(request);
 
-		if (hasUserWithSameEmail(request.getEmailAddress())) {
-			throw new DuplicateEmailAddressException();
-		} else {
-			try {
-				repository.save(createUser(request));
-			} catch (Exception ex) {
-				logger.error(ex);
-				throw new ApplicationRuntimeException("Failed to persist new user: " + ex.getMessage());
-			}
+		CompletableFuture<Boolean> futureHasUserWithSameEmail = hasUserWithSameEmail(request.getEmailAddress());
+		CompletableFuture<Optional<User>> futureCreatedUser = futureHasUserWithSameEmail.thenCompose(hasUserWithSameEmail -> {
+			if (hasUserWithSameEmail) {
+				CompletableFuture<Optional<User>> failedFuture = new CompletableFuture<>();
+				failedFuture.completeExceptionally(new DuplicateEmailAddressException());
+				return failedFuture;
+			} 
+			return createNewUser(request);
+		});
+		return futureCreatedUser;
+	}
+
+	private CompletableFuture<Optional<User>> createNewUser(CreateUserRequest request) {
+		CompletableFuture<Optional<User>> futureUser = new CompletableFuture<>();
+		try {
+			final User newUser = new UserBuilder()
+					.withFirstName(request.getFirstName())
+					.withLastName(request.getLastName())
+					.withRole(Role.fromString(request.getRole()))
+					.withHashedPassword(passwordHashService.hashPassword(request.getPassword()))
+					.withEmailAddress(request.getEmailAddress())
+					.withVerified(Boolean.FALSE)
+					.build();
+			repository.save(newUser);
+			futureUser.complete(Optional.of(newUser));
+		} catch(Throwable ex) {
+			CompletableFuture<Optional<User>> failedFuture = new CompletableFuture<>();
+			failedFuture.completeExceptionally(new ApplicationRuntimeException("Failed to save new user: " + ex.getMessage()));
+			return failedFuture;
 		}
+		return futureUser;
 	}
 
-	private User createUser(CreateUserRequest request) {
-		final User newUser = new UserBuilder()
-				.withFirstName(request.getFirstName())
-				.withLastName(request.getLastName())
-				.withRole(Role.fromString(request.getRole()))
-				.withHashedPassword(passwordHashService.hashPassword(request.getPassword()))
-				.withEmailAddress(request.getEmailAddress())
-				.withVerified(Boolean.FALSE)
-				.build();
-		return newUser;
-	}
-
-	private boolean hasUserWithSameEmail(String emailAddress) {
-		boolean userWithSameEmailFound = false;
+	private CompletableFuture<Boolean> hasUserWithSameEmail(String emailAddress) {
+		CompletableFuture<Boolean> futureBoolean = new CompletableFuture<>();
 		try {
 			CompletableFuture<Optional<User>> futureUser = repository.findOne(new FindByEmailAddressSpecification(emailAddress));
 			Optional<User> optionalUser = futureUser.get();
-			userWithSameEmailFound = optionalUser.isPresent();
-		} catch(Exception ex) {
-			logger.error(ex);
-			throw new ApplicationRuntimeException("Failed to get user by email address: " + ex.getMessage());
+			futureBoolean.complete(optionalUser.isPresent());
+		} catch(Throwable ex) {
+			CompletableFuture<Boolean> failedFuture = new CompletableFuture<>();
+			failedFuture.completeExceptionally(new ApplicationRuntimeException("Failed to get user by email address: " + ex.getMessage()));
+			return failedFuture;
 		}	
-		return userWithSameEmailFound;
+		return futureBoolean;
 	}
 
 }

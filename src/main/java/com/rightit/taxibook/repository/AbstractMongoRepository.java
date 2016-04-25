@@ -8,7 +8,6 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Provider;
 
-import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -25,8 +24,6 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	abstract public MongoCollection<Document> getCollection();
 
 	abstract public Class<T> getResultType();
-
-	protected Logger logger;
 
 	private Provider<ObjectMapper> objectMapper;
 
@@ -81,10 +78,8 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 			Document document = Document.parse(getObjectMapper().writeValueAsString(obj));
 			getCollection().insertOne(document);
 		} catch (JsonProcessingException ex) {
-			getLogger().error(ex);
 			throw new RuntimeException(ex);
 		} catch (MongoException ex) {
-			getLogger().error(ex);
 			throw new RuntimeException(ex);
 		}
 	}
@@ -94,7 +89,6 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 		try {
 			obj = getObjectMapper().readValue(document.toJson(), getResultType());
 		} catch (IOException ex) {
-			getLogger().error(ex);
 			throw new RuntimeException(ex);
 		}
 		return obj;
@@ -104,10 +98,4 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 		return objectMapper.get();
 	}
 
-	private Logger getLogger() {
-		if (null == logger) {
-			logger = Logger.getLogger(getClass());
-		}
-		return logger;
-	}
 }

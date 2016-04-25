@@ -1,5 +1,9 @@
 package com.rightit.taxibook.resource;
 
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -8,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.rightit.taxibook.domain.User;
 import com.rightit.taxibook.service.user.CreateUserRequest;
 import com.rightit.taxibook.service.user.UserService;
 
@@ -24,8 +29,16 @@ public class UserResource {
 	}
 	
 	@POST
-    public Response signupUser(CreateUserRequest request) {
-		userService.createNewUser(request);
-        return Response.ok().build();
+    public Response signupUser(CreateUserRequest request) throws Throwable {
+		CompletableFuture<Optional<User>> futureUser = userService.createUser(request);
+		Optional<User> optionalUser = null;
+		try {
+			optionalUser = futureUser.get();
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		} catch (ExecutionException ex) {
+			throw ex.getCause();
+		}
+        return Response.ok(optionalUser.get()).build();
     }
 }
