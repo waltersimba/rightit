@@ -17,8 +17,6 @@ import com.rightit.taxibook.service.user.CreateUserRequest;
 import com.rightit.taxibook.service.user.UserService;
 
 @Path("users")
-@Produces({MediaType.APPLICATION_JSON})
-@Consumes({MediaType.APPLICATION_JSON})
 public class UserResource {
 
 	private UserService userService;
@@ -29,13 +27,15 @@ public class UserResource {
 	}
 	
 	@POST
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
     public Response signupUser(CreateUserRequest request) throws Throwable {
 		CompletableFuture<Optional<User>> futureUser = userService.createUser(request);
 		Optional<User> optionalUser = null;
 		try {
 			optionalUser = futureUser.get();
 		} catch (InterruptedException ex) {
-			ex.printStackTrace();
+			throw ex;
 		} catch (ExecutionException ex) {
 			throw ex.getCause();
 		}

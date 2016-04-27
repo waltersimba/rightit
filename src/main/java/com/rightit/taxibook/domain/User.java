@@ -25,6 +25,7 @@ public class User extends DomainObject {
 		this.emailAddress = builder.emailAddress;
 		this.hashedPassword = builder.hashedPassword;
 		this.role = builder.role;
+		this.verified = builder.verified;
 	}
 	
 	public String getFirstName() {
