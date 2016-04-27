@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -46,21 +45,18 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 	}
 
 	@Override
-	public Optional<VerificationToken> generateEmailVerificationToken(EmailVerificationRequest request) {
+	public CompletableFuture<Optional<VerificationToken>> generateEmailVerificationToken(EmailVerificationRequest request) {
 		
 		validate(request);
 		
-		final User user = fetchUserByEmailAddress(request.getEmailAddress());
+		CompletableFuture<User> futureUser = fetchUserByEmailAddress(request.getEmailAddress());
+		CompletableFuture<Optional<VerificationToken>> futureToken = futureUser.thenCompose(user -> {
+			return generateVerificationToken(user).thenCompose(optionalToken -> {
+				return sendTokenVerificationEmail(user, optionalToken);
+			});
+		});
 		
-		if(user.isVerified()) {
-			throw new UserAlreadyVerified();
-		}
-		
-		final VerificationToken token = generateVerificationToken(user);
-
-		sendTokenVerificationEmail(user, token);
-		
-		return Optional.of(token);
+		return futureToken;
 	}
 
 	@Override
@@ -68,37 +64,45 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		return Optional.empty();
 	}
 		
-	private VerificationToken generateVerificationToken(User user) {
+	private CompletableFuture<Optional<VerificationToken>> generateVerificationToken(User user) {
 		final String userId = user.getId().toString();
-		VerificationToken token = null;
-		//Check if there's an existing token that is not expired yet
-		final Optional<VerificationToken> activeVerificationToken = fetchActiveVerificationToken(userId, VerificationTokenType.EMAIL_VERIFICATION);
-		if(activeVerificationToken.isPresent()) {
-			//Use the active token instead
-			token = activeVerificationToken.get();
-		} else {
-			//Generate a token for the user and persist it
-			token = new VerificationToken(userId, VerificationTokenType.EMAIL_VERIFICATION);
-			try {
-				verificationTokenRepository.save(token);
-				logger.info(String.format("Token %s for user ID %s generated!", token.getToken(), userId));
-			} catch(Exception ex) {
-				throw new ApplicationRuntimeException("Failed to save the verification token for user with the given: " + ex.getMessage());
-			}			
-		}
-		return token;
+		CompletableFuture<Optional<VerificationToken>> futureActiveToken = fetchActiveVerificationToken(userId, VerificationTokenType.EMAIL_VERIFICATION);
+		CompletableFuture<Optional<VerificationToken>> futureToken = futureActiveToken.thenApply(activeVerificationToken -> {
+			VerificationToken token = null;
+			if(activeVerificationToken.isPresent()) {
+				//Use the active token instead
+				token = activeVerificationToken.get();
+			} else {
+				//Generate a token for the user and persist it
+				token = new VerificationToken(userId, VerificationTokenType.EMAIL_VERIFICATION);
+				try {
+					verificationTokenRepository.save(token);
+					logger.info(String.format("Token %s for user ID %s generated!", token.getToken(), userId));
+				} catch(Throwable ex) {
+					futureActiveToken.completeExceptionally(new ApplicationRuntimeException("Failed to save the verification token for user with the given: " + ex.getMessage()));
+				}			
+			}
+			return Optional.of(token);
+		});
+		return futureToken;
 	}
 	
-	private void sendTokenVerificationEmail(User user, VerificationToken verificationToken) {
+	private CompletableFuture<Optional<VerificationToken>> sendTokenVerificationEmail(User user, Optional<VerificationToken> optionalToken) {
+		CompletableFuture<Optional<VerificationToken>> tokenFuture = new CompletableFuture<>();
 		try {
+			final VerificationToken verificationToken = optionalToken.get();
 			final Map<String, String> templateValues = buildTemplateMap(user.getFirstName(), verificationToken.getToken());
 			final String htmlMessage = templateMerger.mergeTemplateIntoString("VerifyMail", templateValues);
 			final EmailMessage emailMessage = buildEmailMessage(user, htmlMessage); 
 			//Send a mail with an embedded link that includes the verification token to the user
 			emailService.send(emailMessage);
+			tokenFuture.complete(optionalToken);
 		} catch (MergeException ex) {
-			throw new ApplicationRuntimeException("Failed to send token verification email: " + ex.getMessage());
+			CompletableFuture<Optional<VerificationToken>> failedFuture = new CompletableFuture<>();
+			failedFuture.completeExceptionally(new ApplicationRuntimeException("Failed to send token verification email: " + ex.getMessage()));
+			return failedFuture;
 		}	
+		return tokenFuture;
 	}
 	
 	private Map<String, String> buildTemplateMap(String firstName, String token) {
@@ -122,37 +126,36 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 				.build();
 	}
 
-	private User fetchUserByEmailAddress(String emailAddress) {
-		CompletableFuture<Optional<User>> futureUser = userRepostory.findOne(new FindByEmailAddressSpecification(emailAddress)); 
-		Optional<User> optionalUser = null;
-		try {
-			optionalUser = futureUser.get();
+	private CompletableFuture<User> fetchUserByEmailAddress(String emailAddress) {	
+		CompletableFuture<Optional<User>> futureOptionalUser = userRepostory.findOne(new FindByEmailAddressSpecification(emailAddress));
+		CompletableFuture<User> futureUser = futureOptionalUser.thenApply(optionalUser -> {
 			if (!optionalUser.isPresent()) {
-				throw new UserNotFoundException("Failed to find user with a given email address");
+				futureOptionalUser.completeExceptionally(new UserNotFoundException("Failed to find user with a given email address"));
+			} 
+			final User user = optionalUser.get();
+			if(user.isVerified()) {
+				futureOptionalUser.completeExceptionally(new UserAlreadyVerified());
 			}
-		} catch (InterruptedException | ExecutionException ex) {
-			logger.error(ex);
-			throw new UserNotFoundException("Failed to find user with a given email address");
-		} 		
-		return optionalUser.get();
+			return user;
+		});
+		return futureUser;
 	}
 	
-	private Optional<VerificationToken> fetchActiveVerificationToken(String userId, VerificationTokenType tokenType) {
-		Optional<VerificationToken> optionalToken = Optional.empty();
-		try {
-			final Specification findActiveTokenSpec = new FindActiveVerificationTokenSpecification(userId, tokenType);
-			final CompletableFuture<List<VerificationToken>> futureTokens = verificationTokenRepository.findSome(findActiveTokenSpec); 
-			for(VerificationToken token : futureTokens.get()) {
+	private CompletableFuture<Optional<VerificationToken>> fetchActiveVerificationToken(String userId, VerificationTokenType tokenType) {
+		//Check if there's an existing token that is not expired yet
+		final Specification findActiveTokenSpec = new FindActiveVerificationTokenSpecification(userId, tokenType);
+		final CompletableFuture<List<VerificationToken>> futureTokens = verificationTokenRepository.findSome(findActiveTokenSpec);
+		final CompletableFuture<Optional<VerificationToken>> futureOptionalToken = futureTokens.thenApply(tokens -> {
+			Optional<VerificationToken> optionalToken = Optional.empty();
+			for(VerificationToken token : tokens) {
 				if(!token.hasExpired()) {
 					optionalToken = Optional.of(token);
 					break;
 				}
 			}
-		} catch(Exception ex) {
-			logger.error(ex);
-			throw new ApplicationRuntimeException("Failed to find active verification token for user: " + ex.getMessage());
-		}
-		return optionalToken;
+			return optionalToken;
+		});
+		return futureOptionalToken;
 	}
 
 }

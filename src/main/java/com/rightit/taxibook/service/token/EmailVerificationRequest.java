@@ -1,9 +1,11 @@
 package com.rightit.taxibook.service.token;
 
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.validator.constraints.Email;
 
+@XmlRootElement
 public class EmailVerificationRequest {
 	@NotNull(message = "The email address is required")
     @Email(message = "Email address is not a valid")
