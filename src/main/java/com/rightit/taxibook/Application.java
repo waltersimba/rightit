@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 import javax.validation.Validator;
 
 import org.apache.commons.configuration.Configuration;
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Guice;
@@ -54,6 +55,8 @@ public class Application extends GuiceServletContextListener {
 				bind(Configuration.class).toProvider(ConfigurationProvider.class).asEagerSingleton();
 				bind(MongoDatabase.class).toProvider(MongoProvider.class).asEagerSingleton();
 				
+				bind(JacksonFeature.class);
+								
 				ResourceConfig rc = new PackagesResourceConfig("com.rightit.taxibook");
 				for (Class<?> resource : rc.getClasses()) {
 					bind(resource);
