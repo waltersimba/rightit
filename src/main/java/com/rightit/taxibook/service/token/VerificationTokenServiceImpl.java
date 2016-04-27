@@ -52,7 +52,15 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		CompletableFuture<User> futureUser = fetchUserByEmailAddress(request.getEmailAddress());
 		CompletableFuture<Optional<VerificationToken>> futureToken = futureUser.thenCompose(user -> {
 			return generateVerificationToken(user).thenCompose(optionalToken -> {
-				return sendTokenVerificationEmail(user, optionalToken);
+				//send email asynchronously
+				logger.info(String.format("Sending token verification email to %s ...", user.getEmailAddress()));
+				CompletableFuture.runAsync(() -> {
+					sendTokenVerificationEmail(user, optionalToken);
+					logger.info(String.format("Token verification email sent to %s", user.getEmailAddress()));
+				});
+				final CompletableFuture<Optional<VerificationToken>> future = new CompletableFuture<>();
+				future.complete(optionalToken);
+				return future;
 			});
 		});
 		
@@ -87,8 +95,7 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		return futureToken;
 	}
 	
-	private CompletableFuture<Optional<VerificationToken>> sendTokenVerificationEmail(User user, Optional<VerificationToken> optionalToken) {
-		CompletableFuture<Optional<VerificationToken>> tokenFuture = new CompletableFuture<>();
+	private void sendTokenVerificationEmail(User user, Optional<VerificationToken> optionalToken) {
 		try {
 			final VerificationToken verificationToken = optionalToken.get();
 			final Map<String, String> templateValues = buildTemplateMap(user.getFirstName(), verificationToken.getToken());
@@ -96,13 +103,9 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 			final EmailMessage emailMessage = buildEmailMessage(user, htmlMessage); 
 			//Send a mail with an embedded link that includes the verification token to the user
 			emailService.send(emailMessage);
-			tokenFuture.complete(optionalToken);
 		} catch (MergeException ex) {
-			CompletableFuture<Optional<VerificationToken>> failedFuture = new CompletableFuture<>();
-			failedFuture.completeExceptionally(new ApplicationRuntimeException("Failed to send token verification email: " + ex.getMessage()));
-			return failedFuture;
+			throw new ApplicationRuntimeException("Failed to construct email contents.");
 		}	
-		return tokenFuture;
 	}
 	
 	private Map<String, String> buildTemplateMap(String firstName, String token) {
