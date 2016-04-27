@@ -40,11 +40,51 @@
 		</plugins>
 	</build>
 
+	<properties>
+		<jersey.version>2.22.2</jersey.version>
+		<jackson.version>2.7.3</jackson.version>
+		<jersey.guice.version>1.19</jersey.guice.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>1.8</jdk.version>
+		<joda.time.version>2.9.3</joda.time.version>
+		<mongo.version>3.2.2</mongo.version>
+		<hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
+		<apache.commons.version>1.10</apache.commons.version>
+		<velocity.version>1.7</velocity.version>
+		<commons.email.version>1.4</commons.email.version>
+	</properties>
+
+	<organization>
+		<name>Rightit</name>
+		<url>www.rightit.co.za</url>
+	</organization>
+
 	<dependencies>
 		<dependency>
-			<groupId>com.fasterxml.jackson.jaxrs</groupId>
-			<artifactId>jackson-jaxrs-json-provider</artifactId>
-			<version>${jackson.version}</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-guice</artifactId>
+			<version>${jersey.guice.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -65,17 +105,6 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-joda</artifactId>
 			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey.contribs</groupId>
-			<artifactId>jersey-guice</artifactId>
-			<version>${jersey.guice.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -129,21 +158,4 @@
 		</dependency>
 	</dependencies>
 
-	<properties>
-		<jersey.version>2.22.2</jersey.version>
-		<jackson.version>2.7.3</jackson.version>
-		<jersey.guice.version>1.19</jersey.guice.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jdk.version>1.8</jdk.version>
-		<joda.time.version>2.9.3</joda.time.version>
-		<mongo.version>3.2.2</mongo.version>
-		<hibernate.validator.version>5.2.1.Final</hibernate.validator.version>
-		<apache.commons.version>1.10</apache.commons.version>
-		<velocity.version>1.7</velocity.version>
-		<commons.email.version>1.4</commons.email.version>
-	</properties>
-	<organization>
-		<name>Rightit</name>
-		<url>www.rightit.co.za</url>
-	</organization>
 </project>
