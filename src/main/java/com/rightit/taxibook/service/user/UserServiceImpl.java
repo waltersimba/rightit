@@ -11,7 +11,7 @@ import com.rightit.taxibook.domain.User;
 import com.rightit.taxibook.domain.User.Role;
 import com.rightit.taxibook.domain.User.UserBuilder;
 import com.rightit.taxibook.repository.Repository;
-import com.rightit.taxibook.repository.spec.FindByEmailAddressSpecification;
+import com.rightit.taxibook.repository.spec.FindByEmailAddressSpec;
 import com.rightit.taxibook.service.AbstractService;
 import com.rightit.taxibook.service.password.PasswordHashService;
 import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
@@ -70,7 +70,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	private CompletableFuture<Boolean> hasUserWithSameEmail(String emailAddress) {
 		CompletableFuture<Boolean> futureBoolean = new CompletableFuture<>();
 		try {
-			CompletableFuture<Optional<User>> futureUser = repository.findOne(new FindByEmailAddressSpecification(emailAddress));
+			CompletableFuture<Optional<User>> futureUser = repository.findOne(new FindByEmailAddressSpec(emailAddress));
 			Optional<User> optionalUser = futureUser.get();
 			futureBoolean.complete(optionalUser.isPresent());
 		} catch(Throwable ex) {

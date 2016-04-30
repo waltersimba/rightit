@@ -17,8 +17,8 @@ import com.rightit.taxibook.domain.VerificationToken;
 import com.rightit.taxibook.domain.VerificationToken.VerificationTokenType;
 import com.rightit.taxibook.repository.UseRepository;
 import com.rightit.taxibook.repository.VerificationTokenRepository;
-import com.rightit.taxibook.repository.spec.FindActiveVerificationTokenSpecification;
-import com.rightit.taxibook.repository.spec.FindByEmailAddressSpecification;
+import com.rightit.taxibook.repository.spec.FindActiveVerificationTokenSpec;
+import com.rightit.taxibook.repository.spec.FindByEmailAddressSpec;
 import com.rightit.taxibook.repository.spec.Specification;
 import com.rightit.taxibook.service.AbstractService;
 import com.rightit.taxibook.service.mail.EmailMessage;
@@ -135,7 +135,7 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 	}
 
 	private CompletableFuture<User> fetchUserByEmailAddress(String emailAddress) {	
-		CompletableFuture<Optional<User>> futureOptionalUser = userRepostory.findOne(new FindByEmailAddressSpecification(emailAddress));
+		CompletableFuture<Optional<User>> futureOptionalUser = userRepostory.findOne(new FindByEmailAddressSpec(emailAddress));
 		CompletableFuture<User> futureUser = futureOptionalUser.thenApply(optionalUser -> {
 			if (!optionalUser.isPresent()) {
 				futureOptionalUser.completeExceptionally(new UserNotFoundException("Failed to find user with a given email address"));
@@ -151,7 +151,7 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 	
 	private CompletableFuture<Optional<VerificationToken>> fetchActiveVerificationToken(String userId, VerificationTokenType tokenType) {
 		//Check if there's an existing token that is not expired yet
-		final Specification findActiveTokenSpec = new FindActiveVerificationTokenSpecification(userId, tokenType);
+		final Specification findActiveTokenSpec = new FindActiveVerificationTokenSpec(userId, tokenType);
 		final CompletableFuture<List<VerificationToken>> futureTokens = verificationTokenRepository.findSome(findActiveTokenSpec);
 		final CompletableFuture<Optional<VerificationToken>> futureOptionalToken = futureTokens.thenApply(tokens -> {
 			Optional<VerificationToken> optionalToken = Optional.empty();

@@ -2,9 +2,9 @@ package com.rightit.taxibook.repository.spec;
 
 import org.bson.types.ObjectId;
 
-public class FindByIdSpecification extends FindByFieldValueSpecification {
+public class FindByIdSpec extends FindByFieldValueSpec {
 	
-	public FindByIdSpecification(String id) {
+	public FindByIdSpec(String id) {
 		super("_id", new ObjectId(id));
 	}
 }

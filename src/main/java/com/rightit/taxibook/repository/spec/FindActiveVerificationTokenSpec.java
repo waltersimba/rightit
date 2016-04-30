@@ -7,12 +7,12 @@ import org.bson.conversions.Bson;
 
 import com.rightit.taxibook.domain.VerificationToken.VerificationTokenType;
 
-public class FindActiveVerificationTokenSpecification implements MongoSpecification {
+public class FindActiveVerificationTokenSpec implements MongoSpecification {
 
 	private String userId = null;
 	private VerificationTokenType tokenType;
 	
-	public FindActiveVerificationTokenSpecification(String userId, VerificationTokenType tokenType) {
+	public FindActiveVerificationTokenSpec(String userId, VerificationTokenType tokenType) {
 		this.userId = userId;
 		this.tokenType = tokenType;
 	}
