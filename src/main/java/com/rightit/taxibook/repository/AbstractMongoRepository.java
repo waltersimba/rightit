@@ -16,8 +16,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.rightit.taxibook.repository.spec.MongoSpecification;
-import com.rightit.taxibook.repository.spec.Specification;
+import com.rightit.taxibook.spec.Specification;
+import com.rightit.taxibook.spec.query.MongoQuerySpecification;
+import com.rightit.taxibook.spec.update.MongoUpdateSpecification;
 
 public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 
@@ -35,11 +36,11 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	public CompletableFuture<Optional<T>> findOne(Specification specification) {
 		CompletableFuture<Optional<T>> future = new CompletableFuture<>();
 		try {
-			final MongoSpecification mongoSpecification = (MongoSpecification) specification;
+			final MongoQuerySpecification mongoSpecification = (MongoQuerySpecification) specification;
 			final Bson query = mongoSpecification.toMongoQuery();
 			final Document document = getCollection().find(query).first();
 			future.complete(document == null ? Optional.empty() : Optional.of(map(document)));
-		} catch (Throwable ex) {
+		} catch (Exception ex) {
 			CompletableFuture<Optional<T>> failedFuture = new CompletableFuture<>();
 			failedFuture.completeExceptionally(ex);
 			return failedFuture;
@@ -52,7 +53,7 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	public CompletableFuture<List<T>> findSome(Specification specification) {
 		CompletableFuture<List<T>> future = new CompletableFuture<>();
 		try {
-			final MongoSpecification mongoSpecification = (MongoSpecification) specification;
+			final MongoQuerySpecification mongoSpecification = (MongoQuerySpecification) specification;
 			final Bson query = mongoSpecification.toMongoQuery();
 			final MongoCursor<Document> cursor = getCollection().find(query).iterator();
 			final List<T> items = new ArrayList<>();
@@ -64,7 +65,7 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 				cursor.close();
 			}
 			future.complete(items);
-		} catch(Throwable ex) {
+		} catch(Exception ex) {
 			CompletableFuture<List<T>> failedFuture = new CompletableFuture<>();
 			failedFuture.completeExceptionally(ex);
 			return failedFuture;
@@ -82,6 +83,20 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 		} catch (MongoException ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+	
+	public CompletableFuture<Optional<T>> updateOne(final Specification specification) {
+		CompletableFuture<Optional<T>> future = new CompletableFuture<>();
+		try {
+			final MongoUpdateSpecification updateSpecification = (MongoUpdateSpecification) specification;
+			final Document document = getCollection().findOneAndUpdate(updateSpecification.getFilter(), updateSpecification.getValue());
+			future.complete(document == null ? Optional.empty() : Optional.of(map(document)));
+		} catch (Exception ex) {
+			CompletableFuture<Optional<T>> failedFuture = new CompletableFuture<>();
+			failedFuture.completeExceptionally(ex);
+			return failedFuture;
+		}
+		return future;
 	}
 
 	public T map(Document document) {
