@@ -8,7 +8,7 @@ public class AuthenticationException extends BaseWebApplicationException {
 
 	public AuthenticationException() {
         super(Response.Status.UNAUTHORIZED.getStatusCode(), 
-        		Response.Status.UNAUTHORIZED.getStatusCode() + "02", 
+        		Response.Status.UNAUTHORIZED.getStatusCode() + "01", 
         		"Authentication Error", 
         		"Authentication credentials were incorrect");
     }

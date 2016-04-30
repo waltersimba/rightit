@@ -8,7 +8,7 @@ public class ApplicationRuntimeException extends BaseWebApplicationException {
 
 	public ApplicationRuntimeException(String applicationMessage) {
         super(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), 
-        		Response.Status.INTERNAL_SERVER_ERROR.getStatusCode() + "02", 
+        		Response.Status.INTERNAL_SERVER_ERROR.getStatusCode() + "01", 
         		"Internal System error", applicationMessage);
     }
 }
