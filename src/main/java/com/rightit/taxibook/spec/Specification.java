@@ -1,3 +1,4 @@
-package com.rightit.taxibook.repository.spec;
+package com.rightit.taxibook.spec;
 
-public interface Specification {}
+public interface Specification {
+}
