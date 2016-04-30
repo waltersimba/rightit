@@ -1,8 +1,10 @@
-package com.rightit.taxibook.repository.spec;
+package com.rightit.taxibook.spec.query;
 
 import org.bson.conversions.Bson;
 
-public interface MongoSpecification extends Specification {
-	
+import com.rightit.taxibook.spec.Specification;
+
+public interface MongoQuerySpecification extends Specification {
+
 	Bson toMongoQuery();
 }

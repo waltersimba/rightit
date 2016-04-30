@@ -1,7 +1,7 @@
-package com.rightit.taxibook.repository.spec;
+package com.rightit.taxibook.spec.query;
 
 public class FindByEmailAddressSpec extends FindByFieldValueSpec {
-	
+
 	public FindByEmailAddressSpec(String emailAddress) {
 		super("emailAddress", emailAddress);
 	}
