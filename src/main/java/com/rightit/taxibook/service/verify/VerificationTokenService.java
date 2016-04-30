@@ -1,4 +1,4 @@
-package com.rightit.taxibook.service.token;
+package com.rightit.taxibook.service.verify;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;

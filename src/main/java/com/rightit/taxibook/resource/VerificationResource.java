@@ -14,10 +14,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.rightit.taxibook.domain.VerificationToken;
-import com.rightit.taxibook.repository.VerificationTokenRepository;
-import com.rightit.taxibook.service.token.EmailVerificationRequest;
-import com.rightit.taxibook.service.token.TokenVerificationRequest;
-import com.rightit.taxibook.service.token.VerificationTokenService;
+import com.rightit.taxibook.service.verify.EmailVerificationRequest;
+import com.rightit.taxibook.service.verify.TokenVerificationRequest;
+import com.rightit.taxibook.service.verify.VerificationTokenService;
 
 @Path("verify")
 public class VerificationResource {
@@ -46,9 +45,8 @@ public class VerificationResource {
 	@POST
 	public Response verifyToken(@PathParam("token") String token) throws Throwable {
 		CompletableFuture<Optional<VerificationToken>> futureToken = verificationTokenService.verify(new TokenVerificationRequest(token));
-		Optional<VerificationToken> optionalToken = null;
 		try {
-			optionalToken = futureToken.get();
+			futureToken.get();
 		} catch (InterruptedException ex) {
 			throw ex;
 		} catch (ExecutionException ex) {

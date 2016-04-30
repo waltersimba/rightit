@@ -1,4 +1,4 @@
-package com.rightit.taxibook.service.token;
+package com.rightit.taxibook.service.verify;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
