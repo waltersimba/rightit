@@ -8,12 +8,15 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.rightit.taxibook.domain.VerificationToken;
+import com.rightit.taxibook.repository.VerificationTokenRepository;
 import com.rightit.taxibook.service.token.EmailVerificationRequest;
+import com.rightit.taxibook.service.token.TokenVerificationRequest;
 import com.rightit.taxibook.service.token.VerificationTokenService;
 
 @Path("verify")
@@ -36,7 +39,21 @@ public class VerificationResource {
 		} catch (ExecutionException ex) {
 			throw ex.getCause();
 		}
-		
-		return Response.ok(optionalToken.get()).build();
+		return Response.status(Response.Status.CREATED).entity(optionalToken.get()).build();
+	}
+	
+	@Path("tokens/{token}")
+	@POST
+	public Response verifyToken(@PathParam("token") String token) throws Throwable {
+		CompletableFuture<Optional<VerificationToken>> futureToken = verificationTokenService.verify(new TokenVerificationRequest(token));
+		Optional<VerificationToken> optionalToken = null;
+		try {
+			optionalToken = futureToken.get();
+		} catch (InterruptedException ex) {
+			throw ex;
+		} catch (ExecutionException ex) {
+			throw ex.getCause();
+		}
+		return Response.ok().build();
 	}
 }

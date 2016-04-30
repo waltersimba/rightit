@@ -68,8 +68,13 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 	}
 
 	@Override
-	public Optional<VerificationToken> verify(String token) {
-		return Optional.empty();
+	public CompletableFuture<Optional<VerificationToken>> verify(TokenVerificationRequest request) {
+		
+		validate(request);
+		
+		CompletableFuture<Optional<VerificationToken>> futureOptionalToken = new CompletableFuture<>();
+		futureOptionalToken.complete(Optional.empty());
+		return futureOptionalToken;
 	}
 		
 	private CompletableFuture<Optional<VerificationToken>> generateVerificationToken(User user) {

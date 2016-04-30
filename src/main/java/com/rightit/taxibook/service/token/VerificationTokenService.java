@@ -9,5 +9,5 @@ public interface VerificationTokenService {
 	
 	CompletableFuture<Optional<VerificationToken>> generateEmailVerificationToken(EmailVerificationRequest request);
 	
-	Optional<VerificationToken> verify(String token);	
+	CompletableFuture<Optional<VerificationToken>> verify(TokenVerificationRequest request);	
 }
