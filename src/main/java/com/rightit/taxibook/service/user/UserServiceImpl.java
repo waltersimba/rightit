@@ -41,8 +41,9 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		CompletableFuture<Boolean> futureHasUserWithSameEmail = hasUserWithSameEmail(request.getEmailAddress());
 		CompletableFuture<Optional<User>> futureCreatedUser = futureHasUserWithSameEmail.thenCompose(hasUserWithSameEmail -> {
 			if (hasUserWithSameEmail) {
-				logger.error(String.format("Already has user with duplicate email address: %s", request.getEmailAddress()));
-				return new FailedCompletableFutureBuilder<Optional<User>>().build(new DuplicateEmailAddressException());
+				String errorMessage = String.format("Already has user with duplicate email address: %s", request.getEmailAddress());
+				logger.error(errorMessage);
+				return new FailedCompletableFutureBuilder<Optional<User>>().build(new DuplicateEmailAddressException(errorMessage));
 			} 
 			return createNewUser(request);
 		});
@@ -50,7 +51,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	}
 
 	private CompletableFuture<Optional<User>> createNewUser(CreateUserRequest request) {
-		logger.info("Creating new user ...");
+		logger.info(String.format("Creating new user with email address: %s...", request.getEmailAddress()));
 		CompletableFuture<Optional<User>> futureUser = new CompletableFuture<>();
 		try {
 			final User newUser = new UserBuilder()
@@ -65,8 +66,9 @@ public class UserServiceImpl extends AbstractService implements UserService {
 			logger.info(String.format("User with email address %s created successfully.", request.getEmailAddress()));
 			futureUser.complete(Optional.of(newUser));
 		} catch(Throwable ex) {
-			logger.error(String.format("Failed to create user with email address %s: %s", request.getEmailAddress(), ex.getMessage()));
-			return new FailedCompletableFutureBuilder<Optional<User>>().build(new ApplicationRuntimeException("Failed to save new user: " + ex.getMessage()));
+			String errorMessage = String.format("Failed to create user with email address %s: %s", request.getEmailAddress(), ex.getMessage()); 
+			logger.error(errorMessage);
+			return new FailedCompletableFutureBuilder<Optional<User>>().build(new ApplicationRuntimeException(errorMessage));
 		}
 		return futureUser;
 	}
@@ -80,9 +82,10 @@ public class UserServiceImpl extends AbstractService implements UserService {
 			futureBoolean.complete(optionalUser.isPresent());
 			logger.info(String.format("User with email address %s found ? %s.", emailAddress, optionalUser.isPresent()));
 		} catch(Throwable ex) {
-			logger.error(String.format("Failed to get user with email address %s: %s", emailAddress, ex.getMessage()));
+			String errorMessage = String.format("Failed to get user with email address %s: %s", emailAddress, ex.getMessage()); 
+			logger.error(errorMessage);
 			return new FailedCompletableFutureBuilder<Boolean>()
-					.build(new ApplicationRuntimeException("Failed to get user by email address: " + ex.getMessage()));
+					.build(new ApplicationRuntimeException(errorMessage));
 		}	
 		return futureBoolean;
 	}

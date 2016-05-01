@@ -66,7 +66,8 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		final CompletableFuture<User> futureUser = fetchUserByEmailAddress(request.getEmailAddress());
 		return futureUser.thenCompose(user -> {
 			if (user.isVerified()) {
-				logger.error(String.format("User with id \"%s\" is already verified.", user.getId().toString()));
+				String errorMessage = String.format(UserAlreadyVerifiedException.ERROR_MESSAGE, user.getEmailAddress());
+				logger.error(errorMessage);
 				return new FailedCompletableFutureBuilder<Optional<VerificationToken>>().build(new UserAlreadyVerifiedException(user));
 			} else {
 				return generateVerificationToken(user).thenApply(optionalToken -> {
@@ -136,16 +137,16 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		final CompletableFuture<Optional<VerificationToken>> futureToken = verificationTokenRepository.findOne(new FindVerificationTokenSpec(token));
 		return futureToken.thenCompose(optionalToken -> {
 			if(!optionalToken.isPresent()) {
-				logger.error(String.format("Could not find token: %s.", token));
+				logger.error(String.format(TokenNotFoundException.ERROR_MESSAGE, token));
 				return new FailedCompletableFutureBuilder<Optional<VerificationToken>>().build(new TokenNotFoundException(token));
 			} else {
 				final VerificationToken verificationToken = optionalToken.get();
 				if(verificationToken.hasExpired()) {
-					logger.error(String.format("Token has expired: %s.", token));
+					logger.error(String.format(TokenHasExpiredException.ERROR_MESSAGE, token));
 					return new FailedCompletableFutureBuilder<Optional<VerificationToken>>().build(new TokenHasExpiredException(verificationToken));
 				}
 				else if(verificationToken.isVerified()) {
-					logger.error(String.format("Token is already verified: %s.", token));
+					logger.error(String.format(TokenAlreadyVerifiedException.ERROR_MESSASE, token));
 					return new FailedCompletableFutureBuilder<Optional<VerificationToken>>().build(new TokenAlreadyVerifiedException(verificationToken));
 				}
 				return futureToken;
@@ -158,11 +159,12 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		final CompletableFuture<Optional<User>> futureOptionalUser = userRepostory.findOne(new FindByIdSpec(userId));
 		return futureOptionalUser.thenCompose(optionalUser -> {
 			if(!optionalUser.isPresent()) {
-				logger.error(String.format("Could not find user for id: %s.", userId));
-				return new FailedCompletableFutureBuilder<Optional<User>>().build(new UserNotFoundException("Could not find with id: " + userId));
+				String errorMessage = String.format("Could not find user for id: %s.", userId);
+				logger.error(errorMessage);
+				return new FailedCompletableFutureBuilder<Optional<User>>().build(new UserNotFoundException(errorMessage));
 			} else {
 				if(optionalUser.get().isVerified()) {
-					logger.error(String.format("User with id \"%s\" is already verified.", userId));
+					logger.error(String.format(UserAlreadyVerifiedException.ERROR_MESSAGE, userId));
 					return new FailedCompletableFutureBuilder<Optional<User>>().build(new UserAlreadyVerifiedException(optionalUser.get()));
 				}
 				return futureOptionalUser;
@@ -188,11 +190,10 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 					future.complete(Optional.of(token));
 					logger.info(String.format("Token %s for user ID %s was generated!", token.getToken(), userId));
 				} catch(Throwable ex) {
-					logger.error(String.format("Failed to save token %s for user %s", token.getToken(), userId));
+					String errorMessage = String.format("Failed to save token %s for user %s: %s", token.getToken(), userId, ex.getMessage());
+					logger.error(errorMessage);
 					return new FailedCompletableFutureBuilder<Optional<VerificationToken>>()
-							.build(new ApplicationRuntimeException(
-									"Failed to save the verification token for user with the given: "
-											+ ex.getMessage()));
+							.build(new ApplicationRuntimeException(errorMessage));
 				}			
 			}
 			return future;
@@ -211,7 +212,7 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 				emailService.send(emailMessage);
 				logger.info(String.format("Token verification email sent for email address: %s.", user.getEmailAddress()));
 			} catch (MergeException ex) {
-				String errorMessage = String.format("Failed to construct email contents for %s: %s", user.getEmailAddress(), ex.getMessage()); 
+				String errorMessage = String.format("Failed to build token verification email for %s: %s", user.getEmailAddress(), ex.getMessage()); 
 				logger.error(errorMessage);
 				throw new ApplicationRuntimeException(errorMessage);
 			}	
@@ -245,12 +246,13 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		return futureOptionalUser.thenCompose(optionalUser -> {
 			CompletableFuture<User> future = new CompletableFuture<>();
 			if (!optionalUser.isPresent()) {
-				logger.error(String.format("Failed to find user by email address: %s.", emailAddress));
-				return new FailedCompletableFutureBuilder<User>().build(new UserNotFoundException("Could not find user by email address: " + emailAddress));
+				String errorMessage = String.format("Could not find user by email address: %s.", emailAddress);
+				logger.error(errorMessage);
+				return new FailedCompletableFutureBuilder<User>().build(new UserNotFoundException(errorMessage));
 			} else {
 				final User user = optionalUser.get();
 				if(user.isVerified()) {
-					logger.error(String.format("User for with email address %s is already verified.", emailAddress));
+					logger.error(String.format(UserAlreadyVerifiedException.ERROR_MESSAGE, emailAddress));
 					return new FailedCompletableFutureBuilder<User>().build(new UserAlreadyVerifiedException(user));
 				} else {
 					future.complete(user);

@@ -7,10 +7,15 @@ import com.rightit.taxibook.domain.User;
 public class UserAlreadyVerifiedException extends BaseWebApplicationException {
 
 	private static final long serialVersionUID = 1L;
+	public static final String ERROR_MESSAGE = "User with email address %s is already verified.";
 
 	public UserAlreadyVerifiedException(User user) {
+		this(String.format(ERROR_MESSAGE, user.getEmailAddress()));
+	}
+
+	public UserAlreadyVerifiedException(String applicationMessage) {
 		super(Response.Status.CONFLICT.getStatusCode(), Response.Status.CONFLICT.getStatusCode() + "02", 
-				"User already verified", String.format("User is already verified: %s", user.getId()));
+				"User already verified", applicationMessage);
 	}
 
 }
