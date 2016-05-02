@@ -13,7 +13,8 @@ angular
     'ngCookies',
     'ngResource',
     'ngRoute',
-    'ngSanitize'
+    'ngSanitize',
+    'pascalprecht.translate'
   ])
   .config(function ($routeProvider) {
     $routeProvider
