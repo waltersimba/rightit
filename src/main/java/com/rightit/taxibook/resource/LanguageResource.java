@@ -17,7 +17,7 @@ import com.rightit.taxibook.locale.Locales;
 @Path("lang")
 public class LanguageResource {
 
-	private static final String SUPPORTED_LANGUAGES = "en";
+	private static final String SUPPORTED_LANGUAGES = "en,en_ZA";
 	
 	@GET
 	@Path("supported")
@@ -30,8 +30,9 @@ public class LanguageResource {
 		List<SupportedLanguage> supportedLanguages = new ArrayList<>();
 		for(String localeString : StringUtils.split(SUPPORTED_LANGUAGES, ",")) {
 			final Locale locale = Locales.of(localeString);
+			final String country = StringUtils.isEmpty(locale.getCountry()) ? null : locale.getCountry();
 			supportedLanguages.add(new SupportedLanguage(localeString, locale.getLanguage(), 
-					locale.getDisplayLanguage(locale)));
+					country, locale.getDisplayLanguage(locale)));
 		}
 		return supportedLanguages;
 	}
@@ -39,14 +40,17 @@ public class LanguageResource {
 	public static class SupportedLanguage {
 		
 		private String locale;
+				
+		private String language;
 		
-		private String language;				
+		private String country;
 		
 		private String displayLanguage;
 		
-		public SupportedLanguage(String locale, String language, String displayLanguage) {
+		public SupportedLanguage(String locale, String language, String country, String displayLanguage) {
 			this.locale = locale;
 			this.language = language;
+			this.country = country;
 			this.displayLanguage = displayLanguage;
 		}
 
@@ -56,6 +60,10 @@ public class LanguageResource {
 
 		public String getLanguage() {
 			return language;
+		}
+		
+		public String getCountry() {
+			return country;
 		}
 
 		public String getDisplayLanguage() {
