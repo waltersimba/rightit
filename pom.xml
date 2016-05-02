@@ -52,6 +52,7 @@
 		<apache.commons.version>1.10</apache.commons.version>
 		<velocity.version>1.7</velocity.version>
 		<commons.email.version>1.4</commons.email.version>
+		<guava.version>19.0</guava.version>
 	</properties>
 
 	<organization>
@@ -155,6 +156,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-email</artifactId>
 			<version>${commons.email.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 	</dependencies>
 
