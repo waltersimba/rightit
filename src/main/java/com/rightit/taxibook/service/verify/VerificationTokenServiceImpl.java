@@ -10,8 +10,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.validation.Validator;
 
-import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rightit.taxibook.domain.User;
 import com.rightit.taxibook.domain.VerificationToken;
@@ -41,7 +42,7 @@ import com.rightit.taxibook.validation.exception.UserNotFoundException;
 
 public class VerificationTokenServiceImpl extends AbstractService implements VerificationTokenService {
 
-	private Logger logger = Logger.getLogger(VerificationTokenServiceImpl.class);
+	private Logger logger = LoggerFactory.getLogger(VerificationTokenServiceImpl.class);
 	@Inject 
 	private EmailService emailService;
 	@Inject 

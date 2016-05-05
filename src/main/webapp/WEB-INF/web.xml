@@ -8,7 +8,7 @@
 	<display-name>Taxibook REST API</display-name>
 
 	<listener>
-		<listener-class>com.rightit.taxibook.Application</listener-class>
+		<listener-class>com.rightit.taxibook.ApplicationListener</listener-class>
 	</listener>
 
 	<filter>

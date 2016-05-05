@@ -7,14 +7,15 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.commons.mail.SimpleEmail;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rightit.taxibook.service.mail.EmailMessage.EmailContentType;
 import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 
 public class EmailServiceImpl implements EmailService {
 
-	private Logger logger = Logger.getLogger(EmailServiceImpl.class);
+	private Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 	
 	@Override
 	public void send(EmailMessage emailMessage) {

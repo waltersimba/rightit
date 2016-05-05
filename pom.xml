@@ -53,6 +53,7 @@
 		<velocity.version>1.7</velocity.version>
 		<commons.email.version>1.4</commons.email.version>
 		<guava.version>19.0</guava.version>
+		<slf4j.version>1.7.21</slf4j.version>
 	</properties>
 
 	<organization>
@@ -143,9 +144,9 @@
 			<version>${apache.commons.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>

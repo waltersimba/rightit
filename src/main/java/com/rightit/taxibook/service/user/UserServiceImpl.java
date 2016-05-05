@@ -7,7 +7,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.validation.Validator;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rightit.taxibook.domain.User;
 import com.rightit.taxibook.domain.User.Role;
@@ -22,7 +23,7 @@ import com.rightit.taxibook.validation.exception.DuplicateEmailAddressException;
 
 public class UserServiceImpl extends AbstractService implements UserService {
 	
-	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	private Repository<User> repository;
 	@Inject
 	private PasswordHashService passwordHashService;

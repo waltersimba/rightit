@@ -17,7 +17,7 @@ import com.rightit.taxibook.locale.Locales;
 @Path("lang")
 public class LanguageResource {
 
-	private static final String SUPPORTED_LANGUAGES = "en,en_ZA";
+	private static final String SUPPORTED_LANGUAGES = "en_US,de,zh";
 	
 	@GET
 	@Path("supported")
