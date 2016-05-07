@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.rightit.taxibook.domain.VerificationToken;
-import com.rightit.taxibook.service.verify.EmailVerificationRequest;
+import com.rightit.taxibook.service.verify.EmailBasedRequest;
 import com.rightit.taxibook.service.verify.TokenVerificationRequest;
 import com.rightit.taxibook.service.verify.VerificationTokenService;
 
@@ -28,8 +28,25 @@ public class VerificationResource {
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response sendEmailToken(EmailVerificationRequest request) throws Throwable {
+	public Response sendEmailToken(EmailBasedRequest request) throws Throwable {
 		CompletableFuture<Optional<VerificationToken>> futureToken = verificationTokenService.generateEmailVerificationToken(request);
+		Optional<VerificationToken> optionalToken = null;
+		try {
+			optionalToken = futureToken.get();
+		} catch (InterruptedException ex) {
+			throw ex;
+		} catch (ExecutionException ex) {
+			throw ex.getCause();
+		}
+		return Response.status(Response.Status.CREATED).entity(optionalToken.get()).build();
+	}
+	
+	@Path("tokens/resetPassword")
+	@POST
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response sendResetPasswordToken(EmailBasedRequest request) throws Throwable {
+		CompletableFuture<Optional<VerificationToken>> futureToken = verificationTokenService.generateResetPasswordToken(request);
 		Optional<VerificationToken> optionalToken = null;
 		try {
 			optionalToken = futureToken.get();
@@ -44,7 +61,7 @@ public class VerificationResource {
 	@Path("tokens/{token}")
 	@POST
 	public Response verifyToken(@PathParam("token") String token) throws Throwable {
-		CompletableFuture<Optional<VerificationToken>> futureToken = verificationTokenService.verify(new TokenVerificationRequest(token));
+		CompletableFuture<Optional<VerificationToken>> futureToken = verificationTokenService.verifyUser(new TokenVerificationRequest(token));
 		try {
 			futureToken.get();
 		} catch (InterruptedException ex) {

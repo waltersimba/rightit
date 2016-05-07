@@ -95,7 +95,7 @@ public class VerificationToken extends DomainObject {
 
 
 	public enum VerificationTokenType {
-		LOST_PASSWORD,
+		RESET_PASSWORD,
 		EMAIL_VERIFICATION
 	}
 }

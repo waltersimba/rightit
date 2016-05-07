@@ -7,7 +7,9 @@ import com.rightit.taxibook.domain.VerificationToken;
 
 public interface VerificationTokenService {
 	
-	CompletableFuture<Optional<VerificationToken>> generateEmailVerificationToken(EmailVerificationRequest request);
+	CompletableFuture<Optional<VerificationToken>> generateEmailVerificationToken(EmailBasedRequest request);
 	
-	CompletableFuture<Optional<VerificationToken>> verify(TokenVerificationRequest request);	
+	CompletableFuture<Optional<VerificationToken>> generateResetPasswordToken(EmailBasedRequest request);
+	
+	CompletableFuture<Optional<VerificationToken>> verifyUser(TokenVerificationRequest request);	
 }

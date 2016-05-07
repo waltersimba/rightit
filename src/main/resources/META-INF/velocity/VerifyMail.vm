@@ -4,7 +4,7 @@
     <title>Verify Your Email</title>
   </head>
 	<body>
-		Dear ${firstName},
+		Hi ${firstName},
 		
 		<p>		
 		
@@ -26,7 +26,7 @@
 		<p>
 		
 		This e-mail was sent to you because an account was created using your e-mail address. 
-		If you did not create this account, submit a help request to e-mail ${helpEmailAddress}.
+		If you did not create this account, <a href="mailto:${helpEmailAddress}" target="_top">submit a help request to us</a>.
 		
 		<p>
 		
