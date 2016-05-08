@@ -56,7 +56,7 @@ public class VerifyEmailMessageBuilder implements Function<User, EmailMessage> {
 		return new EmailMessageBuilder()
 				.withSenderName("Taxibook")
 				.withSenderEmail("no-reply@rightit.co.za")
-				.withSubject("Your Taxibook account - Verify your E-mail address")
+				.withSubject("Your Taxibook Account - Verify Your E-mail Address")
 				.withRecipient(user.getEmailAddress())
 				.withMessage(htmlMessage)
 				.withContentType(EmailContentType.HTML)

@@ -11,5 +11,7 @@ public interface VerificationTokenService {
 	
 	CompletableFuture<Optional<VerificationToken>> generateResetPasswordToken(EmailBasedRequest request);
 	
+	CompletableFuture<Optional<VerificationToken>> resetPassword(PasswordRequest request);
+	
 	CompletableFuture<Optional<VerificationToken>> verifyUser(TokenVerificationRequest request);	
 }

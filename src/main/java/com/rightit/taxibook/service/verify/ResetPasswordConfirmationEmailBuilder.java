@@ -2,14 +2,12 @@ package com.rightit.taxibook.service.verify;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rightit.taxibook.domain.User;
-import com.rightit.taxibook.domain.VerificationToken;
 import com.rightit.taxibook.service.mail.EmailMessage;
 import com.rightit.taxibook.service.mail.EmailMessage.EmailContentType;
 import com.rightit.taxibook.service.mail.EmailMessage.EmailMessageBuilder;
@@ -17,35 +15,32 @@ import com.rightit.taxibook.template.MergeException;
 import com.rightit.taxibook.template.TemplateMerger;
 import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 
-public class ResetPasswordMessageBuilder implements Function<User, EmailMessage> {
-	private Logger logger = LoggerFactory.getLogger(ResetPasswordMessageBuilder.class);
-	private final Optional<VerificationToken> optionalToken;
+public class ResetPasswordConfirmationEmailBuilder implements Function<User, EmailMessage> {
+	
+	private Logger logger = LoggerFactory.getLogger(ResetPasswordConfirmationEmailBuilder.class);
 	private final TemplateMerger templateMerger;
-
-	public ResetPasswordMessageBuilder(Optional<VerificationToken> optionalToken, TemplateMerger templateMerger) {
-		this.optionalToken = optionalToken;
+	
+	public ResetPasswordConfirmationEmailBuilder(TemplateMerger templateMerger) {
 		this.templateMerger = templateMerger;
 	}
-
+	
 	@Override
 	public EmailMessage apply(User user) {
 		try {
-			final VerificationToken verificationToken = optionalToken.get();
-			final Map<String, String> templateValues = buildTemplateMap(user.getFirstName(), verificationToken.getToken());
-			final String htmlMessage = templateMerger.mergeTemplateIntoString("ResetPassword", templateValues);
+			final Map<String, String> templateValues = buildTemplateMap(user.getFirstName());
+			final String htmlMessage = templateMerger.mergeTemplateIntoString("ResetPasswordConfirmation", templateValues);
 			return buildEmailMessage(user, htmlMessage);
 		} catch (MergeException ex) {
-			String errorMessage = String.format("Failed to build reset password email for %s: %s", user.getEmailAddress(), ex.getMessage()); 
+			String errorMessage = String.format("Failed to build reset password confirmation email for %s: %s", user.getEmailAddress(), ex.getMessage()); 
 			logger.error(errorMessage);
 			throw new ApplicationRuntimeException(errorMessage);
-		}		
-	}
+		}				
+	}	
 	
-	private Map<String, String> buildTemplateMap(String firstName, String token) {
+	private Map<String, String> buildTemplateMap(String firstName) {
 		final Map<String, String> templateMap = new HashMap<>();
 		templateMap.put("firstName", firstName);
-		templateMap.put("resetPasswordUrl", "www.taxibook.co.za/resetPassword/" + token);
-		templateMap.put("helpEmailAddress", "support@rightit.co.za");
+		templateMap.put("supportEmailAddress", "support@rightit.co.za");
 		return templateMap;
 	}
 
@@ -53,7 +48,7 @@ public class ResetPasswordMessageBuilder implements Function<User, EmailMessage>
 		return new EmailMessageBuilder()
 				.withSenderName("Taxibook")
 				.withSenderEmail("no-reply@rightit.co.za")
-				.withSubject("Reset Password For Taxibook Account")
+				.withSubject("Taxibook Password Change Confirmation")
 				.withRecipient(user.getEmailAddress())
 				.withMessage(htmlMessage)
 				.withContentType(EmailContentType.HTML)
