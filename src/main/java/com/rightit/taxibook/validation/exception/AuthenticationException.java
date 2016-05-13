@@ -6,11 +6,15 @@ public class AuthenticationException extends BaseWebApplicationException {
 
 	private static final long serialVersionUID = 1L;
 
-	public AuthenticationException() {
+	public AuthenticationException(String applicationMessage) {
         super(Response.Status.UNAUTHORIZED.getStatusCode(), 
         		Response.Status.UNAUTHORIZED.getStatusCode() + "01", 
-        		"Authentication Error", 
-        		"Authentication credentials were incorrect");
+        		"Authentication Failed", 
+        		applicationMessage);
+    }
+	
+	public AuthenticationException() {
+		this("Authentication credentials were incorrect");
     }
     
 }
