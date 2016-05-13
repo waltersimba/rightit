@@ -23,7 +23,7 @@ import com.rightit.taxibook.validation.exception.DuplicateEmailAddressException;
 
 public class UserServiceImpl extends AbstractService implements UserService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 	private Repository<User> repository;
 	@Inject
 	private PasswordHashService passwordHashService;
@@ -43,7 +43,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		CompletableFuture<Optional<User>> futureCreatedUser = futureHasUserWithSameEmail.thenCompose(hasUserWithSameEmail -> {
 			if (hasUserWithSameEmail) {
 				String errorMessage = String.format("Already has user with duplicate email address: %s", request.getEmailAddress());
-				logger.error(errorMessage);
+				LOGGER.error(errorMessage);
 				return new FailedCompletableFutureBuilder<Optional<User>>().build(new DuplicateEmailAddressException(errorMessage));
 			} 
 			return createNewUser(request);
@@ -52,7 +52,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	}
 
 	private CompletableFuture<Optional<User>> createNewUser(CreateUserRequest request) {
-		logger.info(String.format("Creating new user with email address: %s...", request.getEmailAddress()));
+		LOGGER.info(String.format("Creating new user with email address: %s...", request.getEmailAddress()));
 		CompletableFuture<Optional<User>> futureUser = new CompletableFuture<>();
 		try {
 			final User newUser = new UserBuilder()
@@ -64,27 +64,27 @@ public class UserServiceImpl extends AbstractService implements UserService {
 					.withVerified(Boolean.FALSE)
 					.build();
 			repository.save(newUser);
-			logger.info(String.format("User with email address %s created successfully.", request.getEmailAddress()));
+			LOGGER.info(String.format("User with email address %s created successfully.", request.getEmailAddress()));
 			futureUser.complete(Optional.of(newUser));
 		} catch(Throwable ex) {
 			String errorMessage = String.format("Failed to create user with email address %s: %s", request.getEmailAddress(), ex.getMessage()); 
-			logger.error(errorMessage);
+			LOGGER.error(errorMessage);
 			return new FailedCompletableFutureBuilder<Optional<User>>().build(new ApplicationRuntimeException(errorMessage));
 		}
 		return futureUser;
 	}
 
 	private CompletableFuture<Boolean> hasUserWithSameEmail(String emailAddress) {
-		logger.info(String.format("Checking if user with email address %s already exists ...", emailAddress));
+		LOGGER.info(String.format("Checking if user with email address %s already exists ...", emailAddress));
 		CompletableFuture<Boolean> futureBoolean = new CompletableFuture<>();
 		try {
 			CompletableFuture<Optional<User>> futureUser = repository.findOne(new FindByEmailAddressSpec(emailAddress));
 			Optional<User> optionalUser = futureUser.get();
 			futureBoolean.complete(optionalUser.isPresent());
-			logger.info(String.format("User with email address %s found ? %s.", emailAddress, optionalUser.isPresent()));
+			LOGGER.info(String.format("User with email address %s found ? %s.", emailAddress, optionalUser.isPresent()));
 		} catch(Throwable ex) {
 			String errorMessage = String.format("Failed to get user with email address %s: %s", emailAddress, ex.getMessage()); 
-			logger.error(errorMessage);
+			LOGGER.error(errorMessage);
 			return new FailedCompletableFutureBuilder<Boolean>()
 					.build(new ApplicationRuntimeException(errorMessage));
 		}	

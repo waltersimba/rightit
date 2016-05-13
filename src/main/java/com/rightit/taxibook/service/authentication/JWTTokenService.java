@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.rightit.taxibook.domain.User;
-import com.rightit.taxibook.security.UserInfo;
+import com.rightit.taxibook.security.JWTPrincipal;
 import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 import com.rightit.taxibook.validation.exception.AuthenticationException;
 
@@ -36,8 +36,8 @@ public class JWTTokenService implements TokenAuthenticationService {
 		LOGGER.info("Generating token for user with email address {}...", user.getEmailAddress());
 		String generatedToken = null;
 		try {
-			final UserInfo userInfo = new UserInfo(user.getEmailAddress(), user.getId().toString(), user.getRole().toString());
-			generatedToken = createJWT(UUID.randomUUID().toString(), userInfo, TimeUnit.MINUTES.toMillis(TTL_IN_MINUTES));
+			final JWTPrincipal jwtPrincipal = new JWTPrincipal(user.getEmailAddress(), user.getId().toString(), user.getRole().toString());
+			generatedToken = createJWT(UUID.randomUUID().toString(), jwtPrincipal, TimeUnit.MINUTES.toMillis(TTL_IN_MINUTES));
 			LOGGER.info("Token generated for user with email address {}", user.getEmailAddress());
 		} catch(Exception ex) {
 			LOGGER.error("Failed to generate token for user with email address {}: {}", user.getEmailAddress(), ex.getMessage());
@@ -49,9 +49,9 @@ public class JWTTokenService implements TokenAuthenticationService {
 	}
 
 	@Override
-	public UserInfo authenticateToken(String token) {
+	public JWTPrincipal authenticateToken(String token) {
 		LOGGER.info("Authenticating token: {}", token);
-		UserInfo userInfo = null;
+		JWTPrincipal jwtPrincipal = null;
 		try {
 			Claims claims = Jwts.parser()
 					.setSigningKey(DatatypeConverter.parseBase64Binary(getApplicationSecret()))
@@ -59,7 +59,7 @@ public class JWTTokenService implements TokenAuthenticationService {
 			String subject = claims.getSubject();
 			String userId = (String) claims.get(USER_ID_ATTRIBUTE);
 			String role = (String) claims.get(ROLE_ATTRIBUTE);
-			userInfo = new UserInfo(userId, subject, role);
+			jwtPrincipal = new JWTPrincipal(userId, subject, role);
 			LOGGER.info("Token authenticated for subject: {}", subject);
 		} catch(ExpiredJwtException ex) {
 			LOGGER.error("Failed to authenticate token due to expiry: {}", ex.getMessage());
@@ -68,10 +68,10 @@ public class JWTTokenService implements TokenAuthenticationService {
 			LOGGER.error("Failed to verify token: {}", ex.getMessage());
 			throw new AuthenticationException("Failed to verify token: " + ex.getMessage());
 		}	
-		return userInfo;
+		return jwtPrincipal;
 	}
 
-	private String createJWT(String id, UserInfo userInfo, long ttlInMillis) {
+	private String createJWT(String id, JWTPrincipal jwtPrincipal, long ttlInMillis) {
 		// The JWT signature algorithm we will be using to sign the token
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -86,9 +86,9 @@ public class JWTTokenService implements TokenAuthenticationService {
 				.setId(id)
 				.setIssuedAt(now)
 				.setNotBefore(now)
-				.setSubject(userInfo.getUsername())
-				.claim(USER_ID_ATTRIBUTE, userInfo.getUserId())
-				.claim(ROLE_ATTRIBUTE, userInfo.getRole())
+				.setSubject(jwtPrincipal.getUsername())
+				.claim(USER_ID_ATTRIBUTE, jwtPrincipal.getUserId())
+				.claim(ROLE_ATTRIBUTE, jwtPrincipal.getRole())
 				.setIssuer(ISSUER)
 				.signWith(signatureAlgorithm, signingKey);
 
