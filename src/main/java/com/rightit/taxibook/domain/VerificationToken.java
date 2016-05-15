@@ -6,8 +6,6 @@ import org.joda.time.DateTime;
 
 public class VerificationToken extends DomainObject {
 
-	private static final int DEFAULT_EXPIRY_TIME_IN_MINS = 60 * 24; //24 hours
-	
 	private String token;
 	
 	private String userId;
@@ -19,19 +17,15 @@ public class VerificationToken extends DomainObject {
 	private boolean verified;
 	
 	public VerificationToken() {
-		this(null, null);
+		this(null, null, null);
 	}
-	
-	public VerificationToken(String userId, VerificationTokenType tokenType) {
-		this(userId, tokenType, DEFAULT_EXPIRY_TIME_IN_MINS);
-	}
-	
-	public VerificationToken(String userId, VerificationTokenType tokenType, int expiraryTimeInMinutes) {
+		
+	public VerificationToken(String userId, VerificationTokenType tokenType, DateTime expires) {
 		super("token");
 		this.userId = userId;
 		this.tokenType = tokenType;
 		this.token = UUID.randomUUID().toString();
-		this.expires = calculateExpiryDate(expiraryTimeInMinutes);
+		this.expires = expires;
 	}
 	
 	public String getToken() {
@@ -74,27 +68,12 @@ public class VerificationToken extends DomainObject {
 		this.verified = verified;
 	}
 
-	public static int getDefaultExpiryTimeInMins() {
-		return DEFAULT_EXPIRY_TIME_IN_MINS;
-	}
-
 	public boolean hasExpired() {
 		return expires.isBeforeNow();
 	}
-	
-	private DateTime calculateExpiryDate(int expiraryTimeInMinutes) {
-		return new DateTime().plusMinutes(expiraryTimeInMinutes);
-	}
 		
-	@Override
-	public String toString() {
-		return "VerificationToken [token=" + token + ", userId=" + userId + ", expires=" + expires + ", tokenType="
-				+ tokenType + ", verified=" + verified + "]";
-	}
-
-
-
 	public enum VerificationTokenType {
+		REFRESH_TOKEN,
 		RESET_PASSWORD,
 		EMAIL_VERIFICATION
 	}

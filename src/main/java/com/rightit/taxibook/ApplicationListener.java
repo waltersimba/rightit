@@ -28,8 +28,8 @@ public class ApplicationListener extends GuiceServletContextListener {
 				new ConfigurationModule(), 
 				new RepositoryModule(), 
 				new ServiceModule(),
-				new ResourceModule(),
-				new SecurityModule());
+				new ResourceModule()/*,
+				new SecurityModule()*/);
 	}
 
 	public ApplicationListener() {

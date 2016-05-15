@@ -7,6 +7,8 @@ import com.google.inject.AbstractModule;
 import com.rightit.taxibook.provider.TemplateMergerProvider;
 import com.rightit.taxibook.provider.ValidatorProvider;
 import com.rightit.taxibook.service.authentication.JWTTokenService;
+import com.rightit.taxibook.service.authentication.LoginService;
+import com.rightit.taxibook.service.authentication.LoginServiceImpl;
 import com.rightit.taxibook.service.authentication.TokenAuthenticationService;
 import com.rightit.taxibook.service.mail.EmailService;
 import com.rightit.taxibook.service.mail.EmailServiceImpl;
@@ -14,6 +16,8 @@ import com.rightit.taxibook.service.password.DefaultPasswordHashService;
 import com.rightit.taxibook.service.password.PasswordHashService;
 import com.rightit.taxibook.service.user.UserService;
 import com.rightit.taxibook.service.user.UserServiceImpl;
+import com.rightit.taxibook.service.verify.TokenGenerator;
+import com.rightit.taxibook.service.verify.TokenGeneratorImpl;
 import com.rightit.taxibook.service.verify.VerificationTokenService;
 import com.rightit.taxibook.service.verify.VerificationTokenServiceImpl;
 import com.rightit.taxibook.template.TemplateMerger;
@@ -27,6 +31,8 @@ public class ServiceModule extends AbstractModule {
 		bind(PasswordHashService.class).to(DefaultPasswordHashService.class);
 		bind(EmailService.class).to(EmailServiceImpl.class);
 		bind(TokenAuthenticationService.class).to(JWTTokenService.class);
+		bind(LoginService.class).to(LoginServiceImpl.class);
+		bind(TokenGenerator.class).to(TokenGeneratorImpl.class);
 		
 		bind(TemplateMerger.class).toProvider(TemplateMergerProvider.class).in(Singleton.class);
 		bind(Validator.class).toProvider(ValidatorProvider.class).asEagerSingleton();

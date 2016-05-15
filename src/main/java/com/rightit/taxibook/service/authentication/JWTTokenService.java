@@ -3,6 +3,7 @@ package com.rightit.taxibook.service.authentication;
 import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.rightit.taxibook.domain.User;
 import com.rightit.taxibook.security.JWTPrincipal;
+import com.rightit.taxibook.util.FailedCompletableFutureBuilder;
 import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 import com.rightit.taxibook.validation.exception.AuthenticationException;
 
@@ -32,25 +34,25 @@ public class JWTTokenService implements TokenAuthenticationService {
 	private static final Long TTL_IN_MINUTES = 15L;
 
 	@Override
-	public String generateToken(User user) {
-		LOGGER.info("Generating token for user with email address {}...", user.getEmailAddress());
-		String generatedToken = null;
+	public CompletableFuture<String> generateToken(User user) {
+		LOGGER.info("Generating JWT token for user with email address {}...", user.getEmailAddress());
+		final CompletableFuture<String> future = new CompletableFuture<>();
 		try {
 			final JWTPrincipal jwtPrincipal = new JWTPrincipal(user.getEmailAddress(), user.getId().toString(), user.getRole().toString());
-			generatedToken = createJWT(UUID.randomUUID().toString(), jwtPrincipal, TimeUnit.MINUTES.toMillis(TTL_IN_MINUTES));
+			String generatedToken = createJWT(UUID.randomUUID().toString(), jwtPrincipal, TimeUnit.MINUTES.toMillis(TTL_IN_MINUTES));
+			future.complete(generatedToken);
 			LOGGER.info("Token generated for user with email address {}", user.getEmailAddress());
 		} catch(Exception ex) {
-			LOGGER.error("Failed to generate token for user with email address {}: {}", user.getEmailAddress(), ex.getMessage());
-			throw new ApplicationRuntimeException(String.format("Failed to generate token for %s: %s",
-					user.getEmailAddress(), 
-					ex.getMessage()));
+			String errorMessage = String.format("Failed to generate token for %s: %s", user.getEmailAddress(), ex.getMessage());
+			LOGGER.error(errorMessage);
+			return new FailedCompletableFutureBuilder<String>().build(new ApplicationRuntimeException(errorMessage));
 		}
-		return generatedToken;		
+		return future;		
 	}
 
 	@Override
 	public JWTPrincipal authenticateToken(String token) {
-		LOGGER.info("Authenticating token: {}", token);
+		LOGGER.info("Authenticating JWT token: {}", token);
 		JWTPrincipal jwtPrincipal = null;
 		try {
 			Claims claims = Jwts.parser()
@@ -63,7 +65,7 @@ public class JWTTokenService implements TokenAuthenticationService {
 			LOGGER.info("Token authenticated for subject: {}", subject);
 		} catch(ExpiredJwtException ex) {
 			LOGGER.error("Failed to authenticate token due to expiry: {}", ex.getMessage());
-			throw new AuthenticationException("Token has expired: " + ex.getMessage());
+			throw new AuthenticationException("The access token provided has expired: " + ex.getMessage());
 		} catch(RuntimeException ex) {
 			LOGGER.error("Failed to verify token: {}", ex.getMessage());
 			throw new AuthenticationException("Failed to verify token: " + ex.getMessage());

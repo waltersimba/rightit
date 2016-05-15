@@ -19,12 +19,8 @@ import com.rightit.taxibook.service.user.UserService;
 @Path("users")
 public class UserResource {
 
-	private UserService userService;
-	
 	@Inject
-	public UserResource(UserService userService) {
-		this.userService = userService;
-	}
+	private UserService userService;
 	
 	@POST
 	@Produces({MediaType.APPLICATION_JSON})

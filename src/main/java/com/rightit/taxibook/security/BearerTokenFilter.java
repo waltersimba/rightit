@@ -22,6 +22,8 @@ import com.sun.jersey.spi.container.ResourceFilter;
 @Priority(Priorities.AUTHENTICATION)
 public class BearerTokenFilter implements ResourceFilter, ContainerRequestFilter {
 
+	private static final String BEARER_PREFIX = "Bearer ";
+	
 	@Inject
 	private TokenAuthenticationService tokenAuthenticationService;
 
@@ -44,11 +46,11 @@ public class BearerTokenFilter implements ResourceFilter, ContainerRequestFilter
 
 	private JWTPrincipal authenticate(final ContainerRequest request) {
 		final String authHeader = request.getHeaderValue(ContainerRequest.AUTHORIZATION);
-		if (authHeader == null || !authHeader.startsWith("Bearer ")) { 
+		if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) { 
             throw new ApplicationRuntimeException("Missing or invalid Authorization header."); 
         } 
 		try {
-			final String token = authHeader.substring("Bearer ".length()); 
+			final String token = authHeader.substring(BEARER_PREFIX.length()); 
 			return tokenAuthenticationService.authenticateToken(token);
 		} catch(Exception ex) {
 			//authentication failed
