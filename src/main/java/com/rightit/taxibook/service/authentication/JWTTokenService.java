@@ -58,11 +58,8 @@ public class JWTTokenService implements TokenAuthenticationService {
 			Claims claims = Jwts.parser()
 					.setSigningKey(DatatypeConverter.parseBase64Binary(getApplicationSecret()))
 					.parseClaimsJws(token).getBody();
-			String subject = claims.getSubject();
-			String userId = (String) claims.get(USER_ID_ATTRIBUTE);
-			String role = (String) claims.get(ROLE_ATTRIBUTE);
-			jwtPrincipal = new JWTPrincipal(userId, subject, role);
-			LOGGER.info("Token authenticated for subject: {}", subject);
+			jwtPrincipal = buildPrincipal(claims);
+			LOGGER.info("Token authenticated for : {}", jwtPrincipal.getUsername());
 		} catch(ExpiredJwtException ex) {
 			LOGGER.error("Failed to authenticate token due to expiry: {}", ex.getMessage());
 			throw new AuthenticationException("The access token provided has expired: " + ex.getMessage());
@@ -71,6 +68,13 @@ public class JWTTokenService implements TokenAuthenticationService {
 			throw new AuthenticationException("Failed to verify token: " + ex.getMessage());
 		}	
 		return jwtPrincipal;
+	}
+	
+	private JWTPrincipal buildPrincipal(Claims claims) {
+		String subject = claims.getSubject();
+		String userId = (String) claims.get(USER_ID_ATTRIBUTE);
+		String role = (String) claims.get(ROLE_ATTRIBUTE);
+		return new JWTPrincipal(userId, subject, role);
 	}
 
 	private String createJWT(String id, JWTPrincipal jwtPrincipal, long ttlInMillis) {

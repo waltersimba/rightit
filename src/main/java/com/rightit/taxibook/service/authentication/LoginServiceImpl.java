@@ -52,14 +52,14 @@ public class LoginServiceImpl extends AbstractService implements LoginService {
 		validate(request);
 		
 		final String hashedPassword = passwordHashService.hashPassword(request.getPassword());
-		return fetchUserByLoginCredetials(request.getUsername(), hashedPassword).thenCompose(user -> {
+		return fetchUserByLoginCredentials(request.getUsername(), hashedPassword).thenCompose(user -> {
 			return jwtTokenService.generateToken(user).thenCombine(createRefreshToken(user), (accessToken, refreshToken) -> {
 				return new AuthenticationToken(accessToken, refreshToken);
 			}); 
 		});
 	}
 	
-	private CompletableFuture<User> fetchUserByLoginCredetials(String username, String password) {
+	private CompletableFuture<User> fetchUserByLoginCredentials(String username, String password) {
 		LOGGER.info("Checking login credentials for user: {}...", username);
 		final CompletableFuture<Optional<User>> futureOptionalUser = userRepository.findOne(
 				new FindByEmailAddressAndPasswordSpec(username, password));

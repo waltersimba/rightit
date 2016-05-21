@@ -2,8 +2,6 @@ package com.rightit.taxibook.security;
 
 import java.security.Principal;
 
-import com.rightit.taxibook.domain.User.Role;
-
 public class BearerSecurityContext implements javax.ws.rs.core.SecurityContext {
 
 	private final JWTPrincipal principal;
@@ -29,12 +27,6 @@ public class BearerSecurityContext implements javax.ws.rs.core.SecurityContext {
 
 	@Override
 	public boolean isUserInRole(String roleString) {
-		try {
-			Role role = Role.fromString(roleString);
-			return principal.getRole().equals(role);
-		} catch (Exception ex) {
-			// ignore
-		}
-		return false;
+		return roleString != null && roleString.equals(principal.getRole());
 	}
 }
