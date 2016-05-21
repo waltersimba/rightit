@@ -14,7 +14,6 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.rightit.taxibook.module.ConfigurationModule;
 import com.rightit.taxibook.module.RepositoryModule;
 import com.rightit.taxibook.module.ResourceModule;
-import com.rightit.taxibook.module.SecurityModule;
 import com.rightit.taxibook.module.ServiceModule;
 
 public class ApplicationListener extends GuiceServletContextListener {
@@ -28,8 +27,7 @@ public class ApplicationListener extends GuiceServletContextListener {
 				new ConfigurationModule(), 
 				new RepositoryModule(), 
 				new ServiceModule(),
-				new ResourceModule()/*,
-				new SecurityModule()*/);
+				new ResourceModule());
 	}
 
 	public ApplicationListener() {
