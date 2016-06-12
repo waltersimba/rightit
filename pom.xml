@@ -55,6 +55,7 @@
 		<guava.version>19.0</guava.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<jjwt.version>0.6.0</jjwt.version>
+		<shiro.version>1.2.5</shiro.version>
 	</properties>
 
 	<organization>
@@ -168,6 +169,21 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${jjwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-guice</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+			<version>${shiro.version}</version>
 		</dependency>
 	</dependencies>
 

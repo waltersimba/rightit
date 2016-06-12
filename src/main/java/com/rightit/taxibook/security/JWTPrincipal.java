@@ -1,6 +1,9 @@
 package com.rightit.taxibook.security;
 
 import java.security.Principal;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 public class JWTPrincipal implements Principal {
 
@@ -33,6 +36,10 @@ public class JWTPrincipal implements Principal {
 	@Override
 	public String getName() {
 		return getUsername();
+	}
+
+	public Set<String> getRoles() {
+		return ImmutableSet.of(getRole());
 	}
 	
 }

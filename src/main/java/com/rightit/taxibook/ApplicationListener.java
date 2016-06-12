@@ -2,6 +2,7 @@ package com.rightit.taxibook;
 
 import static com.google.common.base.Suppliers.memoize;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import org.slf4j.Logger;
@@ -15,19 +16,23 @@ import com.rightit.taxibook.module.ConfigurationModule;
 import com.rightit.taxibook.module.RepositoryModule;
 import com.rightit.taxibook.module.ResourceModule;
 import com.rightit.taxibook.module.ServiceModule;
+import com.rightit.taxibook.module.ShiroSecurityModule;
 
 public class ApplicationListener extends GuiceServletContextListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationListener.class);
 	
+	private volatile ServletContext servletContext;
+	
 	private final Supplier<Injector> injectorSupplier;
 
-	private static Injector createInjector() {
+	private static Injector createInjector(ServletContext servletContext) {
 		return Guice.createInjector(
 				new ConfigurationModule(), 
 				new RepositoryModule(), 
 				new ServiceModule(),
-				new ResourceModule());
+				new ResourceModule(),
+				new ShiroSecurityModule(servletContext));
 	}
 
 	public ApplicationListener() {
@@ -35,7 +40,7 @@ public class ApplicationListener extends GuiceServletContextListener {
 
 			@Override
 			public Injector get() {
-				return createInjector();
+				return createInjector(servletContext);
 			}
 
 		});
@@ -48,13 +53,14 @@ public class ApplicationListener extends GuiceServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		LOGGER.info("initialize");
+		LOGGER.debug("Initialised");
+		servletContext = servletContextEvent.getServletContext();
 		super.contextInitialized(servletContextEvent);
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		LOGGER.info("destroy");
+		LOGGER.debug("Destroyed");
 		super.contextDestroyed(servletContextEvent);
 	}
 
