@@ -1,5 +1,6 @@
 package com.rightit.taxibook.security.shiro;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -19,8 +20,10 @@ import com.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
 
 	private static final String AUTH_SCHEME = "Bearer ";
-	//TODO: Inject constant
-	private static final String APPLICATION_NAME = "taxibook";
+		
+	@Inject
+	@Named("applicationName")
+	private String applicationName;
 	
 	@Inject
 	private TokenAuthenticationService tokenAuthenticationService;
@@ -49,7 +52,7 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
 	
 	@Override
 	public String getApplicationName() {
-		return APPLICATION_NAME;
+		return applicationName;
 	}
 
 }
