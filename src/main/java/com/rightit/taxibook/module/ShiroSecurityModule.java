@@ -24,6 +24,7 @@ public class ShiroSecurityModule extends ShiroWebModule {
 		addFilterChain("/api/users/**", NO_SESSION_CREATION, ANON);
 		addFilterChain("/api/lang/**", NO_SESSION_CREATION, ANON);
 		addFilterChain("/api/session/**", NO_SESSION_CREATION, ANON);
+		addFilterChain("/api/logout", LOGOUT);
 		addFilterChain("/api/**",NO_SESSION_CREATION, JWT_TOKEN_FILTER);
 	}
 
