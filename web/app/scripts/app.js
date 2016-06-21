@@ -8,27 +8,20 @@
  *
  * Main module of the application.
  */
-angular
-  .module('taxibookApp', [
-    'ngCookies',
-    'ngResource',
-    'ngRoute',
-    'ngSanitize',
-    'pascalprecht.translate'
-  ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
-  });
+angular.module('taxibookApp', ['ngRoute']).config(function ($routeProvider) {
+  $routeProvider
+    .when('/', {
+      templateUrl: 'views/main.html',
+      controller: 'MainCtrl',
+      controllerAs: 'main'
+    })
+    .when('/signin', {
+      templateUrl: 'views/login.html',
+      controller: 'LoginCtrl',
+      controllerAs: 'login'
+    })
+    .otherwise({
+      redirectTo: '/'
+    });
+});
+;
