@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Verify Your Email</title>
+  </head>
+	<body>
+		Hi ${firstName},
+		
+		<p>		
+		
+		Welcome to your Taxibook Account. Your username is your e-mail address.
+		
+		<p>		
+		
+		Click the link below to verify your e-mail address. E-mail validation is required to keep your account secured.
+		
+		<p>
+		
+		<a href="${verificationUrl}">Verify E-mail Address</a>
+		
+		<p>
+		
+		The link will expire in ${daysBeforeExpiry} days. 
+		If the link has expired, you can <a href="${generateEmailTokenUrl}"> request that a new verification e-mail be sent to you</a>.
+		
+		<p>
+		
+		This e-mail was sent to you because an account was created using your e-mail address. 
+		If you did not create this account, <a href="mailto:${helpEmailAddress}" target="_top">submit a help request to us</a>.
+		
+		<p>
+		
+		Thank you,<p>
+		The Taxibook Team
+	</body>	
+</html>
