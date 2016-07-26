@@ -1,4 +1,4 @@
-package co.za.rightit.taxibook.domain;
+package co.za.rightit.commons.domain;
 
 import org.joda.time.DateTime;
 

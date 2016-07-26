@@ -1,5 +1,7 @@
 package co.za.rightit.taxibook.domain;
 
+import co.za.rightit.commons.domain.DomainObject;
+
 public class User extends DomainObject {
 	
 	private String firstName;

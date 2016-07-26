@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import org.joda.time.DateTime;
 
+import co.za.rightit.commons.domain.DomainObject;
+
 public class VerificationToken extends DomainObject {
 
 	private String token;
