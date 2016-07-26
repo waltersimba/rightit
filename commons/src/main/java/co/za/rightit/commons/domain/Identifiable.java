@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Identifiable {
 
-	private ObjectId id;
+	protected ObjectId id;
 
 	public Identifiable() {}
 	

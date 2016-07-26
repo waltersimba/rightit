@@ -4,11 +4,11 @@ import org.joda.time.DateTime;
 
 public class DomainObject extends Identifiable {
 	
-	private String type;
+	protected String type;
 	
-	private DateTime created;
+	protected DateTime created;
 
-	private DateTime modified;
+	protected DateTime modified;
 	
 	public DomainObject() {
 		super();
