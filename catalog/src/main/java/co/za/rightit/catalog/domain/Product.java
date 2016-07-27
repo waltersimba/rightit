@@ -10,7 +10,7 @@ import co.za.rightit.commons.domain.DomainObject;
 
 public class Product extends DomainObject implements Comparable<Product> {
 
-	private String name;
+	private String title;
 	
 	private String description;
 	
@@ -19,13 +19,15 @@ public class Product extends DomainObject implements Comparable<Product> {
 	private Set<String> tags = new TreeSet<>();
 	
 	private BigDecimal price;
+	
+	private int inventory;
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getDescription() {
@@ -59,11 +61,23 @@ public class Product extends DomainObject implements Comparable<Product> {
 	public void setTags(Set<String> tags) {
 		this.tags = tags;
 	}
+	
+	public int getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(int inventory) {
+		this.inventory = inventory;
+	}
+	
+	public boolean isOutOfStock() {
+		return inventory == 0;
+	}
 
 	@Override
 	public int compareTo(Product o) {
-		if(this.name == null) return o.name == null ? 0 : -1;
-		return this.name.compareTo(o.name);
+		if(this.title == null) return o.title == null ? 0 : -1;
+		return this.title.compareTo(o.title);
 	}
 
 	@Override

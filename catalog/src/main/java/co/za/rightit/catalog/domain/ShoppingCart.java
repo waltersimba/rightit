@@ -21,14 +21,22 @@ public class ShoppingCart {
 		return totalPrice;
 	}
 	
-	public void addItem(Product product, int quantity) {
+	
+	public void addOrUpdateItem(Product product, int quantity) {
 		ShoppingCartItem item = items.get(product);
 		if(item == null) {
 			items.put(product, new ShoppingCartItem(product, quantity));
 		}
 		else {
 			item.incrementQuantity(quantity);
+			if(item.quantity <= 0) {
+				items.remove(product);
+			}
 		}
+	}
+	
+	public void clearItems() {
+		items.clear();
 	}
 	
 	public static class ShoppingCartItem implements Comparable<ShoppingCartItem> {
