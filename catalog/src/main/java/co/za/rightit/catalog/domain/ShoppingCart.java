@@ -5,9 +5,17 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ShoppingCart {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCart.class);
 	private Map<Product, ShoppingCartItem> items = new TreeMap<>();
+	
+	public ShoppingCartItemSummary getSummary() {
+		return new ShoppingCartItemSummary(getItems(), getTotalPrice());
+	}
 	
 	public Collection<ShoppingCartItem> getItems() {
 		return items.values();
@@ -39,6 +47,31 @@ public class ShoppingCart {
 		items.clear();
 	}
 	
+	public static class ShoppingCartItemSummary {
+		
+		private final Collection<ShoppingCartItem> items;
+		private final BigDecimal totalPrice;
+		
+		public ShoppingCartItemSummary(Collection<ShoppingCartItem> items, BigDecimal totalPrice) {
+			this.items = items;
+			this.totalPrice = totalPrice;
+		}
+
+		public Collection<ShoppingCartItem> getItems() {
+			return items;
+		}
+
+		public BigDecimal getTotalPrice() {
+			return totalPrice;
+		}
+
+		@Override
+		public String toString() {
+			return "ShoppingCartItemSummary [items=" + items + ", totalPrice=" + totalPrice + "]";
+		}
+		
+	}
+	
 	public static class ShoppingCartItem implements Comparable<ShoppingCartItem> {
 
 		private final Product product;
@@ -51,6 +84,14 @@ public class ShoppingCart {
 		
 		public void incrementQuantity(int quantity) {
 			this.quantity += quantity;			
+		}
+		
+		public int getQuantity() {
+			return quantity;
+		}
+
+		public Product getProduct() {
+			return product;
 		}
 
 		public BigDecimal getTotalPrice() {
@@ -78,7 +119,12 @@ public class ShoppingCart {
 			ShoppingCartItem that = (ShoppingCartItem)obj;
 			if(!product.equals(that))return false; 
 			return true;
-		}		
-		
+		}
+
+		@Override
+		public String toString() {
+			return "ShoppingCartItem [product=" + product + ", quantity=" + quantity + "]";
+		}
+				
 	}
 }

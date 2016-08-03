@@ -3,7 +3,6 @@ package co.za.rightit.catalog.resources;
 import java.util.Optional;
 
 import javax.inject.Inject;
-import javax.print.attribute.standard.OrientationRequested;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -18,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.domain.ShoppingCart;
+import co.za.rightit.catalog.domain.ShoppingCart.ShoppingCartItemSummary;
 import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.catalog.repository.ShoppingCartRepository;
 
@@ -43,7 +43,8 @@ public class ShoppingCartResource {
 		}
 		ShoppingCart shoppingCart = shoppingCartRepository.getCurrentShoppingCart(request);
 		shoppingCart.addOrUpdateItem(optionalProduct.get(), quantity);
-		return Response.ok(shoppingCart.getTotalPrice()).build();
+		ShoppingCartItemSummary summary = shoppingCart.getSummary();
+		return Response.ok(summary).build();
 	}
 	
 	@GET
@@ -58,7 +59,8 @@ public class ShoppingCartResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response clearItems(@Context HttpServletRequest request) {
 		shoppingCartRepository.resetCurrentShoppingCart(request);
-		return Response.ok().build();
+		ShoppingCart shoppingCart = shoppingCartRepository.getCurrentShoppingCart(request);
+		return Response.ok(shoppingCart.getSummary()).build();
 	}
 
 	@POST
