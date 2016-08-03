@@ -3,6 +3,7 @@ package co.za.rightit.catalog.module;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
 import co.za.rightit.catalog.domain.Product;
+import co.za.rightit.catalog.provider.LocaleProvider;
 import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.catalog.repository.ShoppingCartRepository;
 import co.za.rightit.catalog.repository.ShoppingCartRepositoryImpl;
@@ -25,6 +27,7 @@ public class ShoppingModule extends AbstractModule {
 	protected void configure() {
 		bind(ShoppingCartRepository.class).to(ShoppingCartRepositoryImpl.class).asEagerSingleton();
 		bind(ShoppingCartService.class).to(ShoppingCartServiceImpl.class);
+		bind(Locale.class).toProvider(LocaleProvider.class);
 	}
 	
 	@Singleton
