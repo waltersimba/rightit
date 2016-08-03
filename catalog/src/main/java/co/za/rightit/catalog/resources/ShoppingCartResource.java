@@ -55,7 +55,7 @@ public class ShoppingCartResource {
 	@POST
 	@Path("clear")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response clearItems(@Context HttpServletRequest request) {
+	public Response clearItems() {
 		ShoppingCart shoppingCart = shoppingCartService.clearShoppingCart();
 		return Response.ok(shoppingCartService.getSummary(shoppingCart.getItems())).build();
 	}
