@@ -11,7 +11,7 @@ public interface ShoppingCartService {
 	
 	ShoppingCartItemSummary getSummary(Collection<ShoppingCartItem> items);
 	
-	Amount calculateTotalPrice (Collection<ShoppingCartItem> items);
+	Amount calculateTotalAmount (Collection<ShoppingCartItem> items);
 	
 	ShoppingCart getShoppingCart();
 	

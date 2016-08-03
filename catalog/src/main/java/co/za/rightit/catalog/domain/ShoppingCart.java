@@ -51,7 +51,6 @@ public class ShoppingCart {
 		public Amount getAmount() {
 			return amount;
 		}
-		
 	}
 	
 	public static class ShoppingCartItem implements Comparable<ShoppingCartItem> {
@@ -98,11 +97,5 @@ public class ShoppingCart {
 			if(!product.equals(that))return false; 
 			return true;
 		}
-
-		@Override
-		public String toString() {
-			return "ShoppingCartItem [product=" + product + ", quantity=" + quantity + "]";
-		}
-				
 	}
 }

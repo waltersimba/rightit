@@ -36,11 +36,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 	@Override
 	public ShoppingCartItemSummary getSummary(Collection<ShoppingCartItem> items) {
-		return new ShoppingCartItemSummary(items, calculateTotalPrice(items));
+		return new ShoppingCartItemSummary(items, calculateTotalAmount(items));
 	}
 
 	@Override
-	public Amount calculateTotalPrice(Collection<ShoppingCartItem> items) {
+	public Amount calculateTotalAmount(Collection<ShoppingCartItem> items) {
 		List<Money> monies = new ArrayList<>();
 		for (ShoppingCartItem item : items) {
 			Product product = Preconditions.checkNotNull(item.getProduct(), "Product cannot be null");
