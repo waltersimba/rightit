@@ -1,6 +1,5 @@
 package co.za.rightit.catalog.domain;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,24 +37,19 @@ public class ShoppingCart {
 	public static class ShoppingCartItemSummary {
 		
 		private final Collection<ShoppingCartItem> items;
-		private final BigDecimal totalPrice;
+		private final Amount amount;
 		
-		public ShoppingCartItemSummary(Collection<ShoppingCartItem> items, BigDecimal totalPrice) {
+		public ShoppingCartItemSummary(Collection<ShoppingCartItem> items, Amount amount) {
 			this.items = items;
-			this.totalPrice = totalPrice;
+			this.amount = amount;
 		}
 
 		public Collection<ShoppingCartItem> getItems() {
 			return items;
 		}
 
-		public BigDecimal getTotalPrice() {
-			return totalPrice;
-		}
-
-		@Override
-		public String toString() {
-			return "ShoppingCartItemSummary [items=" + items + ", totalPrice=" + totalPrice + "]";
+		public Amount getAmount() {
+			return amount;
 		}
 		
 	}
@@ -80,10 +74,6 @@ public class ShoppingCart {
 
 		public Product getProduct() {
 			return product;
-		}
-
-		public BigDecimal getTotalPrice() {
-			return BigDecimal.valueOf(quantity).multiply(product.getPrice());
 		}
 		
 		@Override

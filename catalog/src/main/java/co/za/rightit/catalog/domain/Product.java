@@ -1,7 +1,6 @@
 package co.za.rightit.catalog.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -21,7 +20,7 @@ public class Product implements Serializable, Comparable<Product> {
 	
 	private Set<String> tags = new TreeSet<>();
 	
-	private BigDecimal price;
+	private Amount amount;
 	
 	private int inventory;
 
@@ -57,12 +56,12 @@ public class Product implements Serializable, Comparable<Product> {
 		this.photoUrl = photoUrl;
 	}
 
-	public BigDecimal getPrice() {
-		return price;
+	public Amount getAmount() {
+		return amount;
 	}
 
-	public void setPrice(BigDecimal price) {
-		this.price = price;
+	public void setAmount(Amount amount) {
+		this.amount = amount;
 	}
 
 	public Set<String> getTags() {
@@ -134,20 +133,14 @@ public class Product implements Serializable, Comparable<Product> {
 		return this;
 	}
 	
-	public Product withPrice(BigDecimal price) {
-		setPrice(price);
+	public Product withAmount(Amount price) {
+		setAmount(price);
 		return this;
 	}
 	
 	public Product withInventory(int inventory) {
 		setInventory(inventory);
 		return this;
-	}
-
-	@Override
-	public String toString() {
-		return "Product [id=" + id + ", title=" + title + ", description=" + description + ", photoUrl=" + photoUrl
-				+ ", tags=" + tags + ", price=" + price + ", inventory=" + inventory + "]";
 	}
 	
 }
