@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bson.types.ObjectId;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -18,12 +16,15 @@ import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.catalog.repository.ShoppingCartRepository;
 import co.za.rightit.catalog.repository.ShoppingCartRepositoryImpl;
+import co.za.rightit.catalog.service.ShoppingCartService;
+import co.za.rightit.catalog.service.ShoppingCartServiceImpl;
 
-public class CatalogModule extends AbstractModule {
+public class ShoppingModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(ShoppingCartRepository.class).to(ShoppingCartRepositoryImpl.class).asEagerSingleton();		
+		bind(ShoppingCartRepository.class).to(ShoppingCartRepositoryImpl.class).asEagerSingleton();
+		bind(ShoppingCartService.class).to(ShoppingCartServiceImpl.class);
 	}
 	
 	@Singleton

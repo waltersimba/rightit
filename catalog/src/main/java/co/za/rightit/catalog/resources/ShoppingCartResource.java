@@ -17,9 +17,8 @@ import javax.ws.rs.core.Response;
 
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.domain.ShoppingCart;
-import co.za.rightit.catalog.domain.ShoppingCart.ShoppingCartItemSummary;
 import co.za.rightit.catalog.repository.ProductRepository;
-import co.za.rightit.catalog.repository.ShoppingCartRepository;
+import co.za.rightit.catalog.service.ShoppingCartService;
 
 @Path("/cart")
 public class ShoppingCartResource {
@@ -28,29 +27,28 @@ public class ShoppingCartResource {
 	private ProductRepository productRepository;
 	
 	@Inject
-	private ShoppingCartRepository shoppingCartRepository; 
+	private ShoppingCartService shoppingCartService; 
 	
 	@POST
 	@Path("{id}")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response addOrUpdateItem(@Context HttpServletRequest request,  @PathParam("id")String productId, @QueryParam("quantity") int quantity) {
+	public Response addOrUpdateItem(@PathParam("id")String productId, @QueryParam("quantity") int quantity) {
 		Optional<Product> optionalProduct = productRepository.get(productId);
 		if(!optionalProduct.isPresent()) {
 			throw new ProductNotFoundException(productId);
 		} else if(optionalProduct.get().isOutOfStock()) {
 			throw new ProductOutOfStockException(optionalProduct.get().getTitle());
 		}
-		ShoppingCart shoppingCart = shoppingCartRepository.getCurrentShoppingCart(request);
+		ShoppingCart shoppingCart = shoppingCartService.getShoppingCart();
 		shoppingCart.addOrUpdateItem(optionalProduct.get(), quantity);
-		ShoppingCartItemSummary summary = shoppingCart.getSummary();
-		return Response.ok(summary).build();
+		return Response.ok(shoppingCartService.getSummary(shoppingCart.getItems())).build();
 	}
 	
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response getItems(@Context HttpServletRequest request) {
-		ShoppingCart shoppingCart = shoppingCartRepository.getCurrentShoppingCart(request);
+	public Response getItems() {
+		ShoppingCart shoppingCart = shoppingCartService.getShoppingCart();
 		return Response.ok(shoppingCart.getItems()).build();
 	}
 	
@@ -58,19 +56,18 @@ public class ShoppingCartResource {
 	@Path("clear")
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response clearItems(@Context HttpServletRequest request) {
-		shoppingCartRepository.resetCurrentShoppingCart(request);
-		ShoppingCart shoppingCart = shoppingCartRepository.getCurrentShoppingCart(request);
-		return Response.ok(shoppingCart.getSummary()).build();
+		ShoppingCart shoppingCart = shoppingCartService.clearShoppingCart();
+		return Response.ok(shoppingCartService.getSummary(shoppingCart.getItems())).build();
 	}
 
 	@POST
 	@Path("checkout")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response checkout(@Context HttpServletRequest request) {
-		ShoppingCart shoppingCart = shoppingCartRepository.getCurrentShoppingCart(request);
+	public Response checkout() {
+		ShoppingCart shoppingCart = shoppingCartService.getShoppingCart();
 		//Get customer information
 		//Send customer an email with order confirmation
-		shoppingCartRepository.resetCurrentShoppingCart(request);
+		shoppingCartService.clearShoppingCart();
 		return Response.ok().build();
 	}
 	

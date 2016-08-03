@@ -13,23 +13,11 @@ public class ShoppingCart {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCart.class);
 	private Map<Product, ShoppingCartItem> items = new TreeMap<>();
 	
-	public ShoppingCartItemSummary getSummary() {
-		return new ShoppingCartItemSummary(getItems(), getTotalPrice());
-	}
 	
 	public Collection<ShoppingCartItem> getItems() {
 		return items.values();
 	}
-	
-	public BigDecimal getTotalPrice() {
-		BigDecimal totalPrice = BigDecimal.ZERO;
-		for(ShoppingCartItem item : getItems()) {
-			totalPrice = totalPrice.add(item.getTotalPrice());
-		}
-		return totalPrice;
-	}
-	
-	
+		
 	public void addOrUpdateItem(Product product, int quantity) {
 		ShoppingCartItem item = items.get(product);
 		if(item == null) {

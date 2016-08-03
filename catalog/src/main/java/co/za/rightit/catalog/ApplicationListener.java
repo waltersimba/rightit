@@ -13,7 +13,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 
-import co.za.rightit.catalog.module.CatalogModule;
+import co.za.rightit.catalog.module.ShoppingModule;
 import co.za.rightit.catalog.module.RestfulResourceModule;
 
 public class ApplicationListener extends GuiceServletContextListener {
@@ -27,7 +27,7 @@ public class ApplicationListener extends GuiceServletContextListener {
 	private static Injector createInjector(ServletContext servletContext) {
 		return Guice.createInjector(
 				new RestfulResourceModule(),
-				new CatalogModule());
+				new ShoppingModule());
 	}
 
 	public ApplicationListener() {
