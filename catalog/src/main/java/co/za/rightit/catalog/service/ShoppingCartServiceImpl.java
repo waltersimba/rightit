@@ -12,6 +12,7 @@ import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 
 import co.za.rightit.catalog.domain.Amount;
@@ -42,12 +43,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	public Amount calculateTotalPrice(Collection<ShoppingCartItem> items) {
 		List<Money> monies = new ArrayList<>();
 		for (ShoppingCartItem item : items) {
-			Product product = item.getProduct();
-			Amount amount = product.getAmount();
-			if (amount != null) {
-				Money money = Money.of(CurrencyUnit.of(amount.getCurrency()), amount.getTotal(), RoundingMode.HALF_EVEN);
-				monies.add(money.multipliedBy(item.getQuantity()));
-			}
+			Product product = Preconditions.checkNotNull(item.getProduct(), "Product cannot be null");
+			Amount amount = Preconditions.checkNotNull(product.getAmount(), String.format("Amount for product %s cannot be null.", product.getId()));
+			Money money = Money.of(CurrencyUnit.of(amount.getCurrency()), amount.getTotal(), RoundingMode.HALF_EVEN);
+			monies.add(money.multipliedBy(item.getQuantity()));
 		}
 		Money total = Money.total(monies);
 		return new Amount(total.getCurrencyUnit(), total.getAmount());
