@@ -104,7 +104,7 @@ public class ProductResource {
 			}
 		};
 		return Response.ok(imageStream)
-				.header("cache-control", "public, max-age=" + TimeUnit.SECONDS.convert(1, TimeUnit.DAYS)).build();
+				.header("cache-control", "public, max-age=" + TimeUnit.SECONDS.convert(30, TimeUnit.DAYS)).build();
 	}
 
 	private FileItem getFileItem(HttpServletRequest request) throws FileUploadException, IOException {
