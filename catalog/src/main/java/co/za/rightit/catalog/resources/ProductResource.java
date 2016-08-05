@@ -76,17 +76,15 @@ public class ProductResource {
 						fileStorageService.deleteFile(product.getPhotoId());
 					}
 				} finally {
-					FileInfo fileInfo = new FileInfo()
-							.withFilename(item.getName())
-							.withInputStream(item.getInputStream())
-							.withMetadata("product", product.getId());
-					String photoId = fileStorageService.storeFile(fileInfo);
+					String photoId = fileStorageService.storeFile(
+							new FileInfo().withFilename(item.getName()).withContentType(item.getContentType())
+									.withInputStream(item.getInputStream()).withMetadata("product", product.getId()));
 					LOGGER.info("[{}] Saved image for product {}", photoId, productId);
 					product.setPhotoId(photoId);
 					productRepository.update(product);
 				}
 			}
-		} catch (FileUploadException | IOException ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return Response.ok().build();
@@ -111,7 +109,7 @@ public class ProductResource {
 			}
 		};
 		return Response.ok(imageStream)
-				.header("cache-control", "public, max-age=" + TimeUnit.SECONDS.convert(365, TimeUnit.DAYS)).build();
+				.header("cache-control", "public, max-age=" + TimeUnit.SECONDS.convert(1, TimeUnit.DAYS)).build();
 	}
 
 	private FileItem getFileItem(HttpServletRequest request) throws FileUploadException, IOException {

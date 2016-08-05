@@ -74,7 +74,7 @@ public class ShoppingModule extends AbstractModule {
 							.withAmount(new Amount(CurrencyUnit.of(Locale.forLanguageTag("en-ZA")),
 									new BigDecimal(1119.00)))
 							.withTags("Men").withInventory(3)
-							.withPhotoId("57a4cd514c2e82170a896c6b");
+							.withPhotoId("57a4d0db4c2e82193e5d37d7");
 					products.put(product.getId(), product);
 				}
 				return new ArrayList<>(products.values());
