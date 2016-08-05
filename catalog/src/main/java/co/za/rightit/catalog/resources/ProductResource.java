@@ -91,19 +91,14 @@ public class ProductResource {
 	}
 
 	@GET
-	@Path("{id}/photo")
+	@Path("photo/{id}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
-	public Response downloadImage(@PathParam("id") String productId) {
+	public Response downloadImage(@PathParam("id") String photoId) {
 
 		StreamingOutput imageStream = new StreamingOutput() {
 
 			@Override
 			public void write(OutputStream outputStream) throws IOException, WebApplicationException {
-				Optional<Product> optionalProduct = productRepository.get(productId);
-				if (!optionalProduct.isPresent()) {
-					throw new ProductNotFoundException(productId);
-				}
-				String photoId = optionalProduct.get().getPhotoId();
 				fileStorageService.serveFile(photoId, outputStream);
 				outputStream.flush();
 			}
