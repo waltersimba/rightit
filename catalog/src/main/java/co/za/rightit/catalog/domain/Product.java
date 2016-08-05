@@ -1,8 +1,12 @@
 package co.za.rightit.catalog.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.ws.rs.core.Link;
 
 import com.google.common.base.Objects;
 
@@ -23,6 +27,8 @@ public class Product implements Serializable, Comparable<Product> {
 	private Amount amount;
 	
 	private int inventory;
+	
+	private List<Link> links = new ArrayList<>();
 
 	public String getId() {
 		return id;
@@ -79,7 +85,15 @@ public class Product implements Serializable, Comparable<Product> {
 	public void setInventory(int inventory) {
 		this.inventory = inventory;
 	}
-	
+		
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
+
 	public boolean isOutOfStock() {
 		return inventory == 0;
 	}

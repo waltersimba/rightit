@@ -2,6 +2,7 @@ package co.za.rightit.catalog.resources;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +16,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -43,15 +47,44 @@ public class ProductResource {
 
 	@Inject
 	private FileStorageService fileStorageService;
+	
+	@Context 
+	private UriInfo uriInfo;
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response products() {
 		try {
-			return Response.ok(productRepository.get()).build();
+			List<Product> products = productRepository.get();
+			String requestUri = uriInfo.getRequestUri().toString();
+			for(Product product : products) {
+				product.getLinks().add(Link.fromUri(URI.create(requestUri + "/" + product.getId())).rel("self").build());
+				product.getLinks().add(Link.fromUri(URI.create(requestUri + "/photo/" + product.getPhotoId())).rel("photo").build());
+			}
+			return Response.ok(products).build();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new WebApplicationException(ex);
+		}
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}")
+	public Response product(@PathParam("id") String productId) {
+		try {
+			Optional<Product> optionalProduct = productRepository.get(productId);
+			if(!optionalProduct.isPresent()) {
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			Product product = optionalProduct.get();
+			String requestUri = uriInfo.getRequestUri().toString();
+			product.getLinks().add(Link.fromUri(URI.create(requestUri + "/" + product.getId())).rel("self").build());
+			product.getLinks().add(Link.fromUri(URI.create(requestUri + "/photo/" + product.getPhotoId())).rel("photo").build());
+			return Response.ok(product).build();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return Response.serverError().build();
 		}
 	}
 

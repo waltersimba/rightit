@@ -8,11 +8,14 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
+import co.za.rightit.catalog.provider.ObjectMapperContextResolver;
+
 public class RestfulResourceModule extends ServletModule {
 
 	@Override
 	public void configureServlets() {
 		ResourceConfig rc = new PackagesResourceConfig("co.za.rightit.catalog.resources");
+		bind(ObjectMapperContextResolver.class).asEagerSingleton();
 		for (Class<?> resource : rc.getClasses()) {
 			bind(resource);
 		}
