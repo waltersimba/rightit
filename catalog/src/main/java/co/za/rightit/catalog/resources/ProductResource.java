@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
+import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.catalog.service.FileStorageService;
@@ -75,8 +76,11 @@ public class ProductResource {
 						fileStorageService.deleteFile(product.getPhotoId());
 					}
 				} finally {
-					String photoId = fileStorageService.storeFile(item.getName(), item.getInputStream(),
-							item.getContentType());
+					FileInfo fileInfo = new FileInfo()
+							.withFilename(item.getName())
+							.withInputStream(item.getInputStream())
+							.withMetadata("product", product.getId());
+					String photoId = fileStorageService.storeFile(fileInfo);
 					LOGGER.info("[{}] Saved image for product {}", photoId, productId);
 					product.setPhotoId(photoId);
 					productRepository.update(product);

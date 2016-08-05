@@ -1,7 +1,6 @@
 package co.za.rightit.catalog.service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.bson.Document;
@@ -11,15 +10,17 @@ import com.google.common.base.Preconditions;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 
+import co.za.rightit.catalog.domain.FileInfo;
+
 public abstract class MongoDBFileStorageService implements FileStorageService {
 
 	protected GridFSBucket gridFSBucket;
 	
 	@Override
-	public String storeFile(String filename, InputStream inputStream, String contentType) {
-		Preconditions.checkArgument(isContentTypeSupported(contentType), "Content type not supported: " + contentType);
-		GridFSUploadOptions options = new GridFSUploadOptions().chunkSizeBytes(1024).metadata(new Document("type", "media"));
-		ObjectId fileId = gridFSBucket.uploadFromStream(filename, inputStream, options);
+	public String storeFile(FileInfo fileInfo) {
+		Preconditions.checkArgument(isContentTypeSupported(fileInfo.getContentType()), "Content type not supported: " + fileInfo.getContentType());
+		GridFSUploadOptions options = new GridFSUploadOptions().chunkSizeBytes(1024).metadata(new Document(fileInfo.getMetadata()));
+		ObjectId fileId = gridFSBucket.uploadFromStream(fileInfo.getFilename(), fileInfo.getInputStream(), options);
 		return fileId.toHexString();
 	}
 

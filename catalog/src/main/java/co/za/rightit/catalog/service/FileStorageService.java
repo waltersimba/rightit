@@ -1,12 +1,13 @@
 package co.za.rightit.catalog.service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+
+import co.za.rightit.catalog.domain.FileInfo;
 
 public interface FileStorageService {
 
-	String storeFile(String filename, InputStream in, String contentType);
+	String storeFile(FileInfo fileInfo);
 	
 	void serveFile(String fileId, OutputStream outputStream) throws IOException;
 	
