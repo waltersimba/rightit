@@ -24,6 +24,8 @@ import co.za.rightit.catalog.provider.LocaleProvider;
 import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.catalog.repository.ShoppingCartRepository;
 import co.za.rightit.catalog.repository.ShoppingCartRepositoryImpl;
+import co.za.rightit.catalog.service.FileStorageService;
+import co.za.rightit.catalog.service.ImageStorageService;
 import co.za.rightit.catalog.service.ShoppingCartService;
 import co.za.rightit.catalog.service.ShoppingCartServiceImpl;
 
@@ -33,6 +35,7 @@ public class ShoppingModule extends AbstractModule {
 	protected void configure() {
 		bind(ShoppingCartRepository.class).to(ShoppingCartRepositoryImpl.class).asEagerSingleton();
 		bind(ShoppingCartService.class).to(ShoppingCartServiceImpl.class);
+		bind(FileStorageService.class).to(ImageStorageService.class).asEagerSingleton();;
 		bind(Locale.class).toProvider(LocaleProvider.class);
 		bind(new TypeLiteral<Optional<Currency>>() {
 		}).toProvider(CurrencyProvider.class);
@@ -70,7 +73,8 @@ public class ShoppingModule extends AbstractModule {
 							.withTitle("Gold & Green Aviator Sunglasses")
 							.withAmount(new Amount(CurrencyUnit.of(Locale.forLanguageTag("en-ZA")),
 									new BigDecimal(1119.00)))
-							.withTags("Men").withInventory(3);
+							.withTags("Men").withInventory(3)
+							.withPhotoId("57a4cd514c2e82170a896c6b");
 					products.put(product.getId(), product);
 				}
 				return new ArrayList<>(products.values());

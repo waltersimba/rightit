@@ -16,7 +16,7 @@ public class Product implements Serializable, Comparable<Product> {
 	
 	private String description;
 	
-	private String photoUrl;
+	private String photoId;
 	
 	private Set<String> tags = new TreeSet<>();
 	
@@ -48,12 +48,12 @@ public class Product implements Serializable, Comparable<Product> {
 		this.description = description;
 	}
 
-	public String getPhotoUrl() {
-		return photoUrl;
+	public String getPhotoId() {
+		return photoId;
 	}
 
-	public void setPhotoUrl(String photoUrl) {
-		this.photoUrl = photoUrl;
+	public void setPhotoId(String photoId) {
+		this.photoId = photoId;
 	}
 
 	public Amount getAmount() {
@@ -121,8 +121,8 @@ public class Product implements Serializable, Comparable<Product> {
 		return this;
 	}
 	
-	public Product withPhotoUrl(String photoUrl) {
-		setPhotoUrl(photoUrl);
+	public Product withPhotoId(String photoId) {
+		setPhotoId(photoId);
 		return this;
 	}
 	
