@@ -177,10 +177,11 @@ public class ProductResource {
 		@Override
 		public List<Link> apply(Product product) {
 			UriBuilder builder = uriInfo.getRequestUriBuilder();
-			links.add(Link.fromUri(URI.create(builder.path("/{id}").build(product.getId()).toString())).rel("self")
-					.build());
-			links.add(Link.fromUri(URI.create(builder.path("/photo/{id}").build(product.getPhotoId()).toString()))
-					.rel("photo").build());
+			links.add(Link.fromUri(URI.create(builder.clone().path("{id}").build(product.getId()).toString()))
+					.rel("self").build());
+			links.add(
+					Link.fromUri(URI.create(builder.clone().path("photo/{id}").build(product.getPhotoId()).toString()))
+							.rel("photo").build());
 			return links;
 		}
 	};
