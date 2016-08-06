@@ -14,6 +14,7 @@ import co.za.rightit.catalog.domain.FileInfo;
 
 public abstract class MongoDBFileStorageService implements FileStorageService {
 
+	public static final long MAX_IMAGE_SIZE = 16 * 1024L * 1024L; //16 MB
 	protected GridFSBucket gridFSBucket;
 	
 	@Override
@@ -38,6 +39,6 @@ public abstract class MongoDBFileStorageService implements FileStorageService {
 
 	@Override
 	public long getFileSizeMax() {
-		return 30000000; //50 MB
+		return MAX_IMAGE_SIZE;
 	}
 }

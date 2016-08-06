@@ -3,10 +3,12 @@ package co.za.rightit.catalog.resources;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -21,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.fileupload.FileItem;
@@ -47,8 +50,8 @@ public class ProductResource {
 
 	@Inject
 	private FileStorageService fileStorageService;
-	
-	@Context 
+
+	@Context
 	private UriInfo uriInfo;
 
 	@GET
@@ -56,31 +59,25 @@ public class ProductResource {
 	public Response products() {
 		try {
 			List<Product> products = productRepository.get();
-			String requestUri = uriInfo.getRequestUri().toString();
-			for(Product product : products) {
-				product.getLinks().add(Link.fromUri(URI.create(requestUri + "/" + product.getId())).rel("self").build());
-				product.getLinks().add(Link.fromUri(URI.create(requestUri + "/photo/" + product.getPhotoId())).rel("photo").build());
-			}
+			products.forEach((product) -> product.getLinks().addAll(new LinksFunction().apply(product)));
 			return Response.ok(products).build();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new WebApplicationException(ex);
 		}
 	}
-	
+
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
 	public Response product(@PathParam("id") String productId) {
 		try {
 			Optional<Product> optionalProduct = productRepository.get(productId);
-			if(!optionalProduct.isPresent()) {
+			if (!optionalProduct.isPresent()) {
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			Product product = optionalProduct.get();
-			String requestUri = uriInfo.getRequestUri().toString();
-			product.getLinks().add(Link.fromUri(URI.create(requestUri + "/" + product.getId())).rel("self").build());
-			product.getLinks().add(Link.fromUri(URI.create(requestUri + "/photo/" + product.getPhotoId())).rel("photo").build());
+			product.getLinks().addAll(new LinksFunction().apply(product));
 			return Response.ok(product).build();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -109,9 +106,7 @@ public class ProductResource {
 						fileStorageService.deleteFile(product.getPhotoId());
 					}
 				} finally {
-					String photoId = fileStorageService.storeFile(
-							new FileInfo().withFilename(item.getName()).withContentType(item.getContentType())
-									.withInputStream(item.getInputStream()).withMetadata("product", product.getId()));
+					String photoId = fileStorageService.storeFile(new FileInfoFunction(product).apply(item));
 					LOGGER.info("[{}] Saved image for product {}", photoId, productId);
 					product.setPhotoId(photoId);
 					productRepository.update(product);
@@ -154,4 +149,39 @@ public class ProductResource {
 		}
 		return null;
 	}
+
+	private class FileInfoFunction implements Function<FileItem, FileInfo> {
+
+		private final Product product;
+
+		public FileInfoFunction(Product product) {
+			this.product = product;
+		}
+
+		@Override
+		public FileInfo apply(FileItem item) {
+			try {
+				return new FileInfo().withFilename(item.getName()).withContentType(item.getContentType())
+						.withInputStream(item.getInputStream()).withMetadata("product", product.getId());
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+
+	}
+
+	private class LinksFunction implements Function<Product, List<Link>> {
+
+		private List<Link> links = new ArrayList<>();
+
+		@Override
+		public List<Link> apply(Product product) {
+			UriBuilder builder = uriInfo.getRequestUriBuilder();
+			links.add(Link.fromUri(URI.create(builder.path("/{id}").build(product.getId()).toString())).rel("self")
+					.build());
+			links.add(Link.fromUri(URI.create(builder.path("/photo/{id}").build(product.getPhotoId()).toString()))
+					.rel("photo").build());
+			return links;
+		}
+	};
 }
