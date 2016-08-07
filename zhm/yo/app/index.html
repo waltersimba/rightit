@@ -21,19 +21,8 @@
 <![endif]-->
 
 
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <div class="row">
-            <div class="collapse navbar-collapse" id="navbar-ex1-collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="#/products">Products</a></li>
-                    <li><a href="#/cart">Shopping Cart</a></li>
-                    <li><a href="#/checkout">Checkout</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
+<navbar></navbar>
+
 <div class="container">
     <div ng-view=""></div>
 </div>
@@ -55,6 +44,7 @@
 <script src="scripts/controllers/products.js"></script>
 <script src="scripts/controllers/cart.js"></script>
 <script src="scripts/controllers/checkout.js"></script>
+<script src="scripts/directives/navbar.js"></script>
 <!-- endbuild -->
 
 <script src="theme/js/select2.min.js"></script>

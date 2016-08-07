@@ -14,32 +14,22 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
-      })
       .when('/products', {
         templateUrl: 'views/products.html',
         controller: 'ProductsCtrl',
-        controllerAs: 'products'
+        controllerAs: 'vm'
       })
       .when('/cart', {
         templateUrl: 'views/cart.html',
         controller: 'CartCtrl',
-        controllerAs: 'cart'
+        controllerAs: 'vm'
       })
       .when('/checkout', {
         templateUrl: 'views/checkout.html',
         controller: 'CheckoutCtrl',
-        controllerAs: 'checkout'
+        controllerAs: 'vm'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/products'
       });
   });
