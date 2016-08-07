@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import co.za.rightit.commons.repository.AbstractMongoRepository;
 import co.za.rightit.taxibook.domain.User;
 
 public class UseRepository extends AbstractMongoRepository<User> {

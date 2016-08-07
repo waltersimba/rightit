@@ -62,7 +62,7 @@ public class ProductResource {
 			products.forEach((product) -> product.getLinks().addAll(new LinksFunction().apply(product)));
 			return Response.ok(products).build();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LOGGER.error("Failed to get products", ex);
 			throw new WebApplicationException(ex);
 		}
 	}
@@ -80,7 +80,7 @@ public class ProductResource {
 			product.getLinks().addAll(new LinksFunction().apply(product));
 			return Response.ok(product).build();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LOGGER.error("Failed to get product: " + productId, ex);
 			return Response.serverError().build();
 		}
 	}
@@ -96,7 +96,6 @@ public class ProductResource {
 		if (!optionalProduct.isPresent()) {
 			throw new ProductNotFoundException(productId);
 		}
-
 		try {
 			FileItem item = getFileItem(request);
 			if (item != null) {
@@ -113,7 +112,7 @@ public class ProductResource {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LOGGER.error("Failed to upload image for product: " + productId, ex);
 		}
 		return Response.ok().build();
 	}
@@ -122,7 +121,6 @@ public class ProductResource {
 	@Path("photo/{id}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response downloadImage(@PathParam("id") String photoId) {
-
 		StreamingOutput imageStream = new StreamingOutput() {
 
 			@Override

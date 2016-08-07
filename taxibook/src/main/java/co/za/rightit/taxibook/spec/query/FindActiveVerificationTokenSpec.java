@@ -5,6 +5,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 import org.bson.conversions.Bson;
 
+import co.za.rightit.commons.repository.spec.query.MongoQuerySpecification;
 import co.za.rightit.taxibook.domain.VerificationToken.VerificationTokenType;
 
 public class FindActiveVerificationTokenSpec implements MongoQuerySpecification {

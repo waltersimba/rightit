@@ -261,8 +261,7 @@ module.exports = function (grunt) {
         src: [
           '<%= yeoman.dist %>/scripts/{,*/}*.js',
           '<%= yeoman.dist %>/styles/{,*/}*.css',
-          '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-          '<%= yeoman.dist %>/styles/fonts/*'
+          '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
     },
@@ -425,6 +424,21 @@ module.exports = function (grunt) {
           cwd: '.',
           src: 'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*',
           dest: '<%= yeoman.dist %>'
+        },{
+          expand: true,
+          cwd: '<%= yeoman.app %>/styles/mimity',
+          dest: '.tmp/styles/mimity',
+          src: '**'
+        }, {
+          expand: true,
+          cwd: '<%= yeoman.app %>/styles/mimity/bootstrap/fonts',
+          dest: '<%= yeoman.dist %>/styles/fonts',
+          src: '**'
+        }, {
+          expand: true,
+          cwd: '<%= yeoman.app %>/styles/mimity/css/fonts',
+          dest: '<%= yeoman.dist %>/styles/fonts',
+          src: '**'
         }]
       },
       styles: {
@@ -456,13 +470,6 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
-    },
-    
-    open: {
-    	server: {
-    		 url: 'http://localhost:<%= connect.options.port %>',
-    		 app: 'Google Chrome'
-    	}
     }
   });
 
@@ -492,8 +499,7 @@ module.exports = function (grunt) {
     'wiredep',
     'concurrent:test',
     'postcss',
-    'connect:test',
-    'karma'
+    'connect:test'
   ]);
 
   grunt.registerTask('build', [

@@ -12,6 +12,8 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.commons.repository.spec.Specification;
+import co.za.rightit.commons.repository.spec.query.FindByIdSpec;
 import co.za.rightit.taxibook.domain.User;
 import co.za.rightit.taxibook.domain.VerificationToken;
 import co.za.rightit.taxibook.domain.VerificationToken.VerificationTokenType;
@@ -21,9 +23,7 @@ import co.za.rightit.taxibook.service.AbstractService;
 import co.za.rightit.taxibook.service.mail.EmailMessage;
 import co.za.rightit.taxibook.service.mail.EmailService;
 import co.za.rightit.taxibook.service.password.PasswordHashService;
-import co.za.rightit.taxibook.spec.Specification;
 import co.za.rightit.taxibook.spec.query.FindByEmailAddressSpec;
-import co.za.rightit.taxibook.spec.query.FindByIdSpec;
 import co.za.rightit.taxibook.spec.query.FindVerificationTokenSpec;
 import co.za.rightit.taxibook.spec.update.UpdateUserPasswordSpec;
 import co.za.rightit.taxibook.spec.update.UpdateVerificationStatusSpec;

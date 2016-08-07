@@ -10,10 +10,10 @@ import javax.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.commons.repository.Repository;
 import co.za.rightit.taxibook.domain.User;
 import co.za.rightit.taxibook.domain.User.Role;
 import co.za.rightit.taxibook.domain.User.UserBuilder;
-import co.za.rightit.taxibook.repository.Repository;
 import co.za.rightit.taxibook.service.AbstractService;
 import co.za.rightit.taxibook.service.password.PasswordHashService;
 import co.za.rightit.taxibook.spec.query.FindByEmailAddressSpec;

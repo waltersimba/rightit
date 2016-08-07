@@ -5,6 +5,8 @@ import static com.mongodb.client.model.Filters.eq;
 
 import org.bson.conversions.Bson;
 
+import co.za.rightit.commons.repository.spec.query.MongoQuerySpecification;
+
 public class FindByEmailAddressAndPasswordSpec implements MongoQuerySpecification {
 
 	private String emailAddress;

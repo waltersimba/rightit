@@ -1,0 +1,103 @@
+/*a:hover { color: #f44336 }*/
+.btn-sm {
+	color: #fff;
+	background: #f44336; /* Red 500 */
+}
+.btn-sm:hover {
+	color: #fff;
+	background: #d32f2f; /* Red 700 */
+}
+
+/* Select2 */
+.select2-container--default .select2-results__option[aria-selected=true] { background-color: #ffebee } /* Red 50 */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+	color: #fff;
+	background-color: #ef5350; /* Red 400 */
+}
+
+/* Dropdown */
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+    background-color: #ef5350;  /* Red 400 */
+}
+@media (min-width : 768px) {
+	.dropdown-menu > li > a:hover,
+	.dropdown-menu > li > a:focus { color: #fff !important }
+}
+
+
+/* Middle Header*/
+.search-btn { background: #f44336 url('../images/search.png') no-repeat center center } /* Red 500 */
+
+
+/* Navbar */
+.navbar .navbar-nav > .active > a,
+.navbar .navbar-nav > .active > a:focus,
+.navbar .navbar-nav > .active > a:hover {
+    color: #fff !important;
+    background-color: #f44336; /* Red 500 */
+}
+.navbar-nav > li > a:focus,
+.navbar-nav > li > a:hover,
+.navbar-nav .open > a,
+.navbar-nav .open > a:focus,
+.navbar-nav .open > a:hover {
+    color: #fff !important;
+    background-color: #f44336!important; /* Red 500 */
+}
+
+/* Owl Carousel Nav */
+.owl-theme .owl-controls .owl-nav [class*='owl-'] {
+	color: #9e9e9e; /* Grey 500 */
+	border: 1px solid #9e9e9e; /* Grey 500 */
+	background: #f3f3f3;
+}
+.owl-theme .owl-controls .owl-nav [class*='owl-']:hover {
+	color: #f44336; /* Red 500 */
+	border: 1px solid #f44336; /* Red 500 */
+	background: #efefef;
+}
+
+/* Title */
+.title { border-bottom: 3px solid #ef9a9a } /* Red 200 */
+.title span { border-bottom: 3px solid #e53935 } /* Red 600 */
+
+/* Footer */
+.footer ul li a:hover {
+    text-decoration: none;
+    color: #f44336; /* Red 500 */
+}
+.footer h4 {
+    font-size: 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+.subscribe-button {
+    font-size: 12px;
+    padding: 7px 12px 8px;
+    color: #fff;
+    background: #f44336; /* Red 500 */
+}
+.subscribe-button:hover {
+	color: #f8f8f8;
+	background: #d32f2f; /* Red 700 */
+}
+.follow-us li a:hover{
+    color: #fff!important;
+    border: 1px solid #d32f2f; /* Red 700 */
+    background: #f44336; /* Red 500 */
+}
+
+/* Pagination */
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    border-color: #f44336; /* Red 500 */
+    background-color: #f44336; /* Red 500 */
+}
+
+/* Filter Sidebar */
+.filter-sidebar ul li a.remove-filter:hover { color: #f44336 } /* Red 500 */
+.noUi-connect { background: #f44336 } /* Red 500 */

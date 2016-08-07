@@ -1,14 +1,14 @@
 $fa-font-path: "../bower_components/components-font-awesome/fonts";
 
 @import "../../bower_components/components-font-awesome/scss/font-awesome";
-@import "../theme/bootstrap/css/bootstrap.css";
-@import "../theme/css/non-minified/select2.css";
-@import "../theme/css/non-minified/owl.carousel.css";
-@import "../theme/css/non-minified/owl.theme.default.css";
-@import "../theme/css/non-minified/robotodraft.css";
-@import "../theme/css/style.css";
-@import "../theme/css/style-blue.css";
-@import "../theme/css/responsive.css";
+@import "mimity/bootstrap/css/bootstrap.css";
+@import "mimity/css/select2.css";
+@import "mimity/css/owl.carousel.css";
+@import "mimity/css/owl.theme.default.css";
+@import "mimity/css/robotodraft.css";
+@import "mimity/css/style.css";
+@import "mimity/css/style-blue.css";
+@import "mimity/css/responsive.css";
 
 .browsehappy {
   margin: 0.2em 0;
