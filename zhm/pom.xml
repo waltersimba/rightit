@@ -26,16 +26,6 @@
 					<port>8080</port>
 					<path>/zhm</path>
 					<contextFile>${project.basedir}/../tomcat-context.xml</contextFile>
-					<webapps>
-						<webapp>
-							<groupId>co.za.rightit</groupId>
-							<artifactId>catalog</artifactId>
-							<version>${project.version}</version>
-							<type>war</type>
-							<contextPath>/catalog</contextPath>
-							<asWebapp>true</asWebapp>
-						</webapp>
-					</webapps>
 				</configuration>
 			</plugin>
 			<plugin>
