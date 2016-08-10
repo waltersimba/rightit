@@ -13,9 +13,9 @@ import org.apache.shiro.web.util.WebUtils;
 
 import com.google.inject.Inject;
 
+import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 import co.za.rightit.taxibook.security.JWTPrincipal;
 import co.za.rightit.taxibook.service.authentication.TokenAuthenticationService;
-import co.za.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 
 @Singleton
 public class JWTTokenFilter extends BasicHttpAuthenticationFilter {

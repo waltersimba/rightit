@@ -1,10 +1,18 @@
 package co.za.rightit.catalog.resources;
 
-public class ProductNotFoundException extends RuntimeException {
-	
+import javax.ws.rs.core.Response;
+
+import co.za.rightit.commons.exceptions.CustomWebApplicationException;
+
+public class ProductNotFoundException extends CustomWebApplicationException {
+
 	private static final long serialVersionUID = 1L;
 
-	public ProductNotFoundException(String productId) {
-		super("No product found for id: " + productId);
+	public ProductNotFoundException(String applicationMessage) {
+		super(Response.Status.NOT_FOUND.getStatusCode(), 
+				Response.Status.NOT_FOUND.getStatusCode() + "02", 
+				"Product not found", applicationMessage);
 	}
+
 }
+

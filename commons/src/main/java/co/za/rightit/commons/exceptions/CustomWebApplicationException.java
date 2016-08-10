@@ -1,10 +1,10 @@
-package co.za.rightit.taxibook.validation.exception;
+package co.za.rightit.commons.exceptions;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class BaseWebApplicationException extends WebApplicationException {
+public class CustomWebApplicationException extends WebApplicationException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,7 +16,7 @@ public class BaseWebApplicationException extends WebApplicationException {
     
 	private final String developerMessage;
 
-    public BaseWebApplicationException(int httpStatus, String errorCode, String errorMessage, String developerMessage) {
+    public CustomWebApplicationException(int httpStatus, String errorCode, String errorMessage, String developerMessage) {
         this.status = httpStatus;
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;

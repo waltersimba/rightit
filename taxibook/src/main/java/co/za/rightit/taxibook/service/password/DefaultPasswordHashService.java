@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.binary.Base64;
 
-import co.za.rightit.taxibook.validation.exception.ApplicationRuntimeException;
+import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 
 public class DefaultPasswordHashService implements PasswordHashService {
 

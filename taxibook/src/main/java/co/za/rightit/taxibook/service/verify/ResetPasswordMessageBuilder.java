@@ -8,6 +8,7 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 import co.za.rightit.taxibook.domain.User;
 import co.za.rightit.taxibook.domain.VerificationToken;
 import co.za.rightit.taxibook.service.mail.EmailMessage;
@@ -15,7 +16,6 @@ import co.za.rightit.taxibook.service.mail.EmailMessage.EmailContentType;
 import co.za.rightit.taxibook.service.mail.EmailMessage.EmailMessageBuilder;
 import co.za.rightit.taxibook.template.MergeException;
 import co.za.rightit.taxibook.template.TemplateMerger;
-import co.za.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 
 public class ResetPasswordMessageBuilder implements Function<User, EmailMessage> {
 	private Logger logger = LoggerFactory.getLogger(ResetPasswordMessageBuilder.class);

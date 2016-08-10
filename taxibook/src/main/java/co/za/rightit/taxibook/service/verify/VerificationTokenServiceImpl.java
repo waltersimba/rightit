@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.validation.Validator;
 
 import org.bson.types.ObjectId;
@@ -14,12 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import co.za.rightit.commons.repository.spec.Specification;
 import co.za.rightit.commons.repository.spec.query.FindByIdSpec;
+import co.za.rightit.commons.utils.FailedCompletableFutureBuilder;
+import co.za.rightit.commons.utils.ValidationUtils;
 import co.za.rightit.taxibook.domain.User;
 import co.za.rightit.taxibook.domain.VerificationToken;
 import co.za.rightit.taxibook.domain.VerificationToken.VerificationTokenType;
 import co.za.rightit.taxibook.repository.UseRepository;
 import co.za.rightit.taxibook.repository.VerificationTokenRepository;
-import co.za.rightit.taxibook.service.AbstractService;
 import co.za.rightit.taxibook.service.mail.EmailMessage;
 import co.za.rightit.taxibook.service.mail.EmailService;
 import co.za.rightit.taxibook.service.password.PasswordHashService;
@@ -28,7 +28,6 @@ import co.za.rightit.taxibook.spec.query.FindVerificationTokenSpec;
 import co.za.rightit.taxibook.spec.update.UpdateUserPasswordSpec;
 import co.za.rightit.taxibook.spec.update.UpdateVerificationStatusSpec;
 import co.za.rightit.taxibook.template.TemplateMerger;
-import co.za.rightit.taxibook.util.FailedCompletableFutureBuilder;
 import co.za.rightit.taxibook.validation.exception.TokenAlreadyVerifiedException;
 import co.za.rightit.taxibook.validation.exception.TokenHasExpiredException;
 import co.za.rightit.taxibook.validation.exception.TokenNotFoundException;
@@ -36,40 +35,31 @@ import co.za.rightit.taxibook.validation.exception.UserAlreadyVerifiedException;
 import co.za.rightit.taxibook.validation.exception.UserNotFoundException;
 import co.za.rightit.taxibook.validation.exception.UserNotVerifiedException;
 
-public class VerificationTokenServiceImpl extends AbstractService implements VerificationTokenService {
+public class VerificationTokenServiceImpl implements VerificationTokenService {
 
 	private Logger LOGGER = LoggerFactory.getLogger(VerificationTokenServiceImpl.class);
 	
 	private static final int TOKEN_EXPRIRY_IN_DAYS = 1;
-	
 	@Inject 
 	private EmailService emailService;
-	
 	@Inject 
 	private TemplateMerger templateMerger;
-	
 	@Inject 
 	private UseRepository userRepository;
-	
 	@Inject 
 	private VerificationTokenRepository verificationTokenRepository;
-	
 	@Inject
 	private PasswordHashService passwordHashService;
-	
 	@Inject
 	private TokenGenerator tokenGenerator;
-
 	@Inject
-	public VerificationTokenServiceImpl(Provider<Validator> validatorProvider) {
-		super(validatorProvider.get());
-	}
+	private Validator validator;
+	
 
 	@Override
-	public CompletableFuture<Optional<VerificationToken>> generateEmailVerificationToken(
-			final EmailBasedRequest request) {
+	public CompletableFuture<Optional<VerificationToken>> generateEmailVerificationToken(final EmailBasedRequest request) {
 
-		validate(request);
+		ValidationUtils.validate(request, validator);
 
 		LOGGER.info(String.format("Generating email verification token for email address: %s...",request.getEmailAddress()));
 		final CompletableFuture<User> futureUser = fetchUserByEmailAddress(request.getEmailAddress());
@@ -90,7 +80,7 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 	@Override
 	public CompletableFuture<Optional<VerificationToken>> generateResetPasswordToken(EmailBasedRequest request) {
 		
-		validate(request);
+		ValidationUtils.validate(request, validator);
 		
 		LOGGER.info(String.format("Generating reset password token for email address: %s...",request.getEmailAddress()));
 		final CompletableFuture<User> futureUser = fetchUserByEmailAddress(request.getEmailAddress());		
@@ -110,9 +100,7 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 	
 	@Override
 	public CompletableFuture<Optional<VerificationToken>> resetPassword(PasswordRequest request) {
-		
-		validate(request);
-		
+		ValidationUtils.validate(request, validator);
 		LOGGER.info(String.format("Resetting password for token %s...", request.getToken()));
 		return getToken(request.getToken()).thenCompose(optionalToken -> {
 			return getUser(optionalToken.get().getUserId()).thenApply(optionalUser -> {
@@ -125,9 +113,7 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 
 	@Override
 	public CompletableFuture<Optional<VerificationToken>> verifyUser(final TokenVerificationRequest request) {
-
-		validate(request);
-
+		ValidationUtils.validate(request, validator);
 		LOGGER.info(String.format("Verifying token %s...", request.getToken()));
 		return getToken(request.getToken()).thenCompose(optionalToken -> {
 			final CompletableFuture<Optional<User>> futureOptionalUser = getUser(optionalToken.get().getUserId());
@@ -151,16 +137,16 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		CompletableFuture.runAsync(() -> {
 			LOGGER.info("Updating password for user {}...", user.getId().toString());
 			final String hashedPassword = passwordHashService.hashPassword(newPassword);
-			final CompletableFuture<Optional<User>> futureOptionalUser = userRepository.updateOne(
+			final CompletableFuture<Boolean> future = userRepository.updateOne(
 					new UpdateUserPasswordSpec(user.getId(), hashedPassword));
-			futureOptionalUser.thenApply(returnedOptionalUser -> {
-				if(returnedOptionalUser.isPresent()) {
+			future.thenApply(passwordUpdated -> {
+				if(passwordUpdated) {
 					LOGGER.info("Password for user {} updated.", user.getId());
 					sendResetPasswordConfirmationEmailAsync(user);
 				} else {
 					LOGGER.warn("Could not update password for user {}.", user.getId());
 				}				
-				return returnedOptionalUser;
+				return future;
 			});
 			
 		});
@@ -171,15 +157,15 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		token.setVerified(true);
 		CompletableFuture.runAsync(() -> {
 			LOGGER.info(String.format("Persisting verified status for token %s...", token.getToken()));
-			CompletableFuture<Optional<VerificationToken>> futureOptionalToken = verificationTokenRepository.updateOne(
+			CompletableFuture<Boolean> future = verificationTokenRepository.updateOne(
 					createUpdateVerificationStatusSpec(token.getId(), token.isVerified()));
-			futureOptionalToken.thenApply(returnedOptionalToken -> {
-				if(returnedOptionalToken.isPresent()) {
+			future.thenApply(statusUpdated -> {
+				if(statusUpdated) {
 					LOGGER.info(String.format("Verification status for token %s updated.", token.getToken()));
 				} else {
 					LOGGER.warn(String.format("Could not update the verification status for token %s.", token.getToken()));
 				}				
-				return futureOptionalToken;
+				return future;
 			});
 		});
 	}
@@ -189,15 +175,15 @@ public class VerificationTokenServiceImpl extends AbstractService implements Ver
 		user.setVerified(true);
 		CompletableFuture.runAsync(() -> {
 			LOGGER.info(String.format("Persisting verified status for user %s...", user.getId().toString()));
-			CompletableFuture<Optional<User>> futureOptionalUser = userRepository.updateOne(
+			CompletableFuture<Boolean> future = userRepository.updateOne(
 					createUpdateVerificationStatusSpec(user.getId(), user.isVerified()));
-			futureOptionalUser.thenApply(returnedOptionalUser -> {
-				if(returnedOptionalUser.isPresent()) {
+			future.thenApply(statusUpdated -> {
+				if(statusUpdated) {
 					LOGGER.info(String.format("Verification status for user %s updated.", user.getId()));
 				} else {
 					LOGGER.warn(String.format("Could not update the verification status for user %s.", user.getId()));
 				}				
-				return returnedOptionalUser;
+				return future;
 			});
 		});
 	}

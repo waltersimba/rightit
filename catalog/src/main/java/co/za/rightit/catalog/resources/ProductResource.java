@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -38,15 +39,15 @@ import com.google.inject.Inject;
 
 import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
-import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.catalog.service.FileStorageService;
+import co.za.rightit.catalog.service.ProductService;
 
 @Path("products")
 public class ProductResource {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductResource.class);
 	@Inject
-	private ProductRepository productRepository;
+	private ProductService productService;
 
 	@Inject
 	private FileStorageService fileStorageService;
@@ -58,7 +59,8 @@ public class ProductResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response products() {
 		try {
-			List<Product> products = productRepository.get();
+			CompletableFuture<List<Product>> future = productService.findAll();
+			List<Product> products = future.get();
 			products.forEach((product) -> product.getLinks().addAll(new LinksFunction().apply(product)));
 			return Response.ok(products).build();
 		} catch (Exception ex) {
@@ -72,7 +74,8 @@ public class ProductResource {
 	@Path("{id}")
 	public Response product(@PathParam("id") String productId) {
 		try {
-			Optional<Product> optionalProduct = productRepository.get(productId);
+			CompletableFuture<Optional<Product>> future = productService.findProduct(productId);
+			Optional<Product> optionalProduct = future.get();
 			if (!optionalProduct.isPresent()) {
 				return Response.status(Status.NOT_FOUND).build();
 			}
@@ -90,29 +93,21 @@ public class ProductResource {
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response uploadImage(@PathParam("id") String productId, @Context HttpServletRequest request) {
 		if (!ServletFileUpload.isMultipartContent(request)) {
-			throw new WebApplicationException("Not a valid file upload request.");
-		}
-		Optional<Product> optionalProduct = productRepository.get(productId);
-		if (!optionalProduct.isPresent()) {
-			throw new ProductNotFoundException(productId);
+			LOGGER.error("Not a valid file upload request for product: " + productId);
+			return Response.status(Status.BAD_REQUEST).build();
 		}
 		try {
 			FileItem item = getFileItem(request);
 			if (item != null) {
-				Product product = optionalProduct.get();
-				try {
-					if (product.getPhotoId() != null) {
-						fileStorageService.deleteFile(product.getPhotoId());
-					}
-				} finally {
-					String photoId = fileStorageService.storeFile(new FileInfoFunction(product).apply(item));
-					LOGGER.info("[{}] Saved image for product {}", photoId, productId);
-					product.setPhotoId(photoId);
-					productRepository.update(product);
+				CompletableFuture<Boolean> future = productService.updateProductPhoto(productId, new FileInfoFunction(productId).apply(item));
+				if(!future.get()) {
+					LOGGER.error("Could not update photo for product: " + productId);
+					return Response.notModified().build();
 				}
 			}
 		} catch (Exception ex) {
 			LOGGER.error("Failed to upload image for product: " + productId, ex);
+			return Response.serverError().build();
 		}
 		return Response.ok().build();
 	}
@@ -150,17 +145,17 @@ public class ProductResource {
 
 	private class FileInfoFunction implements Function<FileItem, FileInfo> {
 
-		private final Product product;
+		private final String productId;
 
-		public FileInfoFunction(Product product) {
-			this.product = product;
+		public FileInfoFunction(String productId) {
+			this.productId = productId;
 		}
 
 		@Override
 		public FileInfo apply(FileItem item) {
 			try {
 				return new FileInfo().withFilename(item.getName()).withContentType(item.getContentType())
-						.withInputStream(item.getInputStream()).withMetadata("product", product.getId());
+						.withInputStream(item.getInputStream()).withMetadata("product", productId);
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
 			}

@@ -4,40 +4,40 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.validation.Validator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 import co.za.rightit.commons.repository.Repository;
+import co.za.rightit.commons.utils.FailedCompletableFutureBuilder;
+import co.za.rightit.commons.utils.ValidationUtils;
 import co.za.rightit.taxibook.domain.User;
 import co.za.rightit.taxibook.domain.User.Role;
 import co.za.rightit.taxibook.domain.User.UserBuilder;
-import co.za.rightit.taxibook.service.AbstractService;
 import co.za.rightit.taxibook.service.password.PasswordHashService;
 import co.za.rightit.taxibook.spec.query.FindByEmailAddressSpec;
-import co.za.rightit.taxibook.util.FailedCompletableFutureBuilder;
-import co.za.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 import co.za.rightit.taxibook.validation.exception.DuplicateEmailAddressException;
 
-public class UserServiceImpl extends AbstractService implements UserService {
+public class UserServiceImpl implements UserService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 	private Repository<User> repository;
 	@Inject
 	private PasswordHashService passwordHashService;
-
 	@Inject
-	public UserServiceImpl(Repository<User> repository, Provider<Validator> validatorProvider) {
-		super(validatorProvider.get());
+	private Validator validator;
+	
+	@Inject
+	public UserServiceImpl(Repository<User> repository) {
 		this.repository = repository;
 	};
 
 	@Override
 	public CompletableFuture<Optional<User>> createUser(CreateUserRequest request) {
 
-		validate(request);
+		ValidationUtils.validate(request, validator);
 				
 		CompletableFuture<Boolean> futureHasUserWithSameEmail = hasUserWithSameEmail(request.getEmailAddress());
 		CompletableFuture<Optional<User>> futureCreatedUser = futureHasUserWithSameEmail.thenCompose(hasUserWithSameEmail -> {

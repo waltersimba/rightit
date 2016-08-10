@@ -1,8 +1,8 @@
-package co.za.rightit.taxibook.validation.exception;
+package co.za.rightit.commons.exceptions;
 
 import javax.ws.rs.core.Response;
 
-public class ApplicationRuntimeException extends BaseWebApplicationException {
+public class ApplicationRuntimeException extends CustomWebApplicationException {
 
 	private static final long serialVersionUID = 1L;
 

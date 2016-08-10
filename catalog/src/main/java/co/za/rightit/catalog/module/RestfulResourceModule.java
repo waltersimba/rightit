@@ -8,7 +8,7 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
-import co.za.rightit.catalog.provider.ObjectMapperContextResolver;
+import co.za.rightit.commons.provider.ObjectMapperContextResolver;
 
 public class RestfulResourceModule extends ServletModule {
 

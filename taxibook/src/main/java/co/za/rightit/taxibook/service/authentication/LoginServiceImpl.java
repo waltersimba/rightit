@@ -4,26 +4,25 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.validation.Validator;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
+import co.za.rightit.commons.utils.FailedCompletableFutureBuilder;
+import co.za.rightit.commons.utils.ValidationUtils;
 import co.za.rightit.taxibook.domain.User;
 import co.za.rightit.taxibook.domain.VerificationToken;
 import co.za.rightit.taxibook.domain.VerificationToken.VerificationTokenType;
 import co.za.rightit.taxibook.repository.UseRepository;
-import co.za.rightit.taxibook.service.AbstractService;
 import co.za.rightit.taxibook.service.password.PasswordHashService;
 import co.za.rightit.taxibook.service.verify.TokenGenerator;
 import co.za.rightit.taxibook.spec.query.FindByEmailAddressAndPasswordSpec;
-import co.za.rightit.taxibook.util.FailedCompletableFutureBuilder;
-import co.za.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 import co.za.rightit.taxibook.validation.exception.AuthenticationException;
 
-public class LoginServiceImpl extends AbstractService implements LoginService {
+public class LoginServiceImpl implements LoginService {
 
 	private Logger LOGGER = LoggerFactory.getLogger(LoginServiceImpl.class);
 	
@@ -42,14 +41,12 @@ public class LoginServiceImpl extends AbstractService implements LoginService {
 	private PasswordHashService passwordHashService;
 	
 	@Inject
-	public LoginServiceImpl(Provider<Validator> validatorProvider) {
-		super(validatorProvider.get());
-	}
-
+	private Validator validator;
+	
 	@Override
 	public CompletableFuture<AuthenticationToken> login(LoginRequest request) {
 		
-		validate(request);
+		ValidationUtils.validate(request, validator);
 		
 		final String hashedPassword = passwordHashService.hashPassword(request.getPassword());
 		return fetchUserByLoginCredentials(request.getUsername(), hashedPassword).thenCompose(user -> {

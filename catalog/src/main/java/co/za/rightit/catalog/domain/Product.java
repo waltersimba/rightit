@@ -1,6 +1,5 @@
 package co.za.rightit.catalog.domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,11 +7,13 @@ import java.util.TreeSet;
 
 import javax.ws.rs.core.Link;
 
+import org.bson.types.ObjectId;
+
 import com.google.common.base.Objects;
 
-public class Product implements Serializable, Comparable<Product> {
+import co.za.rightit.commons.domain.DomainObject;
 
-	private static final long serialVersionUID = 1L;
+public class Product extends DomainObject implements Comparable<Product> {
 
 	private String id;
 	
@@ -29,14 +30,6 @@ public class Product implements Serializable, Comparable<Product> {
 	private int inventory;
 	
 	private List<Link> links = new ArrayList<>();
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getTitle() {
 		return title;
@@ -121,7 +114,7 @@ public class Product implements Serializable, Comparable<Product> {
 	}
 	
 	public Product withId(String id) {
-		setId(id);
+		setId(new ObjectId(id));
 		return this;
 	}
 	
@@ -137,6 +130,11 @@ public class Product implements Serializable, Comparable<Product> {
 	
 	public Product withPhotoId(String photoId) {
 		setPhotoId(photoId);
+		return this;
+	}
+	
+	public Product withTags(Set<String> tags) {
+		this.tags = tags;
 		return this;
 	}
 	

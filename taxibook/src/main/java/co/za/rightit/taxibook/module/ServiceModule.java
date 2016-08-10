@@ -5,8 +5,8 @@ import javax.validation.Validator;
 
 import com.google.inject.AbstractModule;
 
+import co.za.rightit.commons.provider.ValidatorProvider;
 import co.za.rightit.taxibook.provider.TemplateMergerProvider;
-import co.za.rightit.taxibook.provider.ValidatorProvider;
 import co.za.rightit.taxibook.service.authentication.JWTTokenService;
 import co.za.rightit.taxibook.service.authentication.LoginService;
 import co.za.rightit.taxibook.service.authentication.LoginServiceImpl;

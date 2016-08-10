@@ -1,4 +1,4 @@
-package co.za.rightit.taxibook.provider;
+package co.za.rightit.commons.provider;
 
 import javax.inject.Provider;
 import javax.validation.Validation;

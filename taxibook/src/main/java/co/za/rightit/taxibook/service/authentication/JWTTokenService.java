@@ -12,10 +12,10 @@ import javax.xml.bind.DatatypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
+import co.za.rightit.commons.utils.FailedCompletableFutureBuilder;
 import co.za.rightit.taxibook.domain.User;
 import co.za.rightit.taxibook.security.JWTPrincipal;
-import co.za.rightit.taxibook.util.FailedCompletableFutureBuilder;
-import co.za.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 import co.za.rightit.taxibook.validation.exception.AuthenticationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

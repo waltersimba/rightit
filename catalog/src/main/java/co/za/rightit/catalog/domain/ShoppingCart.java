@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.catalog.resources.ProductOutOfStockException;
+
 public class ShoppingCart {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCart.class);
@@ -18,6 +20,10 @@ public class ShoppingCart {
 	}
 		
 	public void addOrUpdateItem(Product product, int quantity) {
+		if(product.isOutOfStock()) {
+			LOGGER.error("Failed to add/update product: Out of stock");
+			throw new ProductOutOfStockException("Failed to add/update product"); 
+		}
 		ShoppingCartItem item = items.get(product);
 		if(item == null) {
 			items.put(product, new ShoppingCartItem(product, quantity));

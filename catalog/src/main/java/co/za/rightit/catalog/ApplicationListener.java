@@ -13,10 +13,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 
-import co.za.rightit.catalog.module.ShoppingModule;
 import co.za.rightit.catalog.module.ConfigurationModule;
 import co.za.rightit.catalog.module.MongoModule;
 import co.za.rightit.catalog.module.RestfulResourceModule;
+import co.za.rightit.catalog.module.ShoppingModule;
 
 public class ApplicationListener extends GuiceServletContextListener {
 

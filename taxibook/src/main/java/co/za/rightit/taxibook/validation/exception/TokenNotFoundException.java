@@ -2,7 +2,9 @@ package co.za.rightit.taxibook.validation.exception;
 
 import javax.ws.rs.core.Response;
 
-public class TokenNotFoundException extends BaseWebApplicationException {
+import co.za.rightit.commons.exceptions.CustomWebApplicationException;
+
+public class TokenNotFoundException extends CustomWebApplicationException {
 
 	private static final long serialVersionUID = 1L;
 	public static final String ERROR_MESSAGE = "Token could not be found: %s";

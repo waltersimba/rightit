@@ -13,13 +13,6 @@ import co.za.rightit.commons.repository.AbstractMongoRepository;
 import co.za.rightit.taxibook.domain.VerificationToken;
 
 public class VerificationTokenRepository extends AbstractMongoRepository<VerificationToken> {
-	private Provider<MongoDatabase> mongoDatabaseProvider;
-	
-	@Inject
-	public VerificationTokenRepository(Provider<MongoDatabase> mongoDatabaseProvider, Provider<ObjectMapper> objectMapper) {
-		super(objectMapper);
-		this.mongoDatabaseProvider = mongoDatabaseProvider;
-	}
 
 	@Override
 	public MongoCollection<Document> getCollection() {

@@ -2,7 +2,9 @@ package co.za.rightit.taxibook.validation.exception;
 
 import javax.ws.rs.core.Response;
 
-public class DuplicateEmailAddressException extends BaseWebApplicationException {
+import co.za.rightit.commons.exceptions.CustomWebApplicationException;
+
+public class DuplicateEmailAddressException extends CustomWebApplicationException {
 
 	private static final long serialVersionUID = 1L;
 

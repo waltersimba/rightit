@@ -2,7 +2,9 @@ package co.za.rightit.taxibook.validation.exception;
 
 import javax.ws.rs.core.Response;
 
-public class UserNotFoundException extends BaseWebApplicationException {
+import co.za.rightit.commons.exceptions.CustomWebApplicationException;
+
+public class UserNotFoundException extends CustomWebApplicationException {
 
 	private static final long serialVersionUID = 1L;
 

@@ -1,10 +1,17 @@
 package co.za.rightit.catalog.resources;
 
-public class ProductOutOfStockException extends RuntimeException {
-	
+import javax.ws.rs.core.Response;
+
+import co.za.rightit.commons.exceptions.CustomWebApplicationException;
+
+public class ProductOutOfStockException extends CustomWebApplicationException {
+
 	private static final long serialVersionUID = 1L;
 
-	public ProductOutOfStockException(String productTitle) {
-		super("Product is out of stock: " + productTitle);
+	public ProductOutOfStockException(String applicationMessage) {
+		super(Response.Status.BAD_REQUEST.getStatusCode(), 
+				Response.Status.BAD_REQUEST.getStatusCode() + "02", 
+				"Product is out of stock", applicationMessage);
 	}
+
 }

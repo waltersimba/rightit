@@ -10,14 +10,14 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 import co.za.rightit.commons.repository.spec.Specification;
+import co.za.rightit.commons.utils.FailedCompletableFutureBuilder;
 import co.za.rightit.taxibook.domain.User;
 import co.za.rightit.taxibook.domain.VerificationToken;
 import co.za.rightit.taxibook.domain.VerificationToken.VerificationTokenType;
 import co.za.rightit.taxibook.repository.VerificationTokenRepository;
 import co.za.rightit.taxibook.spec.query.FindActiveVerificationTokenSpec;
-import co.za.rightit.taxibook.util.FailedCompletableFutureBuilder;
-import co.za.rightit.taxibook.validation.exception.ApplicationRuntimeException;
 
 public class TokenGeneratorImpl implements TokenGenerator {
 

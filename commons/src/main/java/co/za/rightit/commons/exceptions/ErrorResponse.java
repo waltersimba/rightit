@@ -1,4 +1,4 @@
-package co.za.rightit.taxibook.validation.exception;
+package co.za.rightit.commons.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;
