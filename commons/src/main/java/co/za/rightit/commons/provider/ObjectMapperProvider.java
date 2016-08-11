@@ -38,11 +38,12 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 
 	public ObjectMapper createObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Link.class, new LinkSerializer());
+        simpleModule.addSerializer(ObjectId.class, new ObjectIdJsonSerializer());
         simpleModule.addDeserializer(ObjectId.class, new ObjectIdJsonDeserializer());
 		objectMapper.registerModule(simpleModule);
 		objectMapper.registerModule(new JodaModule());
@@ -60,6 +61,17 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 			}
 			return new ObjectId(node.get("$oid").asText());
 		}
+	}
+	
+	private class ObjectIdJsonSerializer extends JsonSerializer<ObjectId> {
+	    @Override
+	    public void serialize(ObjectId objectId, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+	        if (objectId == null) {
+	            jsonGenerator.writeNull();
+	        } else {
+	            jsonGenerator.writeString(objectId.toString());
+	        }
+	    }
 	}
 	
 	private class LinkSerializer extends JsonSerializer<Link> {

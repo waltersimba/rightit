@@ -25,6 +25,7 @@
 					<!-- Refer to the server settings in your ~/.m2/settings.xml -->
 					<server>tomcat-localhost</server>
 					<path>/${project.build.finalName}</path>
+					 <contextFile>${project.basedir}/tomcat-context.xml</contextFile>
 					<systemProperties>
 						<JAVA_OPTS>
 							-Xmx1024m -Xms256m -XX:MaxPermSize=256m -Xnoagent

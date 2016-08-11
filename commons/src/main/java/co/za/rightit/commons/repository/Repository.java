@@ -12,7 +12,7 @@ public interface Repository<T> {
 	
 	CompletableFuture<List<T>> findSome(Specification specification);
 	
-	CompletableFuture<List<T>> findAll();
+	List<T> findAll();
 	
 	CompletableFuture<Boolean> updateOne(Specification specification);
 	

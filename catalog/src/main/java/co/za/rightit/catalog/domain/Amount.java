@@ -10,8 +10,12 @@ public class Amount {
 	private String symbol;
 	private BigDecimal total;
 	
+	public Amount() {
+		this(new BigDecimal(0));
+	}
+	
 	public Amount(BigDecimal total) {
-		this(null, total);
+		this.total = total;
 	} 
 	
 	public Amount(CurrencyUnit currencyUnit, BigDecimal total) {

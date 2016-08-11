@@ -9,13 +9,13 @@ import co.za.rightit.catalog.domain.Product;
 
 public interface ProductService {
 
-	CompletableFuture<Product> save(ProductRequest request);
+	void save(ProductRequest request);
 	
 	CompletableFuture<Boolean> update(ProductRequest request);
 	
 	CompletableFuture<Optional<Product>> findProduct(String productId);
 	
-	CompletableFuture<List<Product>> findAll();
+	List<Product> findAll();
 
 	CompletableFuture<Boolean> updateProductPhoto(String productId, FileInfo fileInfo);
 }

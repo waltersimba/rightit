@@ -50,7 +50,6 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 			failedFuture.completeExceptionally(ex);
 			return failedFuture;
 		}
-
 		return future;
 	}
 
@@ -65,8 +64,8 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 				while (cursor.hasNext()) {
 					items.add(mapperFunction.apply(cursor.next()));
 				}
+				future.complete(items);
 			}
-			future.complete(items);
 		} catch (Exception ex) {
 			CompletableFuture<List<T>> failedFuture = new CompletableFuture<>();
 			failedFuture.completeExceptionally(ex);
@@ -76,26 +75,20 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	}
 
 	@Override
-	public CompletableFuture<List<T>> findAll() {
-		CompletableFuture<List<T>> future = new CompletableFuture<>();
-		try {
-			try (MongoCursor<Document> cursor = getCollection().find().iterator()) {
-				final List<T> items = new ArrayList<>();
-				while (cursor.hasNext()) {
-					items.add(mapperFunction.apply(cursor.next()));
-				}
+	public List<T> findAll() {
+		final List<T> items = new ArrayList<>();
+		try (MongoCursor<Document> cursor = getCollection().find().iterator()) {
+			while (cursor.hasNext()) {
+				items.add(mapperFunction.apply(cursor.next()));
 			}
-		} catch (Exception ex) {
-			CompletableFuture<List<T>> failedFuture = new CompletableFuture<>();
-			failedFuture.completeExceptionally(ex);
-			return failedFuture;
 		}
-		return future;
+		return items;
 	}
 
 	@Override
 	public void save(T obj) {
 		try {
+			System.out.println("Saving document: " + getObjectMapper().writeValueAsString(obj));
 			Document document = Document.parse(getObjectMapper().writeValueAsString(obj));
 			getCollection().insertOne(document);
 		} catch (JsonProcessingException ex) {

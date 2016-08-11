@@ -9,18 +9,15 @@ import javax.ws.rs.core.Link;
 
 import org.bson.types.ObjectId;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 
 import co.za.rightit.commons.domain.DomainObject;
 
 public class Product extends DomainObject implements Comparable<Product> {
 
-	private String id;
-	
 	private String title;
-	
-	private String description;
-	
+		
 	private String photoId;
 	
 	private Set<String> tags = new TreeSet<>();
@@ -30,6 +27,10 @@ public class Product extends DomainObject implements Comparable<Product> {
 	private int inventory;
 	
 	private List<Link> links = new ArrayList<>();
+	
+	public Product() {
+		super("product");
+	}
 
 	public String getTitle() {
 		return title;
@@ -39,14 +40,11 @@ public class Product extends DomainObject implements Comparable<Product> {
 		this.title = title;
 	}
 
-	public String getDescription() {
-		return description;
+	@JsonIgnore
+	public boolean hasPhoto() {
+		return getPhotoId() != null;
 	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
+	
 	public String getPhotoId() {
 		return photoId;
 	}
@@ -78,7 +76,7 @@ public class Product extends DomainObject implements Comparable<Product> {
 	public void setInventory(int inventory) {
 		this.inventory = inventory;
 	}
-		
+	
 	public List<Link> getLinks() {
 		return links;
 	}
@@ -87,6 +85,7 @@ public class Product extends DomainObject implements Comparable<Product> {
 		this.links = links;
 	}
 
+	@JsonIgnore
 	public boolean isOutOfStock() {
 		return inventory == 0;
 	}
@@ -99,9 +98,6 @@ public class Product extends DomainObject implements Comparable<Product> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		return Objects.hashCode(id);
 	}
 
@@ -120,11 +116,6 @@ public class Product extends DomainObject implements Comparable<Product> {
 	
 	public Product withTitle(String title) {
 		setTitle(title);
-		return this;
-	}
-	
-	public Product withDescription(String description) {
-		setDescription(description);
 		return this;
 	}
 	

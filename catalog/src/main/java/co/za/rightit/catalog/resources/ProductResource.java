@@ -40,6 +40,7 @@ import com.google.inject.Inject;
 import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.service.FileStorageService;
+import co.za.rightit.catalog.service.ProductRequest;
 import co.za.rightit.catalog.service.ProductService;
 
 @Path("products")
@@ -51,22 +52,23 @@ public class ProductResource {
 
 	@Inject
 	private FileStorageService fileStorageService;
-
+	
 	@Context
 	private UriInfo uriInfo;
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response products() {
-		try {
-			CompletableFuture<List<Product>> future = productService.findAll();
-			List<Product> products = future.get();
-			products.forEach((product) -> product.getLinks().addAll(new LinksFunction().apply(product)));
-			return Response.ok(products).build();
-		} catch (Exception ex) {
-			LOGGER.error("Failed to get products", ex);
-			throw new WebApplicationException(ex);
-		}
+		List<Product> products = productService.findAll();
+		products.forEach((product) -> product.getLinks().addAll(new LinksFunction().apply(product)));
+		return Response.ok(products).build();
+	}
+
+	@POST
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response addProduct(ProductRequest request) {
+		productService.save(request);
+		return Response.ok().build();
 	}
 
 	@GET
@@ -170,11 +172,12 @@ public class ProductResource {
 		@Override
 		public List<Link> apply(Product product) {
 			UriBuilder builder = uriInfo.getRequestUriBuilder();
-			links.add(Link.fromUri(URI.create(builder.clone().path("{id}").build(product.getId()).toString()))
+			links.add(Link.fromUri(URI.create(builder.clone().path("{id}").build(product.getId().toString()).toString()))
 					.rel("self").build());
-			links.add(
-					Link.fromUri(URI.create(builder.clone().path("photo/{id}").build(product.getPhotoId()).toString()))
-							.rel("photo").build());
+			if(product.hasPhoto()) {
+				links.add(Link.fromUri(URI.create(builder.clone().path("photo/{id}").build(product.getPhotoId()).toString()))
+						.rel("photo").build());
+			}			
 			return links;
 		}
 	};

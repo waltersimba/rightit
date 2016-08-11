@@ -38,26 +38,22 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public CompletableFuture<Product> save(ProductRequest request) {
+	public void save(ProductRequest request) {
 		ValidationUtils.validate(request, validator);
-		CompletableFuture<Product> future = new CompletableFuture<>();
 		try {
-			Product newProduct = createProduct(request);
-			repository.save(newProduct);
-			future.complete(newProduct);
+			repository.save(createProduct(request));
 		} catch (Exception ex) {
-			String errorMessage = String.format("Failed to add new product: %s", ex.getMessage());
-			LOGGER.error(errorMessage);
-			return new FailedCompletableFutureBuilder<Product>().build(new ApplicationRuntimeException(errorMessage));
+			ex.printStackTrace();
+			LOGGER.error("Failed to add new product");
+			throw new ApplicationRuntimeException("Failed to add new product");
 		}
-		return future;
 	}
 
 	@Override
 	public CompletableFuture<Boolean> update(ProductRequest request) {
 		ValidationUtils.validate(request, validator);
 		try {
-			Product product = createProduct(request);
+			Product product = toProduct(request);
 			return repository.replaceOne(new UpdateProductSpec(product));
 		} catch(Exception ex) {
 			String errorMessage = String.format("Failed to update product: %s", ex.getMessage());
@@ -72,13 +68,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public CompletableFuture<List<Product>> findAll() {
+	public List<Product> findAll() {
 		try {
 			return repository.findAll();
 		} catch(Exception ex) {
-			String errorMessage = String.format("Failed to find all products: ", ex.getMessage());
-			LOGGER.error(errorMessage);
-			return new FailedCompletableFutureBuilder<List<Product>>().build(new ApplicationRuntimeException(errorMessage));
+			ex.printStackTrace();
+			LOGGER.error("Failed to retrieve products.", ex);
+			throw new ApplicationRuntimeException("Failed to retrieve products");
 		}
 	}
 
@@ -114,12 +110,15 @@ public class ProductServiceImpl implements ProductService {
 	private Product createProduct(ProductRequest request) {
 		Amount amount = new Amount(CurrencyUnit.getInstance(request.getCurrency()), request.getPrice());
 		Product product = new Product()
-				.withId(request.getId())
 				.withAmount(amount)
 				.withTitle(request.getTitle())
 				.withInventory(request.getInventory())
 				.withTags(request.getTags());
 		return product;
+	}
+	
+	private Product toProduct(ProductRequest request) {
+		return createProduct(request).withId(request.getId());
 	}
 	
 }
