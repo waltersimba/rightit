@@ -1,8 +1,5 @@
 package co.za.rightit.catalog.resources;
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -13,7 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,21 +34,10 @@ public class ShoppingCartResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response addOrUpdateItem(@PathParam("id")String productId, @QueryParam("quantity") int quantity) {
-		try {
-			CompletableFuture<Optional<Product>> future = productService.findProduct(productId);
-			Optional<Product> optionalProduct = future.get();
-			if (!optionalProduct.isPresent()) {
-				return Response.status(Status.NOT_FOUND).build();
-			} else {
-				ShoppingCart shoppingCart = shoppingCartService.getShoppingCart();
-				shoppingCart.addOrUpdateItem(optionalProduct.get(), quantity);
-				return Response.ok(shoppingCartService.getSummary(shoppingCart.getItems())).build();
-			}
-		}
-		catch(Exception ex) {
-			LOGGER.error("Failed to add or update cart item", ex);
-			return Response.serverError().build();
-		}
+		Product product = productService.findProduct(productId);
+		ShoppingCart shoppingCart = shoppingCartService.getShoppingCart();
+		shoppingCart.addOrUpdateItem(product, quantity);
+		return Response.ok(shoppingCartService.getSummary(shoppingCart.getItems())).build();
 	}
 
 	@GET

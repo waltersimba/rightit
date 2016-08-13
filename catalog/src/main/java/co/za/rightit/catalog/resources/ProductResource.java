@@ -6,8 +6,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -42,6 +40,7 @@ import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.service.FileStorageService;
 import co.za.rightit.catalog.service.ProductRequest;
 import co.za.rightit.catalog.service.ProductService;
+import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 
 @Path("products")
 public class ProductResource {
@@ -52,7 +51,7 @@ public class ProductResource {
 
 	@Inject
 	private FileStorageService fileStorageService;
-	
+
 	@Context
 	private UriInfo uriInfo;
 
@@ -75,19 +74,9 @@ public class ProductResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
 	public Response product(@PathParam("id") String productId) {
-		try {
-			CompletableFuture<Optional<Product>> future = productService.findProduct(productId);
-			Optional<Product> optionalProduct = future.get();
-			if (!optionalProduct.isPresent()) {
-				return Response.status(Status.NOT_FOUND).build();
-			}
-			Product product = optionalProduct.get();
-			product.getLinks().addAll(new LinksFunction().apply(product));
-			return Response.ok(product).build();
-		} catch (Exception ex) {
-			LOGGER.error("Failed to get product: " + productId, ex);
-			return Response.serverError().build();
-		}
+		Product product = productService.findProduct(productId);
+		product.getLinks().addAll(new LinksFunction().apply(product));
+		return Response.ok(product).build();
 	}
 
 	@POST
@@ -98,18 +87,11 @@ public class ProductResource {
 			LOGGER.error("Not a valid file upload request for product: " + productId);
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		try {
-			FileItem item = getFileItem(request);
-			if (item != null) {
-				CompletableFuture<Boolean> future = productService.updateProductPhoto(productId, new FileInfoFunction(productId).apply(item));
-				if(!future.get()) {
-					LOGGER.error("Could not update photo for product: " + productId);
-					return Response.notModified().build();
-				}
-			}
-		} catch (Exception ex) {
-			LOGGER.error("Failed to upload image for product: " + productId, ex);
-			return Response.serverError().build();
+		FileItem item = getFileItem(request);
+		Boolean productUpdated = productService.updateProductPhoto(productId, new FileInfoFunction(productId).apply(item));
+		if(!productUpdated) {
+			LOGGER.error("Could not update photo for product: " + productId);
+			return Response.notModified().build();
 		}
 		return Response.ok().build();
 	}
@@ -119,7 +101,6 @@ public class ProductResource {
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response downloadImage(@PathParam("id") String photoId) {
 		StreamingOutput imageStream = new StreamingOutput() {
-
 			@Override
 			public void write(OutputStream outputStream) throws IOException, WebApplicationException {
 				fileStorageService.serveFile(photoId, outputStream);
@@ -130,19 +111,25 @@ public class ProductResource {
 				.header("cache-control", "public, max-age=" + TimeUnit.SECONDS.convert(30, TimeUnit.DAYS)).build();
 	}
 
-	private FileItem getFileItem(HttpServletRequest request) throws FileUploadException, IOException {
+	private FileItem getFileItem(HttpServletRequest request) {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		List<FileItem> items = upload.parseRequest(request);
-		upload.setFileSizeMax(fileStorageService.getFileSizeMax());
-		Iterator<FileItem> iterator = items.iterator();
-		while (iterator.hasNext()) {
-			FileItem item = iterator.next();
-			if (!item.isFormField() && fileStorageService.isContentTypeSupported(item.getContentType())) {
-				return item;
+		List<FileItem> items;
+		try {
+			items = upload.parseRequest(request);
+			upload.setFileSizeMax(fileStorageService.getFileSizeMax());
+			Iterator<FileItem> iterator = items.iterator();
+			while (iterator.hasNext()) {
+				FileItem item = iterator.next();
+				if (!item.isFormField() && fileStorageService.isContentTypeSupported(item.getContentType())) {
+					return item;
+				}
 			}
+			throw new ApplicationRuntimeException("Could not find upload image to process.");
+		} catch (FileUploadException ex) {
+			ex.printStackTrace();
+			throw new ApplicationRuntimeException("Failed to process image upload.");
 		}
-		return null;
 	}
 
 	private class FileInfoFunction implements Function<FileItem, FileInfo> {
@@ -171,11 +158,11 @@ public class ProductResource {
 
 		@Override
 		public List<Link> apply(Product product) {
-			UriBuilder builder = uriInfo.getRequestUriBuilder();
-			links.add(Link.fromUri(URI.create(builder.clone().path("{id}").build(product.getId().toString()).toString()))
+			UriBuilder builder = uriInfo.getBaseUriBuilder();
+			links.add(Link.fromUri(URI.create(builder.clone().path("products/{id}").build(product.getId().toString()).toString()))
 					.rel("self").build());
 			if(product.hasPhoto()) {
-				links.add(Link.fromUri(URI.create(builder.clone().path("photo/{id}").build(product.getPhotoId()).toString()))
+				links.add(Link.fromUri(URI.create(builder.clone().path("products/photo/{id}").build(product.getPhotoId()).toString()))
 						.rel("photo").build());
 			}			
 			return links;

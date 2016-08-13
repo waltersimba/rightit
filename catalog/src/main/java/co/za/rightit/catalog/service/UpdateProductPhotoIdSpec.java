@@ -6,8 +6,8 @@ import co.za.rightit.commons.repository.spec.update.UpdateFieldSpec;
 
 public class UpdateProductPhotoIdSpec extends UpdateFieldSpec {
 
-	public UpdateProductPhotoIdSpec(String productId, Object newValue) {
-		super(new ObjectId(productId), newValue);
+	public UpdateProductPhotoIdSpec(ObjectId productId, Object newValue) {
+		super(productId, newValue);
 	}
 
 	@Override

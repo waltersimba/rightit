@@ -8,15 +8,15 @@ import co.za.rightit.commons.repository.spec.Specification;
 
 public interface Repository<T> {
 
-	CompletableFuture<Optional<T>> findOne(Specification specification);
+	Optional<T> findOne(Specification specification);
 	
 	CompletableFuture<List<T>> findSome(Specification specification);
 	
 	List<T> findAll();
 	
-	CompletableFuture<Boolean> updateOne(Specification specification);
+	Boolean updateOne(Specification specification);
 	
-	CompletableFuture<Boolean> replaceOne(Specification specification);
+	Boolean replaceOne(Specification specification);
 	
 	void save(T obj);
 }

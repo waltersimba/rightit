@@ -4,6 +4,7 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,13 +16,14 @@ import org.apache.commons.lang.StringUtils;
 
 import co.za.rightit.catalog.domain.CurrencyInfo;
 
-@Path("currency")
+@Path("currencies")
 public class CurrencyResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response currencies() {
-		return Response.ok(getAllCurrencies()).build();
+		return Response.ok(getAllCurrencies())
+				.header("cache-control", "public, max-age=" + TimeUnit.SECONDS.convert(365, TimeUnit.DAYS)).build();
 	}
 
 	public static Map<String, CurrencyInfo> getAllCurrencies() {

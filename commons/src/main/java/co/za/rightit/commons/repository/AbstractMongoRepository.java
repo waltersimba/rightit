@@ -38,19 +38,11 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	protected Provider<ObjectMapper> objectMapper;
 
 	@Override
-	public CompletableFuture<Optional<T>> findOne(Specification specification) {
-		CompletableFuture<Optional<T>> future = new CompletableFuture<>();
-		try {
-			MongoQuerySpecification mongoSpecification = (MongoQuerySpecification) specification;
-			Bson query = mongoSpecification.toMongoQuery();
-			Document document = getCollection().find(query).first();
-			future.complete(Optional.ofNullable(mapperFunction.apply((document))));
-		} catch (Exception ex) {
-			CompletableFuture<Optional<T>> failedFuture = new CompletableFuture<>();
-			failedFuture.completeExceptionally(ex);
-			return failedFuture;
-		}
-		return future;
+	public Optional<T> findOne(Specification specification) {
+		MongoQuerySpecification mongoSpecification = (MongoQuerySpecification) specification;
+		Bson query = mongoSpecification.toMongoQuery();
+		Document document = getCollection().find(query).first();
+		return Optional.ofNullable(mapperFunction.apply((document)));
 	}
 
 	@Override
@@ -98,35 +90,24 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 		}
 	}
 
-	public CompletableFuture<Boolean> updateOne(final Specification specification) {
-		CompletableFuture<Boolean> future = new CompletableFuture<>();
-		try {
-			MongoUpdateSpecification updateSpecification = (MongoUpdateSpecification) specification;
-			Document document = getCollection().findOneAndUpdate(updateSpecification.getFilter(),
-					updateSpecification.getValue());
-			future.complete(document != null);
-		} catch (Exception ex) {
-			CompletableFuture<Boolean> failedFuture = new CompletableFuture<>();
-			failedFuture.completeExceptionally(ex);
-			return failedFuture;
-		}
-		return future;
+	public Boolean updateOne(final Specification specification) {
+		MongoUpdateSpecification updateSpecification = (MongoUpdateSpecification) specification;
+		Document document = getCollection().findOneAndUpdate(updateSpecification.getFilter(),updateSpecification.getValue());
+		return document != null;
 	}
 
 	@Override
-	public CompletableFuture<Boolean> replaceOne(Specification specification) {
-		CompletableFuture<Boolean> future = new CompletableFuture<>();
+	public Boolean replaceOne(Specification specification) {
+		MongoReplaceSpecification replaceSpecification = (MongoReplaceSpecification) specification;
+		Document document;
 		try {
-			MongoReplaceSpecification replaceSpecification = (MongoReplaceSpecification) specification;
-			Document document = Document.parse(getObjectMapper().writeValueAsString(replaceSpecification.getValue()));
+			document = Document.parse(getObjectMapper().writeValueAsString(replaceSpecification.getValue()));
 			UpdateResult updateResult = getCollection().replaceOne(replaceSpecification.getFilter(), document);
-			future.complete(updateResult.getModifiedCount() > 0);
-		} catch (Exception ex) {
-			CompletableFuture<Boolean> failedFuture = new CompletableFuture<>();
-			failedFuture.completeExceptionally(ex);
-			return failedFuture;
+			return updateResult.getModifiedCount() > 0;
+		} catch (JsonProcessingException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
 		}
-		return future;
 	}
 
 	protected ObjectMapper getObjectMapper() {

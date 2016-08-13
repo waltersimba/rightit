@@ -2,7 +2,6 @@ package co.za.rightit.catalog.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 import javax.validation.Validator;
 
@@ -20,7 +19,6 @@ import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.catalog.resources.ProductNotFoundException;
 import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 import co.za.rightit.commons.repository.spec.query.FindByIdSpec;
-import co.za.rightit.commons.utils.FailedCompletableFutureBuilder;
 import co.za.rightit.commons.utils.ValidationUtils;
 
 public class ProductServiceImpl implements ProductService {
@@ -44,27 +42,30 @@ public class ProductServiceImpl implements ProductService {
 			repository.save(createProduct(request));
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			LOGGER.error("Failed to add new product");
+			LOGGER.error("Failed to add new product", ex);
 			throw new ApplicationRuntimeException("Failed to add new product");
 		}
 	}
 
 	@Override
-	public CompletableFuture<Boolean> update(ProductRequest request) {
+	public Boolean update(ProductRequest request) {
 		ValidationUtils.validate(request, validator);
 		try {
 			Product product = toProduct(request);
 			return repository.replaceOne(new UpdateProductSpec(product));
 		} catch(Exception ex) {
-			String errorMessage = String.format("Failed to update product: %s", ex.getMessage());
-			LOGGER.error(errorMessage);
-			return new FailedCompletableFutureBuilder<Boolean>().build(new ApplicationRuntimeException(errorMessage));
+			LOGGER.error("Failed to update product", ex);
+			throw new ApplicationRuntimeException("Failed to update product");
 		}
 	}
 	
 	@Override
-	public CompletableFuture<Optional<Product>> findProduct(String productId) {
-		return repository.findOne(new FindByIdSpec(productId));
+	public Product findProduct(String productId) {
+		Optional<Product> optionalProduct = repository.findOne(new FindByIdSpec(productId));
+		if(!optionalProduct.isPresent()) {
+			throw new ProductNotFoundException("Failed to find product by ID");
+		}
+		return optionalProduct.get();
 	}
 
 	@Override
@@ -79,32 +80,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public CompletableFuture<Boolean> updateProductPhoto(String productId, FileInfo fileInfo) {
-		CompletableFuture<Product> optionalProduct = getProduct(productId);
-		return optionalProduct.thenCompose(product -> {
-			if(product.getPhotoId() != null) {
-				fileStorageService.deleteFile(product.getPhotoId());
-			}
-			String photoId = fileStorageService.storeFile(fileInfo);
-			LOGGER.info("[{}] Saved image for product {}", photoId, productId);
-			product.setPhotoId(photoId);
-			return repository.updateOne(new UpdateProductPhotoIdSpec(productId, photoId));
-		});		
-	}
-
-	private CompletableFuture<Product> getProduct(String productId) {
-		CompletableFuture<Optional<Product>> productFuture = repository.findOne(new FindByIdSpec(productId));
-		return productFuture.thenCompose(optionalProduct -> {
-			CompletableFuture<Product> future = new CompletableFuture<>();
-			if(!optionalProduct.isPresent()) {
-				String errorMessage = String.format("Could not find product for id: %s.", productId);
-				LOGGER.error(errorMessage);
-				return new FailedCompletableFutureBuilder<Product>().build(new ProductNotFoundException(errorMessage));
-			} else {
-				future.complete(optionalProduct.get());
-			}
-			return future;
-		});
+	public Boolean updateProductPhoto(String productId, FileInfo fileInfo) {
+		Product productFound = findProduct(productId);
+		if(productFound.hasPhoto()) {
+			fileStorageService.deleteFile(productFound.getPhotoId());
+		}
+		String photoId = fileStorageService.storeFile(fileInfo);
+		LOGGER.info("[{}] Saved image for product {}", photoId, productId);
+		productFound.setPhotoId(photoId);
+		return repository.updateOne(new UpdateProductPhotoIdSpec(productFound.getId(), photoId));		
 	}
 
 	private Product createProduct(ProductRequest request) {
