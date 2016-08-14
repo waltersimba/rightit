@@ -2,6 +2,7 @@ package co.za.rightit.catalog.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import javax.validation.Validator;
 
@@ -24,20 +25,18 @@ import co.za.rightit.commons.utils.ValidationUtils;
 public class ProductServiceImpl implements ProductService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
-	private final ProductRepository repository;
-	private final Validator validator;
-	private final FileStorageService fileStorageService;
-
 	@Inject
-	public ProductServiceImpl(ProductRepository repository, FileStorageService fileStorageService, Provider<Validator> validatorProvider) {
-		this.repository = repository;
-		this.fileStorageService = fileStorageService;
-		this.validator = validatorProvider.get();
-	}
-
+	private ProductRepository repository;
+	@Inject
+	private FileStorageService fileStorageService;
+	@Inject
+	private Provider<Validator> validatorProvider;
+	@Inject
+	private ProductByIdCache productByIdCache;
+	
 	@Override
 	public void save(ProductRequest request) {
-		ValidationUtils.validate(request, validator);
+		ValidationUtils.validate(request, validatorProvider.get());
 		try {
 			repository.save(createProduct(request));
 		} catch (Exception ex) {
@@ -49,23 +48,26 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Boolean update(ProductRequest request) {
-		ValidationUtils.validate(request, validator);
+		ValidationUtils.validate(request, validatorProvider.get());
 		try {
 			Product product = toProduct(request);
 			return repository.replaceOne(new UpdateProductSpec(product));
 		} catch(Exception ex) {
 			LOGGER.error("Failed to update product", ex);
 			throw new ApplicationRuntimeException("Failed to update product");
+		} finally {
+			productByIdCache.invalidateProductCache(request.getId());
 		}
 	}
 	
 	@Override
 	public Product findProduct(String productId) {
-		Optional<Product> optionalProduct = repository.findOne(new FindByIdSpec(productId));
-		if(!optionalProduct.isPresent()) {
-			throw new ProductNotFoundException("Failed to find product by ID");
+		try {
+			return productByIdCache.getProduct(productId);
+		} catch (ExecutionException ex) {
+			ex.printStackTrace();
+			throw new ApplicationRuntimeException("Failed to find product by ID");
 		}
-		return optionalProduct.get();
 	}
 
 	@Override
