@@ -4,7 +4,8 @@
   "dependencies": {
     "angular": "1.4.9",
     "angular-route": "1.4.9",
-    "jquery": "v1.12.4"
+    "jquery": "v1.12.4",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "angular-mocks": "1.4.9"

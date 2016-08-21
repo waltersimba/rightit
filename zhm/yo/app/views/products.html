@@ -17,13 +17,15 @@
                 </ul>
             </div>
         </div>
+
         <div class="col-sm-9">
             <div class="title"><span>Men</span></div>
-            <div class="col-sm-4 col-md-3 box-product-outer">
+
+            <div class="col-sm-4 col-md-3 box-product-outer" ng-repeat="product in products">
                 <div class="box-product">
                     <div class="img-wrapper">
                         <a href="detail.html">
-                            <img alt="Product" src="../theme/images/demo/p1%20(1).jpg">
+                            <img alt="Product" ng-src="{{vm.getImageLink(product)}}">
                         </a>
                         <div class="option">
                             <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart">
@@ -35,188 +37,14 @@
                         </div>
                     </div>
                     <h6>
-                        <a href="detail.html">WranglerGrey Printed Slim Fit Round Neck T-Shirt</a>
+                        <a href="detail.html">{{product.title}}</a>
                     </h6>
                     <div class="price">
-                        <div>$15.99</div>
+                        <div>{{product.amount.symbol}}{{product.amount.total}}</div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 col-md-3 box-product-outer">
-                <div class="box-product">
-                    <div class="img-wrapper">
-                        <a href="detail.html">
-                            <img alt="Product" src="../theme/images/demo/p2%20(1).jpg">
-                        </a>
-                        <div class="tags">
-                            <span class="label-tags"><span class="label label-danger">Hot Item</span></span>
-                        </div>
-                        <div class="option">
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart"><i
-                                    class="ace-icon fa fa-shopping-cart"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Compare"><i
-                                    class="ace-icon fa fa-align-left"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Wishlist"><i
-                                    class="ace-icon fa fa-heart"></i></a>
-                        </div>
-                    </div>
-                    <h6><a href="detail.html">CelioKhaki Printed Round Neck T-Shirt</a></h6>
-                    <div class="price">
-                        <div>$19.61<span class="price-down">-10%</span></div>
-                        <span class="price-old">$15.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 box-product-outer">
-                <div class="box-product">
-                    <div class="img-wrapper">
-                        <a href="detail.html">
-                            <img alt="Product" src="../theme/images/demo/p3%20(1).jpg">
-                        </a>
-                        <div class="tags">
-                            <span class="label-tags"><span class="label label-danger">Hot Item</span></span>
-                        </div>
-                        <div class="option">
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart"><i
-                                    class="ace-icon fa fa-shopping-cart"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Compare"><i
-                                    class="ace-icon fa fa-align-left"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Wishlist"><i
-                                    class="ace-icon fa fa-heart"></i></a>
-                        </div>
-                    </div>
-                    <h6><a href="detail.html">CelioOff White Printed Round Neck T-Shirt</a></h6>
-                    <div class="price">
-                        <div>$13.57<span class="price-down">-10%</span></div>
-                        <span class="price-old">$15.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 box-product-outer">
-                <div class="box-product">
-                    <div class="img-wrapper">
-                        <a href="detail.html">
-                            <img alt="Product" src="../theme/images/demo/p4%20(1).jpg">
-                        </a>
-                        <div class="tags">
-                            <span class="label-tags"><span class="label label-danger">Hot Item</span></span>
-                        </div>
-                        <div class="option">
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart"><i
-                                    class="ace-icon fa fa-shopping-cart"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Compare"><i
-                                    class="ace-icon fa fa-align-left"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Wishlist"><i
-                                    class="ace-icon fa fa-heart"></i></a>
-                        </div>
-                    </div>
-                    <h6><a href="detail.html">Levi'sNavy Blue Printed Round Neck T-Shirt</a></h6>
-                    <div class="price">
-                        <div>$18.10<span class="price-down">-10%</span></div>
-                        <span class="price-old">$15.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 box-product-outer">
-                <div class="box-product">
-                    <div class="img-wrapper">
-                        <a href="detail.html">
-                            <img alt="Product" src="../theme/images/demo/p5%20(1).jpg">
-                        </a>
-                        <div class="tags">
-                            <span class="label-tags"><span class="label label-danger">Hot Item</span></span>
-                        </div>
-                        <div class="option">
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart"><i
-                                    class="ace-icon fa fa-shopping-cart"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Compare"><i
-                                    class="ace-icon fa fa-align-left"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Wishlist"><i
-                                    class="ace-icon fa fa-heart"></i></a>
-                        </div>
-                    </div>
-                    <h6><a href="detail.html">IncultAcid Wash Raglan Crew Neck T-Shirt</a></h6>
-                    <div class="price">
-                        <div>$12.45<span class="price-down">-10%</span></div>
-                        <span class="price-old">$15.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 box-product-outer">
-                <div class="box-product">
-                    <div class="img-wrapper">
-                        <a href="detail.html">
-                            <img alt="Product" src="../theme/images/demo/p6%20(1).jpg">
-                        </a>
-                        <div class="tags">
-                            <span class="label-tags"><span class="label label-danger">Hot Item</span></span>
-                        </div>
-                        <div class="option">
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart"><i
-                                    class="ace-icon fa fa-shopping-cart"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Compare"><i
-                                    class="ace-icon fa fa-align-left"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Wishlist"><i
-                                    class="ace-icon fa fa-heart"></i></a>
-                        </div>
-                    </div>
-                    <h6><a href="detail.html">Avoir EnvieOlive Printed Round Neck T-Shirt</a></h6>
-                    <div class="price">
-                        <div>$15.84<span class="price-down">-10%</span></div>
-                        <span class="price-old">$15.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 box-product-outer">
-                <div class="box-product">
-                    <div class="img-wrapper">
-                        <a href="detail.html">
-                            <img alt="Product" src="../theme/images/demo/p7%20(1).jpg">
-                        </a>
-                        <div class="tags">
-                            <span class="label-tags"><span class="label label-danger">Hot Item</span></span>
-                        </div>
-                        <div class="option">
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart"><i
-                                    class="ace-icon fa fa-shopping-cart"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Compare"><i
-                                    class="ace-icon fa fa-align-left"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Wishlist"><i
-                                    class="ace-icon fa fa-heart"></i></a>
-                        </div>
-                    </div>
-                    <h6><a href="detail.html">ElaboradoBrown Printed Round Neck T-Shirt</a></h6>
-                    <div class="price">
-                        <div>$13.57<span class="price-down">-10%</span></div>
-                        <span class="price-old">$15.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 box-product-outer">
-                <div class="box-product">
-                    <div class="img-wrapper">
-                        <a href="detail.html">
-                            <img alt="Product" src="../theme/images/demo/polo1.jpg">
-                        </a>
-                        <div class="tags">
-                            <span class="label-tags"><span class="label label-danger">Hot Item</span></span>
-                        </div>
-                        <div class="option">
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart"><i
-                                    class="ace-icon fa fa-shopping-cart"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Compare"><i
-                                    class="ace-icon fa fa-align-left"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Wishlist"><i
-                                    class="ace-icon fa fa-heart"></i></a>
-                        </div>
-                    </div>
-                    <h5><a href="detail.html">IncultGeo Print Polo T-Shirt</a></h5>
-                    <div class="price">
-                        <div>$16.59<span class="price-down">-10%</span></div>
-                        <span class="price-old">$15.00</span>
-                    </div>
-                </div>
-            </div>
+
             <div class="col-xs-12 text-center">
                 <ul class="pagination">
                     <li class="disabled"><a href="#">&laquo;</a></li>

@@ -15,9 +15,7 @@ angular
   .config(function ($routeProvider) {
     $routeProvider
       .when('/products', {
-        templateUrl: 'views/products.html',
-        controller: 'ProductsCtrl',
-        controllerAs: 'vm'
+        template: '<products></products>'
       })
       .when('/cart', {
         templateUrl: 'views/cart.html',
