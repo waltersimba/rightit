@@ -1,7 +1,6 @@
 package co.za.rightit.catalog.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import javax.validation.Validator;
@@ -17,9 +16,7 @@ import co.za.rightit.catalog.domain.Amount;
 import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.repository.ProductRepository;
-import co.za.rightit.catalog.resources.ProductNotFoundException;
 import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
-import co.za.rightit.commons.repository.spec.query.FindByIdSpec;
 import co.za.rightit.commons.utils.ValidationUtils;
 
 public class ProductServiceImpl implements ProductService {

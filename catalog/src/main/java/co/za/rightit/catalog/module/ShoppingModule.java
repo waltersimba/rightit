@@ -3,6 +3,7 @@ package co.za.rightit.catalog.module;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 import javax.validation.Validator;
@@ -10,6 +11,7 @@ import javax.validation.Validator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.provider.CurrencyProvider;
@@ -19,6 +21,7 @@ import co.za.rightit.catalog.repository.ShoppingCartRepository;
 import co.za.rightit.catalog.repository.ShoppingCartRepositoryImpl;
 import co.za.rightit.catalog.service.FileStorageService;
 import co.za.rightit.catalog.service.ImageStorageService;
+import co.za.rightit.catalog.service.ProductByIdCache;
 import co.za.rightit.catalog.service.ProductService;
 import co.za.rightit.catalog.service.ProductServiceImpl;
 import co.za.rightit.catalog.service.ShoppingCartService;
@@ -31,8 +34,10 @@ public class ShoppingModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		bind(Long.class).annotatedWith(Names.named("product-cache-expiration")).toInstance(TimeUnit.HOURS.convert(4, TimeUnit.MINUTES));
 		bind(new TypeLiteral<Repository<Product>>() {}).to(ProductRepository.class);
 		bind(ProductService.class).to(ProductServiceImpl.class).asEagerSingleton();
+		bind(ProductByIdCache.class);
 		bind(Validator.class).toProvider(ValidatorProvider.class).asEagerSingleton();
 		bind(ShoppingCartRepository.class).to(ShoppingCartRepositoryImpl.class).asEagerSingleton();
 		bind(ShoppingCartService.class).to(ShoppingCartServiceImpl.class);

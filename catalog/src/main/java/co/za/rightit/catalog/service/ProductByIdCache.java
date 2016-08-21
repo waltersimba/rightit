@@ -27,11 +27,11 @@ public class ProductByIdCache {
 	private ProductRepository repository;
 
 	@Inject
-	public ProductByIdCache(@Named("product-cache-expiration")int expirationTimeMinutes) {
+	public ProductByIdCache(@Named("product-cache-expiration")long expirationTimeMinutes) {
 		buildProductCache(expirationTimeMinutes);
 	}
 
-	private void buildProductCache(int expirationTimeMinutes) {
+	private void buildProductCache(long expirationTimeMinutes) {
 		productCache = CacheBuilder.newBuilder()
 				.expireAfterAccess(expirationTimeMinutes, TimeUnit.MINUTES)
 				.removalListener(productRemovalListener )
