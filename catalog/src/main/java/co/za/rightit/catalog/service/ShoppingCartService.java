@@ -9,7 +9,7 @@ import co.za.rightit.catalog.domain.ShoppingCart.ShoppingCartItemSummary;
 
 public interface ShoppingCartService {
 	
-	ShoppingCartItemSummary getSummary(Collection<ShoppingCartItem> items);
+	ShoppingCartItemSummary getSummary(ShoppingCart shoppingCart);
 	
 	Amount calculateTotalAmount (Collection<ShoppingCartItem> items);
 	

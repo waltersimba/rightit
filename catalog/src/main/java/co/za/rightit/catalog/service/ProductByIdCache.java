@@ -39,9 +39,14 @@ public class ProductByIdCache {
 
 					@Override
 					public Product load(String key) throws Exception {
-						Optional<Product> optionalProduct = repository.findOne(new FindByIdSpec(key));
+						Optional<Product> optionalProduct = Optional.empty();
+						try {
+							optionalProduct = repository.findOne(new FindByIdSpec(key));
+						} catch(Exception ex) {
+							throw new ProductNotFoundException("Failed to find product by ID: " + key);
+						}
 						if(!optionalProduct.isPresent()) {
-							throw new ProductNotFoundException("Failed to find product by ID");
+							throw new ProductNotFoundException("Failed to find product by ID: " + key);
 						}
 						return optionalProduct.get();
 					}

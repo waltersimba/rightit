@@ -37,14 +37,14 @@ public class ShoppingCartResource {
 		Product product = productService.findProduct(productId);
 		ShoppingCart shoppingCart = shoppingCartService.getShoppingCart();
 		shoppingCart.addOrUpdateItem(product, quantity);
-		return Response.ok(shoppingCartService.getSummary(shoppingCart.getItems())).build();
+		return Response.ok(shoppingCartService.getSummary(shoppingCart)).build();
 	}
 
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response getItems() {
 		ShoppingCart shoppingCart = shoppingCartService.getShoppingCart();
-		return Response.ok(shoppingCart.getItems()).build();
+		return Response.ok(shoppingCartService.getSummary(shoppingCart)).build();
 	}
 
 	@POST
@@ -52,7 +52,7 @@ public class ShoppingCartResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response clearItems() {
 		ShoppingCart shoppingCart = shoppingCartService.clearShoppingCart();
-		return Response.ok(shoppingCartService.getSummary(shoppingCart.getItems())).build();
+		return Response.ok(shoppingCartService.getSummary(shoppingCart)).build();
 	}
 
 	@POST

@@ -118,6 +118,9 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 
 		@Override
 		public T apply(Document document) {
+			if(document == null) {
+				return null;
+			}
 			try {
 				return getObjectMapper().readValue(document.toJson(), getResultType());
 			} catch (IOException ex) {
