@@ -40,6 +40,7 @@ import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.service.FileStorageService;
 import co.za.rightit.catalog.service.ProductRequest;
 import co.za.rightit.catalog.service.ProductService;
+import co.za.rightit.catalog.utils.ProductPredicates;
 import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 
 @Path("products")
@@ -58,7 +59,7 @@ public class ProductResource {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response products() {
-		List<Product> products = productService.findAll();
+		List<Product> products = ProductPredicates.filterProducts(productService.findAll(), ProductPredicates.hasPhoto());
 		products.forEach((product) -> product.getLinks().addAll(new LinksFunction().apply(product)));
 		return Response.ok(products).build();
 	}

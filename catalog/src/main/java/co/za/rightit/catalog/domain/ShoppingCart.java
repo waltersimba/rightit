@@ -21,7 +21,7 @@ public class ShoppingCart {
 	private Map<Product, ShoppingCartItem> items = new TreeMap<>();
 	
 	public boolean isEmpty() {
-		return items.isEmpty();
+		return getItems().isEmpty();
 	}
 	
 	public Collection<ShoppingCartItem> getItems() {
@@ -67,6 +67,7 @@ public class ShoppingCart {
 		public Amount getTotal() {
 			return total;
 		}
+		
 	}
 	
 	public static class ShoppingCartItem implements Comparable<ShoppingCartItem> {
@@ -121,5 +122,6 @@ public class ShoppingCart {
 			if(!product.equals(that))return false; 
 			return true;
 		}
+		
 	}
 }
