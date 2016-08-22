@@ -1,1 +1,55 @@
-<p>This is the cart view.</p>
+<div class="container main-container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="title"><span>My Shopping Cart</span></div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-cart">
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>Unit price</th>
+                        <th>Sub total</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in cart.items">
+                        <td class="img-cart">
+                            <a href="detail.html">
+                                <img alt="Product" src="images/demo/p1-small%20(1).jpg" class="img-thumbnail">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="detail.html">{{vm.getTitle(item)}}</a>
+                            <small>Size : M</small>
+                        </td>
+                        <td class="input-qty">
+                            <quantity-input ng-model="item" callback="vm.quantityChanged"></quantity-input>
+                        </td>
+                        <td class="unit text-center">{{vm.getAmount(item.product.amount)}}</td>
+                        <td class="sub text-center">{{vm.getAmount(item.sub_total)}}</td>
+                        <td class="action text-center">
+                            <a ng-click="vm.removeItem(item)" class="remove_cart clickable" rel="2" data-placement="top" data-toggle="tooltip" data-original-title="Remove">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr ng-if="!vm.isEmptyCart()">
+                        <td colspan="4" align="right">Total</td>
+                        <td colspan="2" class="text-center"><b>{{vm.getAmount(cart.total)}}</b></td>
+                    </tr>
+                    <tr ng-if="vm.isEmptyCart()">
+                        <td colspan="6" class="text-center">
+                            <span >No items in the shopping cart.</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a type="button" class="btn btn-sm pull-left" href="#/products"><i class="fa fa-arrow-circle-left"></i> Continue Shopping</a>
+            <a type="button" class="btn btn-sm pull-right" href="#/checkout">Proceed to Checkout <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>

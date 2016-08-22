@@ -1,0 +1,11 @@
+<div class="input-group bootstrap-touchspin">
+    <span class="input-group-btn">
+        <button class="btn btn-default bootstrap-touchspin-down" type="button" ng-click="vm.decrease()">-</button>
+    </span>
+    <span class="input-group-addon bootstrap-touchspin-prefix" style="display: none;"></span>
+    <input ng-model="item.quantity" type="text" name="quantity" class="input-qty form-control text-center" style="display: block;" readonly>
+    <span class="input-group-addon bootstrap-touchspin-postfix" style="display: none;"></span>
+    <span class="input-group-btn">
+        <button class="btn btn-default bootstrap-touchspin-up" type="button" ng-click="vm.increase()">+</button>
+    </span>
+</div>

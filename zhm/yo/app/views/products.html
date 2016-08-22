@@ -28,10 +28,10 @@
                             <img alt="Product" ng-src="{{vm.getImageLink(product)}}">
                         </a>
                         <div class="option">
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Add to Cart">
+                            <a ng-click="vm.addToCart(product)" data-toggle="tooltip" data-placement="bottom" title="Add to Cart" class="clickable">
                                 <i class="ace-icon fa fa-shopping-cart"></i>
                             </a>
-                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="Wishlist">
+                            <a ng-click="vm.addToWishlist(product)" data-toggle="tooltip" data-placement="bottom" title="Wishlist" class="clickable">
                                 <i class="ace-icon fa fa-heart"></i>
                             </a>
                         </div>
@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 text-center">
+            <div class="col-xs-12 text-center" ng-if="vm.hasProducts()">
                 <ul class="pagination">
                     <li class="disabled"><a href="#">&laquo;</a></li>
                     <li class="disabled"><a href="#">&lsaquo;</a></li>

@@ -1,8 +1,11 @@
-@import "mimity/css/font-awesome.css";
 @import "mimity/bootstrap/css/bootstrap.css";
+@import "mimity/css/font-awesome.css";
+@import "mimity/css/awesome-bootstrap-checkbox.css";
 @import "mimity/css/select2.css";
 @import "mimity/css/owl.carousel.css";
 @import "mimity/css/owl.theme.default.css";
+@import "mimity/css/jquery.bootstrap-touchspin.css";
+@import "mimity/css/nouislider.css";
 @import "mimity/css/robotodraft.css";
 @import "mimity/css/style.css";
 @import "mimity/css/style-blue.css";
@@ -13,4 +16,8 @@
   background: #ccc;
   color: #000;
   padding: 0.2em 0;
+}
+
+.clickable {
+  cursor: pointer;
 }
