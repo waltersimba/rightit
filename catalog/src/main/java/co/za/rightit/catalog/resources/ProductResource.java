@@ -10,11 +10,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
@@ -40,8 +42,9 @@ import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.service.FileStorageService;
 import co.za.rightit.catalog.service.ProductRequest;
 import co.za.rightit.catalog.service.ProductService;
-import co.za.rightit.catalog.utils.ProductPredicates;
 import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
+import co.za.rightit.commons.utils.Page;
+import co.za.rightit.commons.utils.Pageable;
 
 @Path("products")
 public class ProductResource {
@@ -58,10 +61,11 @@ public class ProductResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response products() {
-		List<Product> products = ProductPredicates.filterProducts(productService.findAll(), ProductPredicates.hasPhoto());
-		products.forEach((product) -> product.getLinks().addAll(new LinksFunction().apply(product)));
-		return Response.ok(products).build();
+	public Response products(@DefaultValue("0") @QueryParam("offset") int offset, @DefaultValue("8") @QueryParam("limit") int limit) {
+		Page<Product> page = productService.findAll(new Pageable(offset, limit));
+		List<Product> products = page.getItems(); 
+		products.forEach((product) -> product.setLinks(new LinksFunction().apply(product)));
+		return Response.ok(page).build();
 	}
 
 	@POST

@@ -6,11 +6,13 @@ import java.util.concurrent.CompletableFuture;
 
 import co.za.rightit.commons.repository.spec.Specification;
 
-public interface Repository<T> {
+public interface Repository<T> extends PagingRepository<T> {
 
 	Optional<T> findOne(Specification specification);
 	
 	CompletableFuture<List<T>> findSome(Specification specification);
+	
+	long count();
 	
 	List<T> findAll();
 	

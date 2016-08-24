@@ -34,7 +34,8 @@ public class ShoppingModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(Long.class).annotatedWith(Names.named("product-cache-expiration")).toInstance(TimeUnit.HOURS.convert(4, TimeUnit.MINUTES));
+		bind(Long.class).annotatedWith(Names.named("product-cache-expiration")).toInstance(TimeUnit.HOURS.toMinutes(4));
+		bind(Long.class).annotatedWith(Names.named("products-cache-expiration")).toInstance(TimeUnit.HOURS.toMinutes(1));
 		bind(new TypeLiteral<Repository<Product>>() {}).to(ProductRepository.class);
 		bind(ProductService.class).to(ProductServiceImpl.class).asEagerSingleton();
 		bind(ProductByIdCache.class);

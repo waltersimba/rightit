@@ -14,6 +14,7 @@ import org.bson.conversions.Bson;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import com.mongodb.BasicDBObject;
 import com.mongodb.Function;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
@@ -25,6 +26,9 @@ import co.za.rightit.commons.repository.spec.Specification;
 import co.za.rightit.commons.repository.spec.query.MongoQuerySpecification;
 import co.za.rightit.commons.repository.spec.update.MongoReplaceSpecification;
 import co.za.rightit.commons.repository.spec.update.MongoUpdateSpecification;
+import co.za.rightit.commons.utils.Page;
+import co.za.rightit.commons.utils.Pageable;
+import co.za.rightit.commons.utils.Pagination;
 
 public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 
@@ -69,7 +73,8 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	@Override
 	public List<T> findAll() {
 		final List<T> items = new ArrayList<>();
-		try (MongoCursor<Document> cursor = getCollection().find().iterator()) {
+		Bson sort = new BasicDBObject("_id", -1);
+		try (MongoCursor<Document> cursor = getCollection().find().sort(sort).iterator()) {
 			while (cursor.hasNext()) {
 				items.add(mapperFunction.apply(cursor.next()));
 			}
@@ -80,7 +85,6 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 	@Override
 	public void save(T obj) {
 		try {
-			System.out.println("Saving document: " + getObjectMapper().writeValueAsString(obj));
 			Document document = Document.parse(getObjectMapper().writeValueAsString(obj));
 			getCollection().insertOne(document);
 		} catch (JsonProcessingException ex) {
@@ -108,6 +112,25 @@ public abstract class AbstractMongoRepository<T> implements MongoRepository<T> {
 			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
+	}
+	
+	@Override
+	public long count() {
+		return getCollection().count();
+	}
+	
+	@Override
+	public Page<T> findAll(Pageable pageable) {
+		final List<T> items = new ArrayList<>();
+		int offset = pageable.getOffset();
+		int limit = pageable.getLimit();
+		Bson sort = new BasicDBObject("_id", -1);
+		try (MongoCursor<Document> cursor = getCollection().find().sort(sort).skip(offset).limit(limit).iterator()) {
+			while (cursor.hasNext()) {
+				items.add(mapperFunction.apply(cursor.next()));
+			}
+		}
+		return new Page<>(items, new Pagination(pageable.getPageNumber(), (int)count(), limit));
 	}
 
 	protected ObjectMapper getObjectMapper() {

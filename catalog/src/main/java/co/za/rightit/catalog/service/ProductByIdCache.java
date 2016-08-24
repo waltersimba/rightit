@@ -53,8 +53,8 @@ public class ProductByIdCache {
 				});
 	}
 	
-	public Product getProduct(String id) throws ExecutionException {
-		return productCache.get(id);
+	public Product getProduct(String id) {
+		return productCache.getUnchecked(id);
 	}
 	
 	public void invalidateProductCache(String id) {

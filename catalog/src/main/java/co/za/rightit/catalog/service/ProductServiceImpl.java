@@ -1,8 +1,5 @@
 package co.za.rightit.catalog.service;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import javax.validation.Validator;
 
 import org.joda.money.CurrencyUnit;
@@ -17,6 +14,8 @@ import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
+import co.za.rightit.commons.utils.Page;
+import co.za.rightit.commons.utils.Pageable;
 import co.za.rightit.commons.utils.ValidationUtils;
 
 public class ProductServiceImpl implements ProductService {
@@ -30,6 +29,8 @@ public class ProductServiceImpl implements ProductService {
 	private Provider<Validator> validatorProvider;
 	@Inject
 	private ProductByIdCache productByIdCache;
+	@Inject
+	private ProductsCache productsCache;
 	
 	@Override
 	public void save(ProductRequest request) {
@@ -61,16 +62,16 @@ public class ProductServiceImpl implements ProductService {
 	public Product findProduct(String productId) {
 		try {
 			return productByIdCache.getProduct(productId);
-		} catch (ExecutionException ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ApplicationRuntimeException("Failed to find product by ID");
 		}
 	}
 
 	@Override
-	public List<Product> findAll() {
+	public Page<Product> findAll(Pageable pageable) {
 		try {
-			return repository.findAll();
+			return productsCache.getProducts(pageable);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 			LOGGER.error("Failed to retrieve products.", ex);
