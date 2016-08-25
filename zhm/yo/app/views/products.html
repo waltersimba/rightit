@@ -21,7 +21,7 @@
         <div class="col-sm-9">
             <div class="title"><span>Men</span></div>
 
-            <div class="col-sm-4 col-md-3 box-product-outer" ng-repeat="product in products">
+            <div class="col-sm-4 col-md-3 box-product-outer" ng-repeat="product in items">
                 <div class="box-product">
                     <div class="img-wrapper">
                         <a href="detail.html">
@@ -46,14 +46,14 @@
             </div>
 
             <div class="col-xs-12 text-center" ng-if="vm.hasProducts()">
-                <ul class="pagination">
-                    <li class="disabled"><a href="#">&laquo;</a></li>
-                    <li class="disabled"><a href="#">&lsaquo;</a></li>
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">&rsaquo;</a></li>
-                    <li><a href="#">&raquo;</a></li>
+                <ul class="pagination" class="clickable">
+                    <li ng-class="{disabled : pagination.current_page === 1}"><a ng-click="vm.setPage(1)">&laquo;</a></li>
+                    <li ng-class="{disabled : pagination.current_page === 1}"><a ng-click="vm.setPage(pagination.current_page - 1)">&lsaquo;</a></li>
+                    <li ng-repeat="page in pages" ng-class="{active : pagination.current_page === page.value}">
+                        <a ng-click="vm.setPage(page.value)">{{page.value}}</a>
+                    </li>
+                    <li ng-class="{disabled : pagination.current_page === pagination.total_pages}"><a ng-click="vm.setPage(pagination.current_page + 1)">&rsaquo;</a></li>
+                    <li ng-class="{disabled : pagination.current_page === pagination.total_pages}"><a ng-click="vm.setPage(pagination.total_pages)">&raquo;</a></li>
                 </ul>
             </div>
         </div>

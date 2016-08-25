@@ -7,7 +7,7 @@
  * # productService
  * Factory in the storeApp.
  */
-angular.module('storeApp').factory('productService', function ($http) {
+angular.module('storeApp').factory('productService', function ($http, $log) {
     var api = {};
 
     api.products = [];
@@ -16,8 +16,8 @@ angular.module('storeApp').factory('productService', function ($http) {
         return api.products.length == 0;
     };
 
-    api.fetchProducts = function () {
-        return $http.get('/catalog/api/products').then(function (response) {
+    api.fetchProducts = function (offset, limit) {
+        return $http.get('/catalog/api/products?offset=' + offset + "&limit=" + limit).then(function (response) {
             api.products = response.data;
             return api.products;
         });
