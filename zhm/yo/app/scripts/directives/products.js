@@ -38,26 +38,14 @@ angular.module('storeApp').directive('products', function () {
                 $rootScope.$broadcast("wishlist:add", product);
             };
 
-            vm.setPage = function (page) {
-                if (page < 1 || page > $scope.pagination.total_pages) return;
-                if (page != $scope.pagination.current_page) {
-                    vm.refreshProducts((page - 1) * $scope.pagination.items_per_page, $scope.pagination.items_per_page);
-                }
-            };
-
-            vm.buildPages = function (totalPages) {
-                $scope.pages = [];
-                for (var i = 1; i <= totalPages; i++) {
-                    var page = {"value": i};
-                    $scope.pages.push(page);
-                }
+            vm.refreshItems = function (page) {
+                vm.refreshProducts((page - 1) * $scope.pagination.items_per_page, $scope.pagination.items_per_page);
             };
 
             vm.refreshProducts = function (offset, limit) {
                 productService.fetchProducts(offset || vm.defaultOffset, limit || vm.defaultLimit).then(function (response) {
                     $scope.items = response.items;
                     $scope.pagination = response.pagination;
-                    vm.buildPages($scope.pagination.total_pages);
                 }, function (error) {
                     $log.error(error.message);
                 });

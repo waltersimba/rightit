@@ -46,15 +46,7 @@
             </div>
 
             <div class="col-xs-12 text-center" ng-if="vm.hasProducts()">
-                <ul class="pagination" class="clickable">
-                    <li ng-class="{disabled : pagination.current_page === 1}"><a ng-click="vm.setPage(1)">&laquo;</a></li>
-                    <li ng-class="{disabled : pagination.current_page === 1}"><a ng-click="vm.setPage(pagination.current_page - 1)">&lsaquo;</a></li>
-                    <li ng-repeat="page in pages" ng-class="{active : pagination.current_page === page.value}">
-                        <a ng-click="vm.setPage(page.value)">{{page.value}}</a>
-                    </li>
-                    <li ng-class="{disabled : pagination.current_page === pagination.total_pages}"><a ng-click="vm.setPage(pagination.current_page + 1)">&rsaquo;</a></li>
-                    <li ng-class="{disabled : pagination.current_page === pagination.total_pages}"><a ng-click="vm.setPage(pagination.total_pages)">&raquo;</a></li>
-                </ul>
+                <paginator pagination="pagination" on-page-changed="vm.refreshItems"></paginator>
             </div>
         </div>
     </div>
