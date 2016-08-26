@@ -5,7 +5,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +21,6 @@ import com.google.inject.name.Named;
 
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.repository.ProductRepository;
-import co.za.rightit.commons.utils.Page;
-import co.za.rightit.commons.utils.Pageable;
-import co.za.rightit.commons.utils.Pagination;
 
 public class ProductsCache {
 
@@ -47,19 +43,6 @@ public class ProductsCache {
 
 	public List<Product> getProducts() {
 		return cache.getUnchecked(1L);
-	}
-	
-	public Page<Product> getProducts(Pageable pageable) {
-		return paginate(getProducts(), pageable);
-	}
-
-	private Page<Product> paginate(List<Product> items, Pageable pageable) {
-		List<Product> paginatedList = items.stream()
-				.skip(pageable.getOffset())
-				.limit(pageable.getLimit())
-				.collect(Collectors.toList());
-		Pagination pagination = new Pagination(pageable.getPageNumber(), items.size(), pageable.getLimit());
-		return new Page<Product>(paginatedList, pagination);
 	}
 
 	private final class ProductLoader extends CacheLoader<Long, List<Product>> {

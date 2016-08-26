@@ -1,5 +1,9 @@
 package co.za.rightit.catalog.service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Validator;
 
 import org.joda.money.CurrencyUnit;
@@ -12,10 +16,12 @@ import com.google.inject.Provider;
 import co.za.rightit.catalog.domain.Amount;
 import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
+import co.za.rightit.catalog.domain.ProductSearchCriteria;
 import co.za.rightit.catalog.repository.ProductRepository;
 import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 import co.za.rightit.commons.utils.Page;
 import co.za.rightit.commons.utils.Pageable;
+import co.za.rightit.commons.utils.Paginator;
 import co.za.rightit.commons.utils.ValidationUtils;
 
 public class ProductServiceImpl implements ProductService {
@@ -31,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 	private ProductByIdCache productByIdCache;
 	@Inject
 	private ProductsCache productsCache;
-	
+
 	@Override
 	public void save(ProductRequest request) {
 		ValidationUtils.validate(request, validatorProvider.get());
@@ -57,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
 			productByIdCache.invalidateProductCache(request.getId());
 		}
 	}
-	
+
 	@Override
 	public Product findProduct(String productId) {
 		try {
@@ -71,12 +77,17 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Page<Product> findAll(Pageable pageable) {
 		try {
-			return productsCache.getProducts(pageable);
+			return getProducts(pageable);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 			LOGGER.error("Failed to retrieve products.", ex);
 			throw new ApplicationRuntimeException("Failed to retrieve products");
 		}
+	}
+
+	@Override
+	public Page<Product> search(ProductSearchCriteria searchCriteria, Pageable pageable) {
+		return getProducts(searchCriteria, pageable);
 	}
 
 	@Override
@@ -91,6 +102,24 @@ public class ProductServiceImpl implements ProductService {
 		return repository.updateOne(new UpdateProductPhotoIdSpec(productFound.getId(), photoId));		
 	}
 
+	private Page<Product> getProducts(Pageable pageable) {
+		return Paginator.paginate(productsCache.getProducts(), pageable);
+	}
+
+	private Page<Product> getProducts(ProductSearchCriteria searchCriteria, Pageable pageable) {
+		List<Product> products = productsCache.getProducts();
+		Page<Product> page = null;
+		if(searchCriteria.isEmpty()) {
+			page = Paginator.paginate(products, pageable);
+		} else {
+			List<Product> filteredProducts = products.parallelStream()
+					.filter(product -> !Collections.disjoint(product.getTags(), searchCriteria.getTags()))
+					.collect(Collectors.toList());
+			page = Paginator.paginate(filteredProducts, pageable);
+		}
+		return page;
+	}
+
 	private Product createProduct(ProductRequest request) {
 		Amount amount = new Amount(CurrencyUnit.getInstance(request.getCurrency()), request.getPrice());
 		Product product = new Product()
@@ -100,9 +129,9 @@ public class ProductServiceImpl implements ProductService {
 				.withTags(request.getTags());
 		return product;
 	}
-	
+
 	private Product toProduct(ProductRequest request) {
 		return createProduct(request).withId(request.getId());
 	}
-	
+
 }

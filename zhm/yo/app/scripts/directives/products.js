@@ -41,6 +41,12 @@ angular.module('storeApp').directive('products', function () {
 
             vm.filterByTags = function (tags) {
                 $scope.tags = tags;
+                productService.searchProducts(vm.defaultOffset, vm.defaultLimit, tags.join()).then(function (response) {
+                    $scope.items = response.items;
+                    $scope.pagination = response.pagination;
+                }, function (error) {
+                    $log.error(error.message);
+                });
             };
 
             vm.getTagTitles = function () {

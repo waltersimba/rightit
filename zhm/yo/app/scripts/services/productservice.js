@@ -16,8 +16,20 @@ angular.module('storeApp').factory('productService', function ($http, $log) {
         return api.products.length == 0;
     };
 
+    api.searchProducts = function (offset, limit, tags) {
+        var url = '/catalog/api/products/search?offset=' + offset + "&limit=" + limit;
+        if(tags) {
+            url += "&tags=" + tags;
+        }
+        return $http.get(url).then(function (response) {
+            api.products = response.data;
+            return api.products;
+        });
+    };
+
     api.fetchProducts = function (offset, limit) {
-        return $http.get('/catalog/api/products?offset=' + offset + "&limit=" + limit).then(function (response) {
+        var url = '/catalog/api/products?offset=' + offset + "&limit=" + limit;
+        return $http.get(url).then(function (response) {
             api.products = response.data;
             return api.products;
         });

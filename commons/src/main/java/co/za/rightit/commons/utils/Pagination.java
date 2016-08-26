@@ -13,7 +13,7 @@ public class Pagination {
 		this.currentPage = currentPage;
 		this.totalItems = totalItems;
 		this.itemsPerPage = itemsPerPage;
-		this.totalPages = (totalItems - 1 ) / itemsPerPage + 1;
+		this.totalPages = totalItems == 0 ? 0 : (totalItems - 1 ) / itemsPerPage + 1;
 	}
 
 	@JsonProperty("current_page")
