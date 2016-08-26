@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular.module('storeApp', ['ngRoute'])
+angular.module('storeApp', ['ngRoute', 'checklist-model'])
     .config(function ($routeProvider) {
         $routeProvider
             .when('/products', {

@@ -3,23 +3,12 @@
         <div class="col-sm-3">
             <div class="filter-sidebar">
                 <div class="title"><span>Categories</span></div>
-                <ul>
-                    <li>
-                        <div class="checkbox">
-                            <input type="checkbox" id="DressCheckbox" checked="checked"><label for="DressCheckbox">Ladies (10)</label>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="checkbox">
-                            <input type="checkbox" id="SweaterCheckbox"><label for="SweaterCheckbox">Men (09)</label>
-                        </div>
-                    </li>
-                </ul>
+                <tags on-tags-changed="vm.filterByTags"></tags>
             </div>
         </div>
 
         <div class="col-sm-9">
-            <div class="title"><span>Men</span></div>
+            <div class="title"><span>{{vm.getTagTitles()}}</span></div>
 
             <div class="col-sm-4 col-md-3 box-product-outer" ng-repeat="product in items">
                 <div class="box-product">

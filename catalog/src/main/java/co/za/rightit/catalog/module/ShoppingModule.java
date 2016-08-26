@@ -26,6 +26,7 @@ import co.za.rightit.catalog.service.ProductService;
 import co.za.rightit.catalog.service.ProductServiceImpl;
 import co.za.rightit.catalog.service.ShoppingCartService;
 import co.za.rightit.catalog.service.ShoppingCartServiceImpl;
+import co.za.rightit.catalog.service.TagService;
 import co.za.rightit.commons.provider.ObjectMapperProvider;
 import co.za.rightit.commons.provider.ValidatorProvider;
 import co.za.rightit.commons.repository.Repository;
@@ -38,7 +39,8 @@ public class ShoppingModule extends AbstractModule {
 		bind(Long.class).annotatedWith(Names.named("products-cache-expiration")).toInstance(TimeUnit.HOURS.toMinutes(1));
 		bind(new TypeLiteral<Repository<Product>>() {}).to(ProductRepository.class);
 		bind(ProductService.class).to(ProductServiceImpl.class).asEagerSingleton();
-		bind(ProductByIdCache.class);
+		bind(TagService.class).asEagerSingleton();
+		bind(ProductByIdCache.class).asEagerSingleton();;
 		bind(Validator.class).toProvider(ValidatorProvider.class).asEagerSingleton();
 		bind(ShoppingCartRepository.class).to(ShoppingCartRepositoryImpl.class).asEagerSingleton();
 		bind(ShoppingCartService.class).to(ShoppingCartServiceImpl.class);

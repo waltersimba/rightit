@@ -1,0 +1,7 @@
+<ul>
+    <li ng-repeat="tag in tags">
+        <div class="checkbox">
+            <input type="checkbox" checklist-model="product.tags" checklist-change="vm.tagChanged(product.tags)" checklist-value="tag.title"><label>{{tag.title}} ({{tag.count}})</label>
+        </div>
+    </li>
+</ul>

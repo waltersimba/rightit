@@ -1,6 +1,7 @@
 package co.za.rightit.catalog.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -62,7 +63,7 @@ public class Product extends DomainObject implements Comparable<Product> {
 	}
 
 	public Set<String> getTags() {
-		return tags;
+		return Collections.unmodifiableSet(tags);
 	}
 
 	public void setTags(Set<String> tags) {

@@ -45,9 +45,12 @@ public class ProductsCache {
 				.build(new ProductLoader());
 	}
 
+	public List<Product> getProducts() {
+		return cache.getUnchecked(1L);
+	}
+	
 	public Page<Product> getProducts(Pageable pageable) {
-		List<Product> products = cache.getUnchecked(1L); 
-		return paginate(products, pageable);
+		return paginate(getProducts(), pageable);
 	}
 
 	private Page<Product> paginate(List<Product> items, Pageable pageable) {

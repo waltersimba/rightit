@@ -18,6 +18,7 @@ angular.module('storeApp').directive('products', function () {
             vm.defaultLimit = 8;
 
             $scope.products = [];
+            $scope.tags = [];
 
             vm.hasProducts = function () {
                 return !productService.isEmpty();
@@ -36,6 +37,20 @@ angular.module('storeApp').directive('products', function () {
             vm.addToWishlist = function (product) {
                 $log.log("Trigger wishlist:add -> " + product._id);
                 $rootScope.$broadcast("wishlist:add", product);
+            };
+
+            vm.filterByTags = function (tags) {
+                $scope.tags = tags;
+            };
+
+            vm.getTagTitles = function () {
+                if ($scope.tags.length === 0) {
+                    return "Products";
+                } else if ($scope.tags.length === 1) {
+                    return $scope.tags[0];
+                } else {
+                    return $scope.tags.join();
+                }
             };
 
             vm.refreshItems = function (page) {
