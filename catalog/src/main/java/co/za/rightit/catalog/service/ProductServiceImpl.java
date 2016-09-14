@@ -1,8 +1,7 @@
 package co.za.rightit.catalog.service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import javax.validation.Validator;
 
@@ -16,8 +15,10 @@ import com.google.inject.Provider;
 import co.za.rightit.catalog.domain.Amount;
 import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
-import co.za.rightit.catalog.domain.ProductSearchCriteria;
+import co.za.rightit.catalog.domain.ProductSearch;
 import co.za.rightit.catalog.repository.ProductRepository;
+import co.za.rightit.catalog.utils.PredicateHelper;
+import co.za.rightit.catalog.utils.ProductPredicates;
 import co.za.rightit.commons.exceptions.ApplicationRuntimeException;
 import co.za.rightit.commons.utils.Page;
 import co.za.rightit.commons.utils.Pageable;
@@ -86,8 +87,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Page<Product> search(ProductSearchCriteria searchCriteria, Pageable pageable) {
-		return getProducts(searchCriteria, pageable);
+	public Page<Product> search(ProductSearch productSearch, Pageable pageable) {
+		return getProducts(productSearch, pageable);
 	}
 
 	@Override
@@ -106,15 +107,13 @@ public class ProductServiceImpl implements ProductService {
 		return Paginator.paginate(productsCache.getProducts(), pageable);
 	}
 
-	private Page<Product> getProducts(ProductSearchCriteria searchCriteria, Pageable pageable) {
+	private Page<Product> getProducts(ProductSearch productSearch, Pageable pageable) {
 		List<Product> products = productsCache.getProducts();
 		Page<Product> page = null;
-		if(searchCriteria.isEmpty()) {
+		if(productSearch.isEmpty()) {
 			page = Paginator.paginate(products, pageable);
 		} else {
-			List<Product> filteredProducts = products.parallelStream()
-					.filter(product -> !Collections.disjoint(product.getTags(), searchCriteria.getTags()))
-					.collect(Collectors.toList());
+			List<Product> filteredProducts = PredicateHelper.parallelFilter(products, ProductPredicates.buildPredicate(productSearch));
 			page = Paginator.paginate(filteredProducts, pageable);
 		}
 		return page;

@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row" ng-if="vm.productExists()">
+        <div class="col-sm-4">
+            <div class="image-detail">
+                <img ng-src="{{vm.getImageLink(product)}}" data-zoom-image="{{vm.getImageLink(product)}}" alt="">
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="title-detail">{{product.title}}</div>
+            <table class="table table-detail">
+                <tbody>
+                <tr>
+                    <td>Availability</td>
+                    <td ng-if="vm.isInStock(product)">{{product.inventory}} In Stock</td>
+                    <td ng-if="!vm.isInStock(product)">Out Of Stock</td>
+                </tr>
+                <tr>
+                    <td>Price</td>
+                    <td>
+                        <div class="price">
+                            <div>{{product.amount.symbol}}{{product.amount.total}}</div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -20,7 +20,7 @@ public class Tag {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	
 	public Long getCount() {
 		return count;
 	}

@@ -39,7 +39,7 @@ import com.google.inject.Inject;
 
 import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
-import co.za.rightit.catalog.domain.ProductSearchCriteria;
+import co.za.rightit.catalog.domain.ProductSearch;
 import co.za.rightit.catalog.service.FileStorageService;
 import co.za.rightit.catalog.service.ProductRequest;
 import co.za.rightit.catalog.service.ProductService;
@@ -60,14 +60,12 @@ public class ProductResource {
 	@Context
 	private UriInfo uriInfo;
 
-	@GET
+	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("search")
 	public Response searchProducts(@DefaultValue("0") @QueryParam("offset") int offset, 
-			@DefaultValue("8") @QueryParam("limit") int limit, 
-			@QueryParam("tags") String tags) {
-		ProductSearchCriteria criteria = new ProductSearchCriteria().withTags(tags);
-		Page<Product> page = productService.search(criteria, new Pageable(offset, limit));
+			@DefaultValue("8") @QueryParam("limit") int limit,ProductSearch productSearch) {
+		Page<Product> page = productService.search(productSearch, new Pageable(offset, limit));
 		List<Product> products = page.getItems(); 
 		products.forEach((product) -> product.setLinks(new LinksFunction().apply(product)));
 		return Response.ok(page).build();

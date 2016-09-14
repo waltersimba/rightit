@@ -1,32 +1,29 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-3">
-            <div class="filter-sidebar">
-                <div class="title"><span>Categories</span></div>
-                <tags on-tags-changed="vm.filterByTags"></tags>
-            </div>
+            <tags on-tags-changed="vm.filterByTags"></tags>
         </div>
 
         <div class="col-sm-9">
-            <div class="title"><span>{{vm.getTagTitles()}}</span></div>
+            <div class="title"><span>Products</span></div>
 
             <div class="col-sm-4 col-md-3 box-product-outer" ng-repeat="product in items">
                 <div class="box-product">
                     <div class="img-wrapper">
-                        <a href="detail.html">
+                        <a href="#/products/{{product._id}}">
                             <img alt="Product" ng-src="{{vm.getImageLink(product)}}">
                         </a>
-                        <div class="option">
+                  <!--<div class="option">
                             <a ng-click="vm.addToCart(product)" data-toggle="tooltip" data-placement="bottom" title="Add to Cart" class="clickable">
                                 <i class="ace-icon fa fa-shopping-cart"></i>
                             </a>
                             <a ng-click="vm.addToWishlist(product)" data-toggle="tooltip" data-placement="bottom" title="Wishlist" class="clickable">
                                 <i class="ace-icon fa fa-heart"></i>
                             </a>
-                        </div>
+                        </div>-->
                     </div>
                     <h6>
-                        <a href="detail.html">{{product.title}}</a>
+                        <a href="#/products/{{product._id}}">{{product.title}}</a>
                     </h6>
                     <div class="price">
                         <div>{{product.amount.symbol}}{{product.amount.total}}</div>

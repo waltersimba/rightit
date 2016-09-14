@@ -14,14 +14,8 @@ angular.module('storeApp').directive('products', function () {
         controller: function ($scope, $rootScope, $log, $timeout, productService) {
             var vm = this;
 
-            vm.defaultOffset = 0;
-            vm.defaultLimit = 8;
-
-            $scope.products = [];
-            $scope.tags = [];
-
             vm.hasProducts = function () {
-                return !productService.isEmpty();
+                return $scope.items && $scope.items.length > 0;
             };
 
             vm.getImageLink = function (product) {
@@ -40,8 +34,9 @@ angular.module('storeApp').directive('products', function () {
             };
 
             vm.filterByTags = function (tags) {
-                $scope.tags = tags;
-                productService.searchProducts(vm.defaultOffset, vm.defaultLimit, tags.join()).then(function (response) {
+                var offset = productService.DEFAULT_OFFSET;
+                var limit = productService.DEFAULT_LIMIT;
+                productService.searchProducts(offset, limit, tags).then(function (response) {
                     $scope.items = response.items;
                     $scope.pagination = response.pagination;
                 }, function (error) {
@@ -49,22 +44,12 @@ angular.module('storeApp').directive('products', function () {
                 });
             };
 
-            vm.getTagTitles = function () {
-                if ($scope.tags.length === 0) {
-                    return "Products";
-                } else if ($scope.tags.length === 1) {
-                    return $scope.tags[0];
-                } else {
-                    return $scope.tags.join();
-                }
-            };
-
             vm.refreshItems = function (page) {
                 vm.refreshProducts((page - 1) * $scope.pagination.items_per_page, $scope.pagination.items_per_page);
             };
 
             vm.refreshProducts = function (offset, limit) {
-                productService.fetchProducts(offset || vm.defaultOffset, limit || vm.defaultLimit).then(function (response) {
+                productService.fetchProducts(offset, limit).then(function (response) {
                     $scope.items = response.items;
                     $scope.pagination = response.pagination;
                 }, function (error) {

@@ -39,6 +39,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 	public ObjectMapper createObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		SimpleModule simpleModule = new SimpleModule();

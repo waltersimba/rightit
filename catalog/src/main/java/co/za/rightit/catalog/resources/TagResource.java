@@ -18,8 +18,16 @@ public class TagResource {
 	
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response tags() {
-		return Response.ok(tagService.getTags()).build();
-	}	
+	@Path("categories")
+	public Response categories() {
+		return Response.ok(tagService.getCategories()).build();
+	}
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("availability")
+	public Response availability() {
+		return Response.ok(tagService.getAvailability()).build();
+	}
 	
 }

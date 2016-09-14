@@ -1,7 +1,10 @@
-<ul>
-    <li ng-repeat="tag in tags">
-        <div class="checkbox">
-            <input type="checkbox" checklist-model="product.tags" checklist-change="vm.tagChanged(product.tags)" checklist-value="tag.title"><label>{{tag.title}} ({{tag.count}})</label>
-        </div>
-    </li>
-</ul>
+<div class="filter-sidebar" ng-repeat="(title, values) in tags">
+    <div class="title"><span>{{title}}</span></div>
+    <ul>
+        <li ng-repeat="tag in values">
+            <div class="checkbox">
+                <input class="clickable" type="checkbox" checklist-model="vm.getTags(title)" ng-change="vm.check(title, tag.title, checked)" checklist-value="tag.title"><label>{{tag.title}} ({{tag.count}})</label>
+            </div>
+        </li>
+    </ul>
+</div>

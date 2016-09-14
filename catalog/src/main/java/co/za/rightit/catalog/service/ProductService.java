@@ -2,7 +2,7 @@ package co.za.rightit.catalog.service;
 
 import co.za.rightit.catalog.domain.FileInfo;
 import co.za.rightit.catalog.domain.Product;
-import co.za.rightit.catalog.domain.ProductSearchCriteria;
+import co.za.rightit.catalog.domain.ProductSearch;
 import co.za.rightit.commons.utils.Page;
 import co.za.rightit.commons.utils.Pageable;
 
@@ -16,7 +16,7 @@ public interface ProductService {
 	
 	Page<Product> findAll(Pageable pageable);
 	
-	Page<Product> search(ProductSearchCriteria criteria, Pageable pageable);
+	Page<Product> search(ProductSearch productSearch, Pageable pageable);
 
 	Boolean updateProductPhoto(String productId, FileInfo fileInfo);
 }
