@@ -6,12 +6,12 @@
 
 	<groupId>co.za.rightit</groupId>
 	<artifactId>rightit</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
 		<module>catalog</module>
-		<module>taxibook</module>
+		<!-- module>taxibook</module -->
 		<module>commons</module>
 		<module>zhm</module>
 	</modules>

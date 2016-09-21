@@ -3,24 +3,22 @@
         <div class="col-sm-3">
             <tags on-tags-changed="vm.filterByTags"></tags>
         </div>
-
         <div class="col-sm-9">
             <div class="title"><span>Products</span></div>
-
             <div class="col-sm-4 col-md-3 box-product-outer" ng-repeat="product in items">
                 <div class="box-product">
                     <div class="img-wrapper">
                         <a href="#/products/{{product._id}}">
                             <img alt="Product" ng-src="{{vm.getImageLink(product)}}">
                         </a>
-                  <!--<div class="option">
-                            <a ng-click="vm.addToCart(product)" data-toggle="tooltip" data-placement="bottom" title="Add to Cart" class="clickable">
-                                <i class="ace-icon fa fa-shopping-cart"></i>
-                            </a>
-                            <a ng-click="vm.addToWishlist(product)" data-toggle="tooltip" data-placement="bottom" title="Wishlist" class="clickable">
-                                <i class="ace-icon fa fa-heart"></i>
-                            </a>
-                        </div>-->
+                        <!--<div class="option">
+                                  <a ng-click="vm.addToCart(product)" data-toggle="tooltip" data-placement="bottom" title="Add to Cart" class="clickable">
+                                      <i class="ace-icon fa fa-shopping-cart"></i>
+                                  </a>
+                                  <a ng-click="vm.addToWishlist(product)" data-toggle="tooltip" data-placement="bottom" title="Wishlist" class="clickable">
+                                      <i class="ace-icon fa fa-heart"></i>
+                                  </a>
+                              </div>-->
                     </div>
                     <h6>
                         <a href="#/products/{{product._id}}">{{product.title}}</a>
@@ -30,7 +28,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-xs-12 text-center" ng-if="vm.hasProducts()">
                 <paginator pagination="pagination" on-page-changed="vm.refreshItems"></paginator>
             </div>
