@@ -13,14 +13,14 @@ angular.module('storeApp').factory('tagService', function ($http, $q) {
     api.tags = [];
 
     api.fetchCategoryTags = function () {
-        return $http.get("catalog/api/tags/categories").then(function (response) {
+        return $http.get("/catalog/api/tags/categories").then(function (response) {
             api.tags = response.data;
             return api.tags;
         });
     };
 
     api.fetchAvailabilityTags = function () {
-        return $http.get("catalog/api/tags/availability").then(function (response) {
+        return $http.get("/catalog/api/tags/availability").then(function (response) {
             api.tags = response.data;
             return api.tags;
         });

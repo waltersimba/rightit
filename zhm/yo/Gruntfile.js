@@ -446,6 +446,11 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>/styles/mimity/css/fonts',
           dest: '<%= yeoman.dist %>/styles/fonts',
           src: '**'
+        }, {
+          expand: true,
+          flatten: true,
+          dest: '<%= yeoman.dist %>/vendor',
+          src: ['<%= yeoman.app %>/vendor/*']
         }]
       },
       styles: {
