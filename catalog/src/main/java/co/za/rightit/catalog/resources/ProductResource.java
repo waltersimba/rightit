@@ -175,7 +175,7 @@ public class ProductResource {
 			List<Link> links = new ArrayList<>();
 			UriBuilder builder = uriInfo.getBaseUriBuilder();
 			links.add(new Link().withRel("self").withHref(builder.clone().path("products/{id}").build(product.getId().toString()).toString()));
-			links.add(new Link().withRel("photo").withHref(builder.clone().path("products/photo/{id}").build(product.getId().toString()).toString()));
+			links.add(new Link().withRel("photo").withHref(builder.clone().path("products/photo/{id}").build(product.getPhotoId()).toString()));
 			return links;
 		}
 	};
