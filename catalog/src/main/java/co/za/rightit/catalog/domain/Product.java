@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.ws.rs.core.Link;
-
 import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

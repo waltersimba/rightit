@@ -2,8 +2,6 @@ package co.za.rightit.commons.provider;
 
 import java.io.IOException;
 
-import javax.ws.rs.core.Link;
-
 import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -43,7 +41,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addSerializer(Link.class, new LinkSerializer());
+        //simpleModule.addSerializer(Link.class, new LinkSerializer());
         simpleModule.addSerializer(ObjectId.class, new ObjectIdJsonSerializer());
         simpleModule.addDeserializer(ObjectId.class, new ObjectIdJsonDeserializer());
 		objectMapper.registerModule(simpleModule);
@@ -74,7 +72,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
 	        }
 	    }
 	}
-	
+	/*
 	private class LinkSerializer extends JsonSerializer<Link> {
 
     	@Override
@@ -85,6 +83,6 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
     		jg.writeStringField("href", link.getUri().toString());
     		jg.writeEndObject();
     	}
-    }
+    }*/
 
 }

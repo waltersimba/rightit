@@ -46,7 +46,6 @@ public class ShoppingModule extends AbstractModule {
 		bind(ShoppingCartService.class).to(ShoppingCartServiceImpl.class);
 		bind(FileStorageService.class).to(ImageStorageService.class).asEagerSingleton();;
 		bind(Locale.class).toProvider(LocaleProvider.class);
-		bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class).in(Singleton.class);
 		bind(new TypeLiteral<Optional<Currency>>() {
 		}).toProvider(CurrencyProvider.class);
 	}

@@ -2,7 +2,6 @@ package co.za.rightit.catalog.resources;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +18,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -38,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import co.za.rightit.catalog.domain.FileInfo;
+import co.za.rightit.catalog.domain.Link;
 import co.za.rightit.catalog.domain.Product;
 import co.za.rightit.catalog.domain.ProductSearch;
 import co.za.rightit.catalog.service.FileStorageService;
@@ -128,7 +127,7 @@ public class ProductResource {
 		return Response.ok(imageStream)
 				.header("cache-control", "public, max-age=" + TimeUnit.SECONDS.convert(30, TimeUnit.DAYS)).build();
 	}
-
+	
 	private FileItem getFileItem(HttpServletRequest request) {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
@@ -169,21 +168,16 @@ public class ProductResource {
 		}
 
 	}
-
+	
 	private class LinksFunction implements Function<Product, List<Link>> {
-
-		private List<Link> links = new ArrayList<>();
-
 		@Override
 		public List<Link> apply(Product product) {
+			List<Link> links = new ArrayList<>();
 			UriBuilder builder = uriInfo.getBaseUriBuilder();
-			links.add(Link.fromUri(URI.create(builder.clone().path("products/{id}").build(product.getId().toString()).toString()))
-					.rel("self").build());
-			if(product.hasPhoto()) {
-				links.add(Link.fromUri(URI.create(builder.clone().path("products/photo/{id}").build(product.getPhotoId()).toString()))
-						.rel("photo").build());
-			}			
+			links.add(new Link().withRel("self").withHref(builder.clone().path("products/{id}").build(product.getId().toString()).toString()));
+			links.add(new Link().withRel("self").withHref(builder.clone().path("products/photo/{id}").build(product.getId().toString()).toString()));
 			return links;
 		}
 	};
+	
 }

@@ -1,7 +1,6 @@
 package co.za.rightit.catalog.service;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
