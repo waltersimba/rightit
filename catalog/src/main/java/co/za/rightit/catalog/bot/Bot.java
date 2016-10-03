@@ -24,7 +24,7 @@ public class Bot {
 
 	private String getStartReply(User from) {
 		Optional<String> name = getDisplayName(from);
-		String reply = "Thanks for popping by. Hope you enjoy your stay";
+		String reply = "Thanks for popping by. Please use a slash(/) for a list of supported commands. Hope you enjoy your stay";
 		if(name.isPresent()) {
 			return reply + " " + name.get() + "!";
 		} else {
