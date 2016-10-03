@@ -13,6 +13,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import co.za.rightit.catalog.module.BotModule;
 import co.za.rightit.catalog.module.ConfigurationModule;
 import co.za.rightit.catalog.module.MongoModule;
 import co.za.rightit.catalog.module.RestfulResourceModule;
@@ -31,7 +32,8 @@ public class ApplicationListener extends GuiceServletContextListener {
 				new ConfigurationModule(),
 				new MongoModule(),
 				new RestfulResourceModule(),
-				new ShoppingModule());
+				new ShoppingModule(), 
+				new BotModule());
 	}
 
 	public ApplicationListener() {
