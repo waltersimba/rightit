@@ -1,0 +1,11 @@
+.classpath
+.project
+.settings/*
+/target/
+yo/node_modules
+yo/bower_components
+build/
+yo/dist/
+yo/.sass-cache
+.idea
+yo/.tmp
