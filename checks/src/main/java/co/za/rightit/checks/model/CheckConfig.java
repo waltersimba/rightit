@@ -6,7 +6,7 @@ public class CheckConfig {
 
 	private String name;
 
-	private List<CheckNodeConfig> nodes;
+	private List<Node> nodes;
 
 	public CheckConfig() {
 	}
@@ -19,11 +19,11 @@ public class CheckConfig {
 		this.name = name;
 	}
 	
-	public List<CheckNodeConfig> getNodes() {
+	public List<Node> getNodes() {
 		return nodes;
 	}
 	
-	public void setNodes(List<CheckNodeConfig> nodes) {
+	public void setNodes(List<Node> nodes) {
 		this.nodes = nodes;
 	}
 
@@ -32,7 +32,7 @@ public class CheckConfig {
 		return this;
 	}
 
-	public CheckConfig withNodes(List<CheckNodeConfig> nodes) {
+	public CheckConfig withNodes(List<Node> nodes) {
 		setNodes(nodes);
 		return this;
 	}

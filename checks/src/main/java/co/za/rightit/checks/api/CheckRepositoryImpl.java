@@ -9,7 +9,7 @@ import com.google.common.base.Preconditions;
 import com.mongodb.WriteResult;
 
 import co.za.rightit.checks.model.CheckConfig;
-import co.za.rightit.checks.model.CheckNodeConfig;
+import co.za.rightit.checks.model.Node;
 
 public class CheckRepositoryImpl implements CheckRepository {
 
@@ -27,7 +27,7 @@ public class CheckRepositoryImpl implements CheckRepository {
 	}
 
 	@Override
-	public boolean updateCheck(String name, List<CheckNodeConfig> nodes) {
+	public boolean updateCheck(String name, List<Node> nodes) {
 		WriteResult updateResult = checks.update("{name: #}",name).with("{$set: {nodes: #}}", nodes);
 		return updateResult.getN() == 1;
 	}
