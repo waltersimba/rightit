@@ -45,4 +45,9 @@ public class Node {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		return "Node [name=" + name + ", properties=" + properties + "]";
+	}
+
 }

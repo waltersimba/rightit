@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
+import java.util.prefs.PreferenceChangeListener;
 
 import co.za.rightit.checks.model.CheckConfig;
 import co.za.rightit.checks.model.Node;
@@ -12,9 +13,13 @@ import co.za.rightit.checks.model.Node;
 public class MongoPreferences extends AbstractPreferences {
 
     private CheckConfig config;
+    private PreferenceChangeListener listener;
 
-    public MongoPreferences(CheckConfig config) {
-        this(null, "", config);
+    public MongoPreferences(CheckConfig config, PreferenceChangeListener listener) {
+    	super(null, "");
+        Objects.requireNonNull(config, "CheckConfig cannot be null");
+        this.config = config;
+        this.listener = listener;
     }
 
     public MongoPreferences(AbstractPreferences parent, String name, CheckConfig config) {
@@ -43,12 +48,12 @@ public class MongoPreferences extends AbstractPreferences {
 
     @Override
     protected void removeSpi(String key) {
-    	throw new UnsupportedOperationException("Node removal is not supported");
+    	throw new UnsupportedOperationException();
     }
 
     @Override
     protected void removeNodeSpi() throws BackingStoreException {
-        throw new UnsupportedOperationException("Node removal is not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -76,7 +81,11 @@ public class MongoPreferences extends AbstractPreferences {
 
     @Override
     protected AbstractPreferences childSpi(String name) {
-        return new MongoPreferences(this, name, config);
+    	AbstractPreferences childPreferences = new MongoPreferences(this, name, config);
+    	if(listener != null) {
+    		childPreferences.addPreferenceChangeListener(listener);
+    	}    
+        return childPreferences;
     }
 
     @Override

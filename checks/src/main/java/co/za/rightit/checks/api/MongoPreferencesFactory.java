@@ -18,8 +18,7 @@ public class MongoPreferencesFactory {
         if(!configOptional.isPresent()) {
             throw new IllegalArgumentException(String.format("Failed to retrieve check by name: %s", name));
         }
-        MongoPreferences prefs = new MongoPreferences(getCheckRepository().getCheckByName(name).get());
-        prefs.addPreferenceChangeListener(new PreferenceChangeListener() {
+        final PreferenceChangeListener listener = new PreferenceChangeListener() {
             @Override
             public void preferenceChange(PreferenceChangeEvent evt) {
                 String nodeName = evt.getNode().name();
@@ -27,8 +26,8 @@ public class MongoPreferencesFactory {
                 CheckConfig config = configOptional.get();
                 getCheckRepository().updateCheck(config.getName(),config.getNodes());
             }
-        });
-        return prefs;
+        }; 
+        return new MongoPreferences(getCheckRepository().getCheckByName(name).get(), listener);
     }
 
     private static CheckRepository getCheckRepository() {
