@@ -7,16 +7,20 @@ import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.PreferenceChangeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import co.za.rightit.checks.model.CheckConfig;
 import co.za.rightit.checks.model.Node;
 
 public class MongoPreferences extends AbstractPreferences {
 
+    private Logger LOGGER = LoggerFactory.getLogger(MongoPreferences.class);
     private CheckConfig config;
     private PreferenceChangeListener listener;
 
     public MongoPreferences(CheckConfig config, PreferenceChangeListener listener) {
-    	super(null, "");
+        super(null, "");
         Objects.requireNonNull(config, "CheckConfig cannot be null");
         this.config = config;
         this.listener = listener;
@@ -33,6 +37,7 @@ public class MongoPreferences extends AbstractPreferences {
         if (parent() == null) {
             return;
         } else {
+            LOGGER.debug("[{}] -> {}={}", name(), key, value);
             getNode().put(key, value);
         }
     }
@@ -48,7 +53,7 @@ public class MongoPreferences extends AbstractPreferences {
 
     @Override
     protected void removeSpi(String key) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -81,10 +86,10 @@ public class MongoPreferences extends AbstractPreferences {
 
     @Override
     protected AbstractPreferences childSpi(String name) {
-    	AbstractPreferences childPreferences = new MongoPreferences(this, name, config);
-    	if(listener != null) {
-    		childPreferences.addPreferenceChangeListener(listener);
-    	}    
+        AbstractPreferences childPreferences = new MongoPreferences(this, name, config);
+        if(listener != null) {
+            childPreferences.addPreferenceChangeListener(listener);
+        }
         return childPreferences;
     }
 

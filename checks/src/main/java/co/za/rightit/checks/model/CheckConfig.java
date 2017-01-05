@@ -16,15 +16,15 @@ public class CheckConfig {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public List<Node> getNodes() {
 		return nodes;
 	}
-	
+
 	public void setNodes(List<Node> nodes) {
 		this.nodes = nodes;
 	}
@@ -48,6 +48,15 @@ public class CheckConfig {
 			}
 		}
 		return optional;
+	}
+
+	public int getNodeIndex(String nodeName) {
+		Optional<Node> optional = getNode(nodeName);
+		if(optional.isPresent()) {
+			return nodes.indexOf(optional.get());
+		} else {
+			return -1;
+		}
 	}
 
 }

@@ -53,6 +53,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>net.sf.jopt-simple</groupId>
+			<artifactId>jopt-simple</artifactId>
+			<version>4.8</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
@@ -84,6 +90,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.10.19</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.github.fakemongo</groupId>
 			<artifactId>fongo</artifactId>
 			<version>2.0.6</version>
@@ -103,5 +115,33 @@
 			</snapshots>
 		</repository>
 	</repositories>
+	
+	<build>
+      <plugins>
+         <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+               <archive>
+                  <manifest>
+                     <mainClass>co.za.rightit.checks.util.MongoPreferencesUtil</mainClass>
+                  </manifest>
+               </archive>
+               <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+               </descriptorRefs>
+               <appendAssemblyId>false</appendAssemblyId>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>make-assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>single</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+</build>
 
 </project>

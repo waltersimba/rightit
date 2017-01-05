@@ -3,6 +3,7 @@ package co.za.rightit.checks.api;
 import com.google.common.base.Optional;
 
 import co.za.rightit.checks.model.CheckConfig;
+import co.za.rightit.checks.mongo.CheckRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
