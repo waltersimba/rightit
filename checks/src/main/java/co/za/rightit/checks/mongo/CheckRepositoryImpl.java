@@ -35,9 +35,9 @@ public class CheckRepositoryImpl implements CheckRepository {
         WriteResult updateResult = checks.update("{name: #}",name).with("{$set: {nodes: #}}", nodes);
         boolean updated = updateResult != null && updateResult.getN() == 1;
         if(updated) {
-            LOGGER.debug("Updated {} with {} node count.", name, nodes.size());
+            LOGGER.debug("Updated \"{}\".", name);
         } else {
-            LOGGER.warn("Failed to update {}", name);
+            LOGGER.warn("Failed to update \"{}\".", name);
         }
         return updated;
     }

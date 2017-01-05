@@ -9,8 +9,6 @@ import static org.junit.Assert.assertTrue;
 import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.prefs.BackingStoreException;
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 
 import org.jongo.MongoCollection;
@@ -30,9 +28,9 @@ import atunit.AtUnit;
 import atunit.Container;
 import atunit.Unit;
 import co.za.rightit.checks.model.CheckConfig;
+import co.za.rightit.checks.model.Node;
 import co.za.rightit.checks.mongo.CheckRepository;
 import co.za.rightit.checks.mongo.CheckRepositoryImpl;
-import co.za.rightit.checks.util.Property;
 
 @RunWith(AtUnit.class)
 @Container(Container.Option.GUICE)
@@ -61,7 +59,7 @@ public class MongoPreferencesTest extends AbstractModule {
     public void executeBeforeEachTest() throws UnknownHostException {
         getCollection().insert(createCheckConfig());
         configOptional = repository.getCheckByName("MemcachedCheck");
-        objectUnderTest = new MongoPreferences(configOptional.get(), createPreferenceChangeListener());
+        objectUnderTest = new MongoPreferences(configOptional.get(), repository);
     }
 
     @After
@@ -98,29 +96,19 @@ public class MongoPreferencesTest extends AbstractModule {
         long lastNotified = new Date().getTime() / 1000;
         node.putLong("lastNotified", lastNotified);
         assertEquals("lastNotified should be updated", lastNotified, node.getLong("lastNotified", 0L));
-
-        Mockito.verify(repository, Mockito.atLeastOnce()).updateNodeProperty(Mockito.anyString(), Mockito.anyInt(), Mockito.any(Property.class));
     }
-
-    private PreferenceChangeListener createPreferenceChangeListener() {
-        return new PreferenceChangeListener() {
-
-            @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                String nodeName = evt.getNode().name();
-                Property<String, String> property = new Property<>(evt.getKey(), evt.getNewValue());
-                System.out.println(String.format("[%s] node changed: %s=%s", nodeName, property.getKey(), property.getValue()));
-                CheckConfig config = configOptional.get();
-                int index = config.getNodeIndex(nodeName);
-                if(index >= 0) {
-                    System.out.println(String.format("[%s] %s=%s persisted to db ? %s", nodeName, property.getKey(),
-                            property.getValue(), repository.updateNodeProperty(config.getName(), index, property)));
-                } else {
-                    throw new IllegalStateException(String.format("Index for node \"%s\" is invalid!", nodeName));
-                }
-            }
-
-        };
+    
+    @Test
+    public void testShouldPersistToDBWhenFlushed() throws BackingStoreException {
+    	System.out.println("testShouldPersistToDBWhenFlushed");
+    	//given
+    	Preferences node = objectUnderTest.node("hostname");
+        long lastNotified = new Date().getTime() / 1000;
+        node.putLong("lastNotified", lastNotified);
+        //when
+        node.flush();        
+        //then
+        Mockito.verify(repository, Mockito.atLeastOnce()).updateCheck(Mockito.anyString(), Mockito.anyListOf(Node.class));
     }
 
     private MongoCollection getCollection() {

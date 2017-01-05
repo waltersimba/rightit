@@ -1,8 +1,6 @@
 package co.za.rightit.checks.util;
 
 import java.util.prefs.BackingStoreException;
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 
 import org.slf4j.Logger;
@@ -39,24 +37,7 @@ public final class MongoPreferencesUtil {
             LOGGER.error("No check found: {}!", name);
             throw new IllegalArgumentException(String.format("Failed to retrieve check by name: %s", name));
         }
-        final PreferenceChangeListener listener = new PreferenceChangeListener() {
-            @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                String nodeName = evt.getNode().name();
-                LOGGER.debug("preferenceChange event: {} -> {}={}", evt.getNode().name(), evt.getKey(), evt.getNewValue());
-                CheckConfig config = configOptional.get();
-                int index = config.getNodeIndex(nodeName);
-                if(index >= 0) {
-                    Property<String, String> property = new Property<>(evt.getKey(), evt.getNewValue());
-                    LOGGER.debug("Persisting to backing store: [{}] -> {}={}...", nodeName, property.getKey(), property.getValue());
-                    repository.updateNodeProperty(config.getName(), index, property);
-                } else {
-                    LOGGER.error("[{}] Node index is invalid!", nodeName);
-                    throw new IllegalStateException(String.format("Index for node \"%s\" is invalid!", nodeName));
-                }
-            }
-        };
-        return new MongoPreferences(configOptional.get(), listener);
+        return new MongoPreferences(configOptional.get(), repository);
     }
 
     public static CheckRepository getCheckRepository() {
@@ -93,6 +74,7 @@ public final class MongoPreferencesUtil {
             Preferences node = prefs.node("hostname");
             if(node != null) {
                 node.putLong("lastNotified", System.currentTimeMillis());
+                node.flush();
             }
         } catch (BackingStoreException ex) {
             ex.printStackTrace();

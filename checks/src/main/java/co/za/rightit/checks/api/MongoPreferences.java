@@ -5,25 +5,24 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
-import java.util.prefs.PreferenceChangeListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import co.za.rightit.checks.model.CheckConfig;
 import co.za.rightit.checks.model.Node;
+import co.za.rightit.checks.mongo.CheckRepository;
 
 public class MongoPreferences extends AbstractPreferences {
 
     private Logger LOGGER = LoggerFactory.getLogger(MongoPreferences.class);
     private CheckConfig config;
-    private PreferenceChangeListener listener;
+    private CheckRepository store;
 
-    public MongoPreferences(CheckConfig config, PreferenceChangeListener listener) {
+    public MongoPreferences(CheckConfig config, CheckRepository store) {
         super(null, "");
-        Objects.requireNonNull(config, "CheckConfig cannot be null");
-        this.config = config;
-        this.listener = listener;
+        this.config = Objects.requireNonNull(config, "CheckConfig cannot be null");;
+        this.store = Objects.requireNonNull(store, "CheckRepository cannot be null");
     }
 
     public MongoPreferences(AbstractPreferences parent, String name, CheckConfig config) {
@@ -86,19 +85,25 @@ public class MongoPreferences extends AbstractPreferences {
 
     @Override
     protected AbstractPreferences childSpi(String name) {
-        AbstractPreferences childPreferences = new MongoPreferences(this, name, config);
-        if(listener != null) {
-            childPreferences.addPreferenceChangeListener(listener);
-        }
-        return childPreferences;
+        return new MongoPreferences(this, name, config);
     }
 
     @Override
     protected void syncSpi() throws BackingStoreException {
+    	flushSpi();
     }
 
     @Override
     protected void flushSpi() throws BackingStoreException {
+    	getStore().updateCheck(config.getName(), config.getNodes());
+    }
+    
+    protected CheckRepository getStore() {
+    	if(parent() == null) {
+    		return store;
+    	} else {
+    		return Objects.requireNonNull(((MongoPreferences)parent()).getStore());
+    	}
     }
 
     private Node getNode() {
