@@ -16,7 +16,7 @@
 		<module>coming-soon</module>
     <module>newsletter</module>
     <module>zizisebata</module>
-    <module>checks</module>
+    <module>health-checks</module>
 	</modules>
 
 	<organization>
