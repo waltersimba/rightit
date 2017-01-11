@@ -22,9 +22,7 @@ public class UrlHealthCheck extends HealthCheck {
 	private int timeout;
 
 	public UrlHealthCheck(String url) {
-		this.url = url;
-		secureConnection = false;
-		timeout = HTTP_REQUEST_TIMEOUT;
+		this(url, false);
 	}
 
 	public UrlHealthCheck(String url, boolean secureConnection) {

@@ -2,11 +2,11 @@ package co.za.rightit.healthchecks.events;
 
 import com.google.common.eventbus.EventBus;
 
-public class EventHandlerImpl implements EventHandler {
+public class HealthCheckEventHandlerImpl implements EventHandler<HealthCheckEvent> {
 
 	private final EventBus eventBus;
 	
-	public EventHandlerImpl(EventBus eventBus) {
+	public HealthCheckEventHandlerImpl(EventBus eventBus) {
 		this.eventBus = eventBus;
 	}
 	

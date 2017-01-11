@@ -6,5 +6,6 @@ public interface HealthCheckEvent {
 	
 	boolean isHealthy();
 	
-	String getMessage() ;
+	String getMessage();
+	
 }
