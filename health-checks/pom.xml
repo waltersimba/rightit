@@ -1,87 +1,99 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>co.za.rightit</groupId>
-		<artifactId>rightit</artifactId>
-		<version>1.0</version>
-	</parent>
+	<groupId>co.za.rightit</groupId>
 	<artifactId>health-checks</artifactId>
+	<version>1.0</version>
 	<name>health-checks</name>
+	<packaging>pom</packaging>
 	<description>Health Check Module</description>
-	<dependencies>
 
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-		</dependency>
+	<modules>
+		<module>health-checks-api</module>
+		<module>health-checks-mongo</module>
+		<module>health-checks-web</module>
+		<module>health-checks-model</module>
+	</modules>
 
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.inject</groupId>
+				<artifactId>guice</artifactId>
+				<version>4.1.0</version>
+			</dependency>
 
-		<dependency>
-			<groupId>io.dropwizard</groupId>
-			<artifactId>dropwizard-core</artifactId>
-			<version>1.0.5</version>
-		</dependency>
-		<dependency>
-			<groupId>io.dropwizard</groupId>
-			<artifactId>dropwizard-client</artifactId>
-			<version>1.0.5</version>
-		</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>19.0</version>
+			</dependency>
 
-		<dependency>
-			<groupId>net.sf.jopt-simple</groupId>
-			<artifactId>jopt-simple</artifactId>
-			<version>4.8</version>
-		</dependency>
+			<dependency>
+				<groupId>io.dropwizard</groupId>
+				<artifactId>dropwizard-core</artifactId>
+				<version>1.0.5</version>
+			</dependency>
+			<dependency>
+				<groupId>io.dropwizard</groupId>
+				<artifactId>dropwizard-client</artifactId>
+				<version>1.0.5</version>
+			</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
+			<dependency>
+				<groupId>net.sf.jopt-simple</groupId>
+				<artifactId>jopt-simple</artifactId>
+				<version>4.8</version>
+			</dependency>
 
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jongo</groupId>
-			<artifactId>jongo</artifactId>
-			<version>1.3.0</version>
-		</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.21</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.7.21</version>
+			</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>atunit</groupId>
-			<artifactId>atunit</artifactId>
-			<version>1.0.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.10.19</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.fakemongo</groupId>
-			<artifactId>fongo</artifactId>
-			<version>2.0.6</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+			<dependency>
+				<groupId>org.mongodb</groupId>
+				<artifactId>mongo-java-driver</artifactId>
+				<version>3.2.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jongo</groupId>
+				<artifactId>jongo</artifactId>
+				<version>1.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>atunit</groupId>
+				<artifactId>atunit</artifactId>
+				<version>1.0.1</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.10.19</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.github.fakemongo</groupId>
+				<artifactId>fongo</artifactId>
+				<version>2.0.6</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<repositories>
 		<repository>
@@ -99,27 +111,14 @@
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<inherited>true</inherited>
 				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>co.za.rightit.checks.util.MongoPreferencesUtil</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<appendAssemblyId>false</appendAssemblyId>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
