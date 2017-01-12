@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
+import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 
 import co.za.rightit.healthchecks.model.events.SystemStateChangedEvent;
@@ -53,6 +54,7 @@ public class Slacker {
     
 	
     @Subscribe
+    @AllowConcurrentEvents
     public void handle(SystemStateChangedEvent event) {
     	Preconditions.checkArgument(event != null, "SystemStateChangedEvent cannot be null");
     	
