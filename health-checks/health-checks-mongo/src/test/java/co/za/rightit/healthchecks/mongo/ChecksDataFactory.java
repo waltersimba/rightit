@@ -10,7 +10,7 @@ import org.jongo.MongoCollection;
 import com.github.fakemongo.Fongo;
 import com.mongodb.DB;
 
-import co.za.rightit.healthchecks.model.CheckConfig;
+import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 
 public class ChecksDataFactory {
@@ -23,8 +23,8 @@ public class ChecksDataFactory {
         return checks;
     }
 
-    public static CheckConfig createCheckConfig() {
-        return new CheckConfig().withName("MemcachedCheck").withNodes(createCheckNodeConfig());
+    public static Configuration createCheckConfig() {
+        return new Configuration().withName("MemcachedCheck").withNodes(createCheckNodeConfig());
     }
 
     @SuppressWarnings("serial")

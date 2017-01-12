@@ -9,25 +9,25 @@ import java.util.prefs.BackingStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import co.za.rightit.healthchecks.model.CheckConfig;
+import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 import co.za.rightit.healthchecks.mongo.CheckRepository;
 
 public class MongoPreferences extends AbstractPreferences {
 
     private Logger LOGGER = LoggerFactory.getLogger(MongoPreferences.class);
-    private CheckConfig config;
+    private Configuration config;
     private CheckRepository store;
 
-    public MongoPreferences(CheckConfig config, CheckRepository store) {
+    public MongoPreferences(Configuration config, CheckRepository store) {
         super(null, "");
-        this.config = Objects.requireNonNull(config, "CheckConfig cannot be null");;
+        this.config = Objects.requireNonNull(config, "Configuration cannot be null");;
         this.store = Objects.requireNonNull(store, "CheckRepository cannot be null");
     }
 
-    public MongoPreferences(AbstractPreferences parent, String name, CheckConfig config) {
+    public MongoPreferences(AbstractPreferences parent, String name, Configuration config) {
         super(parent, name);
-        Objects.requireNonNull(config, "CheckConfig cannot be null");
+        Objects.requireNonNull(config, "Configuration cannot be null");
         this.config = config;
     }
 

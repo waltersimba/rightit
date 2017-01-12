@@ -27,7 +27,7 @@ import com.mongodb.DuplicateKeyException;
 import atunit.AtUnit;
 import atunit.Container;
 import atunit.Unit;
-import co.za.rightit.healthchecks.model.CheckConfig;
+import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 import co.za.rightit.healthchecks.model.util.Property;
 import co.za.rightit.healthchecks.mongo.CheckRepository;
@@ -68,7 +68,7 @@ public class CheckRepositoryTest extends AbstractModule {
 	   @Test
 	   public void testCheckConfigByNameDoesNotExist() {
 	      System.out.println("testCheckConfigByNameDoesNotExist");
-	      Optional<CheckConfig> checkOptional = repository.getCheckByName("checkNameDoesNotExist");
+	      Optional<Configuration> checkOptional = repository.getCheckByName("checkNameDoesNotExist");
 	      assertFalse(checkOptional.isPresent());
 	   }
 
@@ -76,11 +76,11 @@ public class CheckRepositoryTest extends AbstractModule {
 	   public void testShouldRetrieveCheckConfig() throws JsonProcessingException {
 	      System.out.println("testShouldRetrieveCheckConfig");
 	      //given
-	      Optional<CheckConfig> checkConfigFound = repository.getCheckByName("MemcachedCheck");
+	      Optional<Configuration> checkConfigFound = repository.getCheckByName("MemcachedCheck");
 	      //when
 	      assertTrue(checkConfigFound.isPresent());
 	      //then
-	      CheckConfig config = checkConfigFound.get();
+	      Configuration config = checkConfigFound.get();
 	      assertNotNull(config);
 	      assertEquals("MemcachedCheck", config.getName());
 	      assertEquals(2, config.getNodes().size());
@@ -96,21 +96,21 @@ public class CheckRepositoryTest extends AbstractModule {
 	   public void testNodeIndex() {
 	      System.out.println("testNodeIndex");
 	      //given
-	      CheckConfig checkConfig = repository.getCheckByName("MemcachedCheck").get();
+	      Configuration configuration = repository.getCheckByName("MemcachedCheck").get();
 	      //when
-	      assertNotNull(checkConfig.getNode("admin"));
-	      assertNotNull(checkConfig.getNode("hostname"));
+	      assertNotNull(configuration.getNode("admin"));
+	      assertNotNull(configuration.getNode("hostname"));
 	      //then
-	      assertEquals(0, checkConfig.getNodeIndex("admin"));
-	      assertEquals(1, checkConfig.getNodeIndex("hostname"));
+	      assertEquals(0, configuration.getNodeIndex("admin"));
+	      assertEquals(1, configuration.getNodeIndex("hostname"));
 	   }
 
 	   @Test
 	   public void testShouldPersistUpdatedCheckConfigNodesToDB() {
 	      System.out.println("testShouldPersistUpdatedCheckConfigNodesToDB");
 	      //given
-	      CheckConfig checkConfig = repository.getCheckByName("MemcachedCheck").get();
-	      Node checkNode = checkConfig.getNode("hostname").get();
+	      Configuration configuration = repository.getCheckByName("MemcachedCheck").get();
+	      Node checkNode = configuration.getNode("hostname").get();
 	      assertEquals("hostname", checkNode.getName());
 	      assertNull("lastNotified shouldn't be set", checkNode.get("lastNotified"));
 	      //when
@@ -118,9 +118,9 @@ public class CheckRepositoryTest extends AbstractModule {
 	      checkNode.put("lastNotified", lastNotified);
 	      assertNotNull("lastNotified is set", checkNode.get("lastNotified"));
 	      assertEquals(lastNotified, checkNode.get("lastNotified"));
-	      assertTrue("MemcachedCheck configuration should be persisted to DB", repository.updateCheck("MemcachedCheck", checkConfig.getNodes()));
+	      assertTrue("MemcachedCheck configuration should be persisted to DB", repository.updateCheck("MemcachedCheck", configuration.getNodes()));
 	      //then
-	      CheckConfig updatedCheckConfig = repository.getCheckByName("MemcachedCheck").get();
+	      Configuration updatedCheckConfig = repository.getCheckByName("MemcachedCheck").get();
 	      Node updatedCheckNode = updatedCheckConfig.getNode("hostname").get();
 	      assertEquals("hostname node should be updated in the DB", "hostname", updatedCheckNode.getName());
 	      assertEquals("lastNotified should be updated in the DB", lastNotified, updatedCheckNode.get("lastNotified"));
@@ -132,7 +132,7 @@ public class CheckRepositoryTest extends AbstractModule {
 	      //given
 	      assertTrue(repository.updateNodeProperty("MemcachedCheck", 1, new Property<>("lastNotified", 1483602523L)));
 	      //when
-	      CheckConfig config = checks.findOne("{name:#}", "MemcachedCheck").as(CheckConfig.class);
+	      Configuration config = checks.findOne("{name:#}", "MemcachedCheck").as(Configuration.class);
 	      assertEquals(2, config.getNodes().size());
 	      //then
 	      Optional<Node> nodeOptional = config.getNode("hostname");

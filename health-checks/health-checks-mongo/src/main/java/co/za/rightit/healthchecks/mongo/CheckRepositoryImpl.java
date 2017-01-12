@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Optional;
 import com.mongodb.WriteResult;
 
-import co.za.rightit.healthchecks.model.CheckConfig;
+import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 import co.za.rightit.healthchecks.model.util.Property;
 
@@ -26,8 +26,8 @@ public class CheckRepositoryImpl implements CheckRepository {
     }
 
     @Override
-    public Optional<CheckConfig> getCheckByName(String name) {
-        CheckConfig check = checks.findOne("{name: #}", name).as(CheckConfig.class);
+    public Optional<Configuration> getCheckByName(String name) {
+        Configuration check = checks.findOne("{name: #}", name).as(Configuration.class);
         return Optional.fromNullable(check);
     }
 

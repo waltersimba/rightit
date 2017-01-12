@@ -4,13 +4,13 @@ import java.util.List;
 
 import com.google.common.base.Optional;
 
-import co.za.rightit.healthchecks.model.CheckConfig;
+import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 import co.za.rightit.healthchecks.model.util.Property;
 
 public interface CheckRepository {
 	
-	Optional<CheckConfig> getCheckByName(String name);
+	Optional<Configuration> getCheckByName(String name);
 	
 	boolean updateCheck(String name, List<Node> nodes);
 	

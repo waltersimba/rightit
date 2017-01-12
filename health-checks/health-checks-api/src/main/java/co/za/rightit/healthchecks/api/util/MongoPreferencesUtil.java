@@ -12,7 +12,7 @@ import com.google.inject.Injector;
 
 import co.za.rightit.healthchecks.api.modules.ChecksModule;
 import co.za.rightit.healthchecks.api.modules.MongoModule;
-import co.za.rightit.healthchecks.model.CheckConfig;
+import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.mongo.CheckRepository;
 import co.za.rightit.healthchecks.mongo.preferences.MongoPreferences;
 import joptsimple.OptionParser;
@@ -32,7 +32,7 @@ public final class MongoPreferencesUtil {
     }
 
     public static Preferences getPreferences(String name, final CheckRepository repository) {
-        final Optional<CheckConfig> configOptional = repository.getCheckByName(name);
+        final Optional<Configuration> configOptional = repository.getCheckByName(name);
         if(!configOptional.isPresent()) {
             LOGGER.error("No check found: {}!", name);
             throw new IllegalArgumentException(String.format("Failed to retrieve check by name: %s", name));

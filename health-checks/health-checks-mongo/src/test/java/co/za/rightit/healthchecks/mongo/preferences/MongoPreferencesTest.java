@@ -27,7 +27,7 @@ import com.google.inject.Singleton;
 import atunit.AtUnit;
 import atunit.Container;
 import atunit.Unit;
-import co.za.rightit.healthchecks.model.CheckConfig;
+import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 import co.za.rightit.healthchecks.mongo.CheckRepository;
 import co.za.rightit.healthchecks.mongo.CheckRepositoryImpl;
@@ -53,7 +53,7 @@ public class MongoPreferencesTest extends AbstractModule {
 
     private static MongoCollection checks;
     private MongoPreferences objectUnderTest;
-    private Optional<CheckConfig> configOptional;
+    private Optional<Configuration> configOptional;
 
     @Before
     public void executeBeforeEachTest() throws UnknownHostException {
@@ -75,7 +75,7 @@ public class MongoPreferencesTest extends AbstractModule {
         System.out.println("testMongoPreferencesIsInstantiated");
         assertNotNull(objectUnderTest);
         assertNotNull(repository);
-        assertTrue("CheckConfig cannot be null", configOptional.isPresent());
+        assertTrue("Configuration cannot be null", configOptional.isPresent());
     }
 
     @Test

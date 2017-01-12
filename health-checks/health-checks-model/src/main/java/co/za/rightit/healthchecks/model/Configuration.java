@@ -4,13 +4,13 @@ import java.util.List;
 
 import com.google.common.base.Optional;
 
-public class CheckConfig {
+public class Configuration {
 
 	private String name;
 
 	private List<Node> nodes;
 
-	public CheckConfig() {
+	public Configuration() {
 	}
 
 	public String getName() {
@@ -29,12 +29,12 @@ public class CheckConfig {
 		this.nodes = nodes;
 	}
 
-	public CheckConfig withName(String name) {
+	public Configuration withName(String name) {
 		setName(name);
 		return this;
 	}
 
-	public CheckConfig withNodes(List<Node> nodes) {
+	public Configuration withNodes(List<Node> nodes) {
 		setNodes(nodes);
 		return this;
 	}
