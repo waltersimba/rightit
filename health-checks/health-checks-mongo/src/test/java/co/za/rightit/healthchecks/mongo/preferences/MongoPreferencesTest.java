@@ -1,7 +1,7 @@
 package co.za.rightit.healthchecks.mongo.preferences;
 
-import static co.za.rightit.healthchecks.mongo.ChecksDataFactory.createCheckConfig;
-import static co.za.rightit.healthchecks.mongo.ChecksDataFactory.getChecksCollection;
+import static co.za.rightit.healthchecks.mongo.util.ChecksDataFactory.createCheckConfig;
+import static co.za.rightit.healthchecks.mongo.util.ChecksDataFactory.getChecksCollection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

@@ -4,7 +4,7 @@ public class SystemStateChangedEvent implements HealthCheckEvent {
 	
 	private final String systemName;
 	private final boolean healthy;
-	private final String message;;
+	private final String message;
 	
 	public SystemStateChangedEvent(String systemName, boolean healthy, String message) {
 		this.systemName = systemName;

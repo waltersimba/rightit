@@ -1,4 +1,4 @@
-package co.za.rightit.healthchecks.mongo;
+package co.za.rightit.healthchecks.mongo.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,16 @@ import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 
 public class ChecksDataFactory {
+	
+	public static MongoCollection getHealthChecksCollection() {
+        Fongo fongo = new Fongo("mongo in-memory server");
+        DB db = fongo.getDB("config");
+        Jongo jongo = new Jongo(db);
+        MongoCollection checks = jongo.getCollection("healthchecks");
+        checks.ensureIndex("{name:1}", "{unique: true}");
+        return checks;
+    }
+	
 	public static MongoCollection getChecksCollection() {
         Fongo fongo = new Fongo("mongo in-memory server");
         DB db = fongo.getDB("config");

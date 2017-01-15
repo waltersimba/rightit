@@ -32,6 +32,7 @@ import co.za.rightit.healthchecks.model.Node;
 import co.za.rightit.healthchecks.model.util.Property;
 import co.za.rightit.healthchecks.mongo.CheckRepository;
 import co.za.rightit.healthchecks.mongo.CheckRepositoryImpl;
+import co.za.rightit.healthchecks.mongo.util.ChecksDataFactory;
 
 @RunWith(AtUnit.class)
 @Container(Container.Option.GUICE)
