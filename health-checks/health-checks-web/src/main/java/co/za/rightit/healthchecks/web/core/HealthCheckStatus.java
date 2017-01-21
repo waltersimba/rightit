@@ -1,4 +1,4 @@
-package co.za.rightit.healthchecks.web;
+package co.za.rightit.healthchecks.web.core;
 
 import java.util.concurrent.atomic.AtomicReference;
 

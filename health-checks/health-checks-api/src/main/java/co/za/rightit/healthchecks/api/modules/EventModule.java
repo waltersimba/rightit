@@ -18,7 +18,6 @@ public class EventModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EventServiceImpl.class);
 		bind(ExecutorService.class).toInstance(Executors.newWorkStealingPool());
 	}
 			
@@ -34,6 +33,12 @@ public class EventModule extends AbstractModule {
 		return new Slacker("services/T2P74FSUC/B3Q9FSLTU/1GkfjfcbzPschHhLYfkXnwya")
 				.withScreenName("healthchecks-bot")
 				.withChannel("#health-checks");
+	}
+	
+	@Provides
+	@Singleton
+	public EventService eventService(EventBus channel){
+		return new EventServiceImpl(channel);
 	}
 	
 	@Provides

@@ -11,9 +11,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import co.za.rightit.healthchecks.api.modules.ChecksModule;
-import co.za.rightit.healthchecks.api.modules.MongoModule;
 import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.mongo.CheckRepository;
+import co.za.rightit.healthchecks.mongo.modules.MongoDBModule;
 import co.za.rightit.healthchecks.mongo.preferences.MongoPreferences;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -42,7 +42,7 @@ public final class MongoPreferencesUtil {
 
     public static CheckRepository getCheckRepository() {
         Injector injector = Guice.createInjector(
-                new MongoModule(),
+                new MongoDBModule(),
                 new ChecksModule()
         );
         return injector.getInstance(CheckRepository.class);

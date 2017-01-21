@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import co.za.rightit.healthchecks.model.HealthCheck;
 import co.za.rightit.healthchecks.mongo.HealthCheckRepository;
-import co.za.rightit.healthchecks.web.HealthCheckExecutor;
-import co.za.rightit.healthchecks.web.HealthCheckStatus;
+import co.za.rightit.healthchecks.web.core.HealthCheckExecutor;
+import co.za.rightit.healthchecks.web.core.HealthCheckStatus;
 
 @Path("checks")
 public class HealthCheckResource {
@@ -39,11 +39,12 @@ public class HealthCheckResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("{id}")
+	@Path("/ping/{id}")
 	public Response pingCheck(@PathParam("id") String healthCheckId) {
-		LOGGER.debug("Pinging health check {} ...", healthCheckId);
+		LOGGER.debug("Health check to ping: {}.", healthCheckId);
 		Optional<HealthCheck> healthCheckOptional = repository.getHealthCheck(healthCheckId);
 		if (!healthCheckOptional.isPresent()) {
+			LOGGER.error("Health check not found: {}", healthCheckId);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		try {
@@ -74,7 +75,7 @@ public class HealthCheckResource {
 	}
 
 	@GET
-	@Path("status")
+	@Path("/ping/status")
 	public String getFeedStatus(@QueryParam("min") @DefaultValue("5") int cutOffMinutes) {
 		DateTime lastUpdated = healthCheckStatus.getLastUpdated();
 		if (lastUpdated.isAfter(DateTime.now().minusMinutes(cutOffMinutes))) {

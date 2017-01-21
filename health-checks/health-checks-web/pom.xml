@@ -10,6 +10,7 @@
 	</parent>
 	<artifactId>health-checks-web</artifactId>
 	<name>health-checks-web</name>
+	<packaging>war</packaging>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -17,7 +18,7 @@
 	</properties>
 
 	<build>
-		<finalName>health-checks-web</finalName>
+		<finalName>health-checks</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
