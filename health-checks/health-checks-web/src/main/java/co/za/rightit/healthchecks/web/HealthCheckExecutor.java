@@ -31,6 +31,8 @@ public class HealthCheckExecutor {
 	private final Map<HealthCheck.Type, HealthCheckCommand> commands;
 	private final ExecutorService executor;
 	private final EventService eventService;
+	@Inject
+	private HealthCheckStatus healthCheckStatus;
 
 	@SuppressWarnings("serial")
 	@Inject
@@ -72,6 +74,7 @@ public class HealthCheckExecutor {
 
 		@Override
 		public void onSuccess(Result result) {
+			healthCheckStatus.updated();
 			if(isHealthCheckStatusChanged(result)) {
 				healthCheck.put(HealthCheckConstants.HEALTHY, result.isHealthy());
 				if(shouldSendNotification()) {

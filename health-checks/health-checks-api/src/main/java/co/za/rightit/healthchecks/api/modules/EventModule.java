@@ -19,14 +19,9 @@ public class EventModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(EventServiceImpl.class);
+		bind(ExecutorService.class).toInstance(Executors.newWorkStealingPool());
 	}
-	
-	@Provides
-	@Singleton
-	public ExecutorService executorService() {
-		return Executors.newWorkStealingPool();
-	}
-		
+			
 	@Provides
 	@Singleton
 	public EventBus asyncEventBus(ExecutorService executorService) {
