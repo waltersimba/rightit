@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -30,8 +29,6 @@ import atunit.Unit;
 import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 import co.za.rightit.healthchecks.model.util.Property;
-import co.za.rightit.healthchecks.mongo.CheckRepository;
-import co.za.rightit.healthchecks.mongo.CheckRepositoryImpl;
 import co.za.rightit.healthchecks.mongo.util.ChecksDataFactory;
 
 @RunWith(AtUnit.class)

@@ -1,12 +1,12 @@
 package co.za.rightit.healthchecks.model;
 
-public class Channel {
+public class NotificationChannel {
 	
 	private String type;
 	
 	private String destination;
 	
-	public Channel(String type, String destination) {
+	public NotificationChannel(String type, String destination) {
 		this.type = type;
 		this.destination = destination;
 	}

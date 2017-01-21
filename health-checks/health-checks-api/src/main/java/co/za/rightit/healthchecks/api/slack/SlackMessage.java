@@ -84,11 +84,11 @@ public class SlackMessage {
 	}
 
 
-	static class Color {
-        static final Color WARNING = of("warning");
-        static final Color GOOD = of("good");
-        static final Color DANGER = of("danger");
-        static final Color TEAL = of("#35B3AB");
+	public static class Color {
+        public static final Color WARNING = of("warning");
+        public static final Color GOOD = of("good");
+        public static final Color DANGER = of("danger");
+        public static final Color TEAL = of("#35B3AB");
 
         private final String value;
 

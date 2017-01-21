@@ -27,4 +27,9 @@ public class HealthCheckRepositoryImpl implements HealthCheckRepository {
 		return Optional.ofNullable(healthCheck);
 	}
 
+	@Override
+	public boolean updateHealthCheck(HealthCheck healthCheck) {
+		return healthChecks.save(healthCheck).wasAcknowledged();
+	}
+
 }

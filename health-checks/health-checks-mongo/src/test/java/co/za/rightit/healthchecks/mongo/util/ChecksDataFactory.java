@@ -6,7 +6,10 @@ import java.util.List;
 
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
+import org.jongo.marshall.jackson.JacksonMapper;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.github.fakemongo.Fongo;
 import com.mongodb.DB;
 
@@ -14,11 +17,14 @@ import co.za.rightit.healthchecks.model.Configuration;
 import co.za.rightit.healthchecks.model.Node;
 
 public class ChecksDataFactory {
-	
+		
 	public static MongoCollection getHealthChecksCollection() {
         Fongo fongo = new Fongo("mongo in-memory server");
         DB db = fongo.getDB("config");
-        Jongo jongo = new Jongo(db);
+        Jongo jongo = new Jongo(db, new JacksonMapper.Builder()
+        		.registerModule(new JodaModule())
+        		.enable(MapperFeature.AUTO_DETECT_GETTERS)
+        		.build());
         MongoCollection checks = jongo.getCollection("healthchecks");
         checks.ensureIndex("{name:1}", "{unique: true}");
         return checks;
