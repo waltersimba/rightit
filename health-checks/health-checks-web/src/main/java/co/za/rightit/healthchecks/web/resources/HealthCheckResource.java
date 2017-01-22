@@ -24,10 +24,10 @@ import co.za.rightit.healthchecks.mongo.HealthCheckRepository;
 import co.za.rightit.healthchecks.web.core.HealthCheckExecutor;
 import co.za.rightit.healthchecks.web.core.HealthCheckStatus;
 
-@Path("checks")
+@Path("/")
 public class HealthCheckResource {
 	/**
-	 * TODO: 1. Rate limit API ping call with ??? permits per minute/second?.
+	 * TODO: 1. Rate limit API. No more than one call per second.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(HealthCheckResource.class);
 	@Inject
@@ -39,12 +39,12 @@ public class HealthCheckResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("/ping/{id}")
-	public Response pingCheck(@PathParam("id") String healthCheckId) {
-		LOGGER.debug("Health check to ping: {}.", healthCheckId);
-		Optional<HealthCheck> healthCheckOptional = repository.getHealthCheck(healthCheckId);
+	@Path("/ping/{name}")
+	public Response pingCheck(@PathParam("name") String healthCheckName) {
+		LOGGER.debug("Health check to ping: {}.", healthCheckName);
+		Optional<HealthCheck> healthCheckOptional = repository.getHealthCheckByName(healthCheckName);
 		if (!healthCheckOptional.isPresent()) {
-			LOGGER.error("Health check not found: {}", healthCheckId);
+			LOGGER.error("Health check not found: {}", healthCheckName);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		try {

@@ -1,33 +1,28 @@
 package co.za.rightit.healthchecks.api.slack;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-
-import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 
 import com.google.common.base.Preconditions;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
 
 public class Slacker {
 
-	private final WebTarget slackMeResource;
+	private final WebResource slackMeResource;
 	private String channel;
 	private String screenName;
 	private String iconUrl;
 
 	public Slacker(String webhookPath) {
-		final Client client = ClientBuilder.newClient();
-		UriBuilder uriBuilder = new JerseyUriBuilder();
-		uriBuilder
-		.scheme("https")
-		.host("hooks.slack.com")
-		.port(443)
-		.path(webhookPath);
-		slackMeResource = client.target(uriBuilder.build());
+		ClientConfig clientConfig = new DefaultClientConfig();
+		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		Client client = Client.create(clientConfig);
+		slackMeResource = client.resource("https://hooks.slack.com:443").path(webhookPath);
 	}
 
 	public Slacker withChannel(String channel) {
@@ -48,11 +43,10 @@ public class Slacker {
 	public boolean sendSlackMessage(String message, SlackMessage.Color color) {
 		return sendSlackMessage(toSlackMessage(message, color));
 	}
-	
+
 	public boolean sendSlackMessage(SlackMessage slackMessage) {
-		final Response response = slackMeResource
-				.request(MediaType.APPLICATION_JSON_TYPE)
-				.post(Entity.json(slackMessage));
+		ClientResponse response = slackMeResource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,
+				slackMessage);
 		return response.getStatus() == Response.Status.OK.getStatusCode();
 	}
 

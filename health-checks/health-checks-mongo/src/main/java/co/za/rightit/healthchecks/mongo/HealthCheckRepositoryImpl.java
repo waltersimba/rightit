@@ -22,8 +22,14 @@ public class HealthCheckRepositoryImpl implements HealthCheckRepository {
 	}
 
 	@Override
-	public Optional<HealthCheck> getHealthCheck(String id) {
+	public Optional<HealthCheck> getHealthCheckById(String id) {
 		HealthCheck healthCheck = healthChecks.findOne("{_id: #}", new ObjectId(id)).as(HealthCheck.class);
+		return Optional.ofNullable(healthCheck);
+	}
+	
+	@Override
+	public Optional<HealthCheck> getHealthCheckByName(String name) {
+		HealthCheck healthCheck = healthChecks.findOne("{name: #}", name).as(HealthCheck.class);
 		return Optional.ofNullable(healthCheck);
 	}
 

@@ -78,7 +78,7 @@ public class HealthCheckRepositoryTest extends AbstractModule {
 		HealthCheck healthCheck = HealthChecksDataFactory.createHealthCheck();
 		HealthCheck insertedHealthCheck = repository.createHealthCheck(healthCheck);
 		/// then
-		Optional<HealthCheck> healthCheckFound = repository.getHealthCheck(insertedHealthCheck.getId());
+		Optional<HealthCheck> healthCheckFound = repository.getHealthCheckById(insertedHealthCheck.getId());
 		assertTrue(healthCheckFound.isPresent());
 		assertEquals(healthCheck.getId(), healthCheckFound.get().getId());
 	}
@@ -95,7 +95,7 @@ public class HealthCheckRepositoryTest extends AbstractModule {
 		healthCheck.put(HealthCheckConstants.HEALTHY, false);
 		assertTrue(repository.updateHealthCheck(healthCheck));
 		// then
-		Optional<HealthCheck> healthCheckOptional = repository.getHealthCheck(healthCheck.getId());
+		Optional<HealthCheck> healthCheckOptional = repository.getHealthCheckById(healthCheck.getId());
 		assertTrue(healthCheckOptional.isPresent());
 		HealthCheck updatedHealthCheck = healthCheckOptional.get();
 		assertEquals(updatedAt, updatedHealthCheck.getDateTime(HealthCheckConstants.LAST_PING));

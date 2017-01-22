@@ -41,7 +41,7 @@
 	</build>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>health-checks-api</artifactId>
@@ -59,8 +59,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>io.dropwizard</groupId>
-			<artifactId>dropwizard-core</artifactId>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-healthchecks</artifactId>
 		</dependency>
 
 		<dependency>
