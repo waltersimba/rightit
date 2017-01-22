@@ -1,5 +1,0 @@
-2017-01-22 14:28:08 DEBUG MongoPreferences:39 - [hostname] -> lastNotified=1485088088
-2017-01-22 14:28:08 DEBUG MongoPreferences:39 - [hostname] -> lastNotified=1485088088
-2017-01-22 14:28:08 DEBUG CheckRepositoryImpl:39 - Updated "MemcachedCheck".
-2017-01-22 14:28:08 DEBUG CheckRepositoryImpl:39 - Updated "MemcachedCheck".
-2017-01-22 14:28:08 INFO  CheckRepositoryImpl:54 - Updated MemcachedCheck.nodes[1].properties.lastNotified=1483602523
