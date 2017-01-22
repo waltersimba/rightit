@@ -7,9 +7,10 @@ import com.google.common.eventbus.EventBus;
 
 import co.za.rightit.healthchecks.api.notify.subscriber.DeadEventSubscriber;
 import co.za.rightit.healthchecks.api.notify.subscriber.EventSubscriber;
+import co.za.rightit.healthchecks.api.util.Closeable;
 import co.za.rightit.healthchecks.model.events.Event;
 
-public class EventServiceImpl implements EventService, AutoCloseable {
+public class EventServiceImpl implements EventService, Closeable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 

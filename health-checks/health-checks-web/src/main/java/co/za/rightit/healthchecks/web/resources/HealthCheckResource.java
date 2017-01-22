@@ -19,10 +19,10 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.za.rightit.healthchecks.api.HealthCheckExecutor;
+import co.za.rightit.healthchecks.api.HealthCheckStatus;
 import co.za.rightit.healthchecks.model.HealthCheck;
 import co.za.rightit.healthchecks.mongo.HealthCheckRepository;
-import co.za.rightit.healthchecks.web.core.HealthCheckExecutor;
-import co.za.rightit.healthchecks.web.core.HealthCheckStatus;
 
 @Path("/")
 public class HealthCheckResource {
