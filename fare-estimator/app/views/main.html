@@ -1,0 +1,41 @@
+<form name="fareEstimatorForm" ng-submit="vm.calculateFare()">
+  <div class="row">
+    <label for="pickup-location">Pickup location:</label>
+    <div class="form-group">
+      <input id="pickup-location"
+             ng-model="vm.pickupLocation.name"
+             type="text"
+             class="form-control"
+             placeholder="Enter pickup location"
+             vs-google-autocomplete
+             vs-autocomplete-validator
+             vs-latitude="vm.pickupLocation.lat"
+             vs-longitude="vm.pickupLocation.lng" required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <label for="destination">Destination:</label>
+      <div class="input-group" id="destination">
+        <input ng-model="vm.destination.name"
+               type="text" class="form-control"
+               placeholder="Enter destination"
+               vs-google-autocomplete
+               vs-autocomplete-validator
+               vs-latitude="vm.destination.lat"
+               vs-longitude="vm.destination.lng" required>
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-secondary" button-spinner="vm.loading" ng-disabled="vm.loading"
+                  ng-disabled="fareEstimatorForm.$invalid"><span>Go!</span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="vm.hasFareEstimate()">
+    <label>Fare estimate:</label>
+      <span>
+        {{vm.fareEstimate.cost.text}} (~ {{vm.fareEstimate.duration.text}} away)
+      </span>
+  </div>
+</form>

@@ -1,0 +1,26 @@
+{
+  "name": "fare-estimator",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "^1.4.0",
+    "bootstrap-sass-official": "^3.2.0",
+    "angular-route": "^1.4.0",
+    "vsGoogleAutocomplete": "vs-google-autocomplete#^0.5.0",
+    "angular-button-spinner": "^0.0.4",
+    "components-font-awesome": "^4.7.0"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.4.0"
+  },
+  "appPath": "app",
+  "moduleName": "fareEstimatorApp",
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "less/bootstrap.less",
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    }
+  }
+}
