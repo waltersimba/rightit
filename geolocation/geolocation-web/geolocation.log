@@ -1,8 +1,0 @@
-2017-01-29 10:42:21 DEBUG GeolocationGuiceServletConfig:47 - Initialised
-2017-01-29 10:42:22 DEBUG GeolocationGuiceServletConfig:54 - Destroyed
-2017-01-29 10:42:52 DEBUG GeolocationGuiceServletConfig:47 - Initialised
-2017-01-29 10:43:41 INFO  FareResource:66 - Result: [origin=7 Gemini Pl, Alberton, 1449, South Africa, destination=27 Boy Louw St, Pretoria, 0018, South Africa, distance=[text=72.5 km, value=72471], duration=[text=57 mins, value=3395], cost=[text=R 804.00, value=804.0]]
-2017-01-29 10:45:26 DEBUG GeolocationGuiceServletConfig:54 - Destroyed
-2017-01-29 10:45:44 DEBUG GeolocationGuiceServletConfig:47 - Initialised
-2017-01-29 10:46:39 INFO  FareResource:67 - Result: [origin=7 Gemini Pl, Alberton, 1449, South Africa, destination=27 Boy Louw St, Pretoria, 0018, South Africa, distance=[text=72.5 km, value=72471], duration=[text=57 mins, value=3395], cost=[text=R 804.00, value=804.0]]
-2017-01-29 10:49:41 DEBUG GeolocationGuiceServletConfig:54 - Destroyed
