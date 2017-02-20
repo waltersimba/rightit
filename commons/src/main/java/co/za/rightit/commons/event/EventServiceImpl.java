@@ -1,18 +1,26 @@
 package co.za.rightit.commons.event;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 
-public class EventServiceImpl implements EventService {
+import co.za.rightit.commons.utils.CleanupCapable;
+
+public class EventServiceImpl implements EventService, CleanupCapable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
 	private final EventBus channel;
-	
-	public EventServiceImpl(final EventBus channel) {
-		this.channel = channel;
+	private final ExecutorService executor;
+		
+	public EventServiceImpl() {
+		executor = Executors.newWorkStealingPool();
+		this.channel = new AsyncEventBus(executor);
 	}
 
 	@Override
@@ -31,6 +39,11 @@ public class EventServiceImpl implements EventService {
 	public <E extends Event> void post(E event) {
 		LOGGER.debug("posting event {}", (event != null ? event.getId() : "null"));
 		channel.post(event);
+	}
+
+	@Override
+	public void cleanup() {
+		executor.shutdown();		
 	}
 	
 }
