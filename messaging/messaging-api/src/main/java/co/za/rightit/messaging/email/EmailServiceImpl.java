@@ -10,8 +10,11 @@ import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Singleton;
+
 import co.za.rightit.messaging.email.EmailMessage.EmailContentType;
 
+@Singleton
 public class EmailServiceImpl implements EmailService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
