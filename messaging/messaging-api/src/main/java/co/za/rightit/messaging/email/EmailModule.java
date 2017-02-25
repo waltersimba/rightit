@@ -14,7 +14,7 @@ public class EmailModule extends AbstractModule {
 		bind(EmailEventSubscriber.class);
 		install(new CamelModuleWithRouteTypes(
 				ImmutableSet.<Class<? extends RoutesBuilder>>builder()
-				.add(EmailRouteBuilder.class)
+				.add(EmailRoutes.class)
 				.build()));
 	}
 

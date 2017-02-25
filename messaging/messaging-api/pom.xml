@@ -16,9 +16,8 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>co.za.rightit</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>commons</artifactId>
-			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

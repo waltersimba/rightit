@@ -13,15 +13,14 @@ import org.slf4j.LoggerFactory;
 
 import co.za.rightit.messaging.web.model.EmailRequest;
 
-@Path("/send")
-public class MessagingResource {
+@Path("/emails")
+public class EmailResource {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MessagingResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmailResource.class);
 
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	@Path("/email")
 	public Response email(EmailRequest request) {
 		LOGGER.debug("received email request: {}", request);
 		return Response.status(Status.ACCEPTED).build();

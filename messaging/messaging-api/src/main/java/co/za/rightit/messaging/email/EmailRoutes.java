@@ -6,7 +6,7 @@ import org.apache.camel.builder.RouteBuilder;
 
 import com.google.inject.Inject;
 
-public class EmailRouteBuilder extends RouteBuilder {
+public class EmailRoutes extends RouteBuilder {
 
 	@Inject
 	private EmailService emailService;
