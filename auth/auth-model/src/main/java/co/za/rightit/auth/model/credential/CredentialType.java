@@ -1,7 +1,7 @@
 package co.za.rightit.auth.model.credential;
 
 public enum CredentialType {
-	API("api"),
+	API("jwt"),
 	BASIC("basic");
 	
 	private String value;

@@ -29,7 +29,7 @@ public class AuthResource {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-	@Path("/token")
+	@Path("/app/token")
 	public Response getAccessToken() {
 		try {
 			return Response.ok(tokenService.getAccessToken(accessTokenRequestProvider.get())).build();

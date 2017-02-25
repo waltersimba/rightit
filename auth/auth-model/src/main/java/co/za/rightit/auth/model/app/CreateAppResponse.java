@@ -7,11 +7,11 @@ import co.za.rightit.auth.model.credential.ApiKey;
 public class CreateAppResponse {
 	
 	private String appName;
-	private ApiKey credentials;
+	private ApiKey credential;
 	
-	public CreateAppResponse(String appName, ApiKey credentials) {
+	public CreateAppResponse(String appName, ApiKey credential) {
 		this.appName = appName;
-		this.credentials = credentials;
+		this.credential = credential;
 	}
 	
 	@JsonProperty(value = "app_name")
@@ -19,8 +19,8 @@ public class CreateAppResponse {
 		return appName;
 	}
 	
-	public ApiKey getCredentials() {
-		return credentials;
+	public ApiKey getCredential() {
+		return credential;
 	}
 		
 }
