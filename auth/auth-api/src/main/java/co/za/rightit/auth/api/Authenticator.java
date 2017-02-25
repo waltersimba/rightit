@@ -1,4 +1,4 @@
-package co.za.rightit.healthchecks.api.security;
+package co.za.rightit.auth.api;
 
 import java.util.Optional;
 

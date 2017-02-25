@@ -1,4 +1,4 @@
-package co.za.rightit.healthchecks.api.security.basic;
+package co.za.rightit.auth.api.basic;
 
 import java.util.Optional;
 
@@ -6,12 +6,17 @@ import javax.inject.Inject;
 
 import com.google.common.base.Preconditions;
 
-import co.za.rightit.healthchecks.api.security.AuthenticationException;
-import co.za.rightit.healthchecks.api.security.Authenticator;
-import co.za.rightit.healthchecks.api.security.apikey.ApiKey;
-import co.za.rightit.healthchecks.api.security.apikey.ApiKeyProvider;
+import co.za.rightit.auth.api.AuthenticationException;
+import co.za.rightit.auth.api.Authenticator;
+import co.za.rightit.auth.api.key.ApiKeyProvider;
+import co.za.rightit.auth.model.basic.BasicPrincipal;
+import co.za.rightit.auth.model.basic.UsernamePassword;
+import co.za.rightit.auth.model.credential.ApiKey;
 
-public class BasicCredentialsAuthenticator implements Authenticator<BasicCredentials, String> {
+/**
+ * Convert HTTP basic credentials into an API key
+ */
+public class BasicCredentialsAuthenticator implements Authenticator<UsernamePassword, BasicPrincipal> {
 
 	private final ApiKeyProvider provider;
 	
@@ -21,7 +26,7 @@ public class BasicCredentialsAuthenticator implements Authenticator<BasicCredent
 	}
 	
 	@Override
-	public Optional<String> authenticate(BasicCredentials credentials) throws AuthenticationException {
+	public Optional<BasicPrincipal> authenticate(UsernamePassword credentials) throws AuthenticationException {
 		Preconditions.checkNotNull(credentials);
 
 	    String username = credentials.getUsername();
@@ -36,7 +41,7 @@ public class BasicCredentialsAuthenticator implements Authenticator<BasicCredent
 	      return Optional.empty();
 	    }
 
-	    return Optional.of(key.getUsername());
+	    return Optional.of(new BasicPrincipal(key.getUsername()));
 	}
 
 }

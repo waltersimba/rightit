@@ -1,11 +1,11 @@
-package co.za.rightit.healthchecks.api.security.basic;
+package co.za.rightit.auth.model.basic;
 
-public class BasicCredentials {
+public class UsernamePassword {
 	
 	private final String username;
 	private final String password;
 	
-	public BasicCredentials(String username, String password) {
+	public UsernamePassword(String username, String password) {
 		this.username = username;
 		this.password = password;
 	}

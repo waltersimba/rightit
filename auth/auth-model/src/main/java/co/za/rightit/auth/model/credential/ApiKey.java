@@ -1,4 +1,6 @@
-package co.za.rightit.healthchecks.api.security.apikey;
+package co.za.rightit.auth.model.credential;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ApiKey {
 
@@ -10,6 +12,7 @@ public class ApiKey {
 		this.secret = secret;
 	}
 
+	@JsonProperty(value = "key")
 	public String getUsername() {
 		return username;
 	}
