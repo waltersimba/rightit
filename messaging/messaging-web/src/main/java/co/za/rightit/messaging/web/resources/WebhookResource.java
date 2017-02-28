@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import co.za.rightit.messaging.web.model.CreateWebhookRequest;
 
-
 @Path("/webhooks")
 public class WebhookResource {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailResource.class);
