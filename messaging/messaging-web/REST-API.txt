@@ -1,0 +1,6 @@
+#POST /messaging/api/emails
+curl -i \
+--header "Content-Type:application/json" \
+--request POST \
+--data '{"to":"walter.simba@rightit.co.za", "message":"This is a test", "phoneNumber": "0722748171"}' \
+http://localhost:8080/messaging/api/emails

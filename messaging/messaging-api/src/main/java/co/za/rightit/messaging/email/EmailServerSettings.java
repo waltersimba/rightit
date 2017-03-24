@@ -1,14 +1,19 @@
 package co.za.rightit.messaging.email;
 
-public class EmailOptions {
+import com.google.gson.annotations.SerializedName;
+
+public class EmailServerSettings {
 	
+	@SerializedName("smpt_port")
 	private final int smtpPort;
+	@SerializedName("host_name")
 	private final String hostName;
 	private final String username;
 	private final String password;
+	@SerializedName("start_tls_enabled")
 	private final Boolean startTLSEnabled;
 	
-	public EmailOptions(Builder builder) {
+	public EmailServerSettings(Builder builder) {
 		smtpPort = builder.smtpPort;
 		hostName = builder.hostName;
 		username = builder.username;
@@ -72,8 +77,8 @@ public class EmailOptions {
 			return this;
 		}
 		
-		public EmailOptions build() {
-			return new EmailOptions(this);
+		public EmailServerSettings build() {
+			return new EmailServerSettings(this);
 		}
 	}
 }

@@ -10,7 +10,8 @@ public class EmailMessage {
 	private List<String> recipients;
 	private String subject;
 	private String message;
-	private EmailOptions emailOptions;
+	private String replyTo;
+	private EmailServerSettings settings;
 	private EmailContentType contentType;
 	
 	public EmailMessage(EmailMessageBuilder builder) {
@@ -19,7 +20,8 @@ public class EmailMessage {
 		this.recipients = builder.recipients;
 		this.subject = builder.subject;
 		this.message = builder.message;
-		this.emailOptions = builder.emailOptions;
+		this.replyTo = builder.replyTo;
+		this.settings = builder.settings;
 		this.contentType = builder.contentType;
 	}
 		
@@ -43,8 +45,12 @@ public class EmailMessage {
 		return message;
 	}
 	
-	public EmailOptions getEmailOptions() {
-		return emailOptions;
+	public String getReplyTo() {
+		return replyTo;
+	}
+	
+	public EmailServerSettings getSettings() {
+		return settings;
 	}
 
 	public EmailContentType getContentType() {
@@ -57,7 +63,8 @@ public class EmailMessage {
 		private List<String> recipients;
 		private String subject;
 		private String message;
-		private EmailOptions emailOptions;
+		private String replyTo;
+		private EmailServerSettings settings;
 		private EmailContentType contentType;
 		
 		public EmailMessageBuilder withSenderName(String senderName) {
@@ -97,13 +104,18 @@ public class EmailMessage {
 			return this;
 		} 
 		
-		public EmailMessageBuilder withEmailOptions(EmailOptions emailOptions) {
-			this.emailOptions = emailOptions;
+		public EmailMessageBuilder withEmailServerSettings(EmailServerSettings settings) {
+			this.settings = settings;
 			return this;
 		}
 		
 		public EmailMessage build() {
 			return new EmailMessage(this);
+		}
+
+		public EmailMessageBuilder withReplyTo(String replyTo) {
+			this.replyTo = replyTo;
+			return this;
 		}
 	}
 	

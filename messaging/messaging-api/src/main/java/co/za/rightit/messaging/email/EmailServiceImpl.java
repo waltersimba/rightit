@@ -21,24 +21,24 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	public void send(EmailMessage emailMessage) throws EmailException {
-		LOGGER.debug("Sending email to \"{}\"", emailMessage.getRecipients());
 		final Optional<Email> optionalEmail = new EmailMessageBuilder(emailMessage.getMessage()).apply(emailMessage.getContentType());
 		if(!optionalEmail.isPresent()) {
 			throw new EmailException("Failed to create an instance of an Email object");
 		}
 		final Email email = optionalEmail.get();
-		final EmailOptions options = emailMessage.getEmailOptions();
-		email.setSmtpPort(options.getSmtpPort());
-		email.setHostName(options.getHostName());
-		email.setAuthentication(options.getUsername(), options.getPassword());
-		email.setStartTLSEnabled(options.isStartTLSEnabled());
+		final EmailServerSettings settings = emailMessage.getSettings();
+		email.setSmtpPort(settings.getSmtpPort());
+		email.setHostName(settings.getHostName());
+		email.setAuthentication(settings.getUsername(), settings.getPassword());
+		email.setStartTLSEnabled(settings.isStartTLSEnabled());
 		email.setFrom(emailMessage.getSenderEmail(), emailMessage.getSenderName());
 		email.setSubject(emailMessage.getSubject());
 		for(String recipient : emailMessage.getRecipients()) {
 			email.addTo(recipient);
 		}
-		String messageId = email.send();
-		LOGGER.info(String.format("Email with message id %s sent!", messageId));
+		email.addReplyTo(emailMessage.getReplyTo());
+		email.send();
+		LOGGER.info("sent email to \"{}\"", emailMessage.getRecipients());
 	}
 
 	protected class EmailMessageBuilder implements Function<EmailContentType, Optional<Email>> {

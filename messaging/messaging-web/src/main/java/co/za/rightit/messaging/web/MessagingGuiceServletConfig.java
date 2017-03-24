@@ -18,8 +18,9 @@ import co.za.rightit.commons.event.EventModule;
 import co.za.rightit.commons.event.EventService;
 import co.za.rightit.commons.event.EventSubscriber;
 import co.za.rightit.commons.utils.CleanupHandler;
-import co.za.rightit.commons.utils.guice.LifecycleModule;
 import co.za.rightit.messaging.email.EmailModule;
+import co.za.rightit.messaging.web.modules.CleanupModule;
+import co.za.rightit.messaging.web.modules.MessagingModule;
 import co.za.rightit.messaging.web.modules.RestfulResourceModule;
 
 public class MessagingGuiceServletConfig extends GuiceServletContextListener {
@@ -32,8 +33,9 @@ public class MessagingGuiceServletConfig extends GuiceServletContextListener {
 
 	private static Injector createInjector(ServletContext servletContext) {
 		return Guice.createInjector(
-				new LifecycleModule(),
+				new CleanupModule(),
 				new EmailModule(),
+				new MessagingModule(),
 				new EventModule(),
 				new RestfulResourceModule());
 	}

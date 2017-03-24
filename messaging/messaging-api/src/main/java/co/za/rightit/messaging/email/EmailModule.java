@@ -11,7 +11,7 @@ public class EmailModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(EmailService.class).to(EmailServiceImpl.class);
-		bind(EmailEventSubscriber.class);
+		bind(EmailEventSubscriber.class).asEagerSingleton();
 		install(new CamelModuleWithRouteTypes(
 				ImmutableSet.<Class<? extends RoutesBuilder>>builder()
 				.add(EmailRoutes.class)
