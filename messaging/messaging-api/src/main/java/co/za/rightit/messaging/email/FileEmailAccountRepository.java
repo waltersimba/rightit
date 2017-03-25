@@ -23,13 +23,15 @@ public class FileEmailAccountRepository implements EmailAccountRepository {
 	
 	public FileEmailAccountRepository(Path jsonFilePath) {
 		this.jsonFilePath = Preconditions.checkNotNull(jsonFilePath, "jsonFilePath");
-		Preconditions.checkArgument(Files.exists(jsonFilePath), "json file does not exist");
-		Preconditions.checkArgument(jsonFilePath.endsWith(".json"), "json extention expected");
+		Preconditions.checkArgument(Files.exists(jsonFilePath), "json file must exist");
+		Preconditions.checkArgument(jsonFilePath.toFile().getAbsolutePath().endsWith(".json"), 
+				"json extention expected");
 	}
 		
 	@Override
 	public Optional<EmailAccount> findEmailAccount(String domain) {
 		LOGGER.info("Scanning for email account with domain={} in file={}", domain, jsonFilePath.getFileName());
+		if(domain == null) return Optional.empty();
 		try (InputStream inputStream = Files.newInputStream(jsonFilePath);
 				JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"))) {
 			Gson gson = new GsonBuilder().create();
@@ -40,12 +42,12 @@ public class FileEmailAccountRepository implements EmailAccountRepository {
 				// Read data into object model one at a time
 				emailAccount = gson.fromJson(reader, EmailAccount.class);
 				if (domain != null && emailAccount != null && domain.equals(emailAccount.getDomain())) {
-					LOGGER.info("Email account with domain={} found.", domain);
+					LOGGER.info("Email account found: {}", emailAccount.toString());
 					break;
 				}
 			}
 			if(emailAccount == null) {
-				LOGGER.warn("Email account with domain={} NOT found", domain);
+				LOGGER.error("Email account with domain={} not found", domain);
 			}
 			return Optional.ofNullable(emailAccount);
 		} catch (UnsupportedEncodingException uee) {

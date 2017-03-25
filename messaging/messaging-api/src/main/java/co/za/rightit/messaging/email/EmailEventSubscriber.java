@@ -24,7 +24,7 @@ public class EmailEventSubscriber implements EventSubscriber {
 	
 	@Subscribe
 	public void onEmailEvent(EmailEvent evt) {
-		LOGGER.info("Proccessing email event for \"{}\"", evt.getMessage().getRecipients());
+		LOGGER.info("Proccessing email event to \"{}\"", evt.getMessage().getRecipients());
 		Preconditions.checkNotNull(evt, "evt");
 		Preconditions.checkNotNull(evt.getMessage(), "message");
 		producer.asyncSendBody("seda:email", evt.getMessage());

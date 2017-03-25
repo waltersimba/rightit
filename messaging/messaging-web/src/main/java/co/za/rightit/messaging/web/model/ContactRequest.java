@@ -3,6 +3,7 @@ package co.za.rightit.messaging.web.model;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 
 import com.google.common.base.MoreObjects;
@@ -56,7 +57,7 @@ public class ContactRequest {
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
 				.add("to", to)
-				.add("message", message)
+				.add("message", StringUtils.abbreviate(message, 18))
 				.add("phoneNumber", phoneNumber)
 				.add("contactName", contactName)
 				.toString();

@@ -1,10 +1,11 @@
 package co.za.rightit.messaging.email;
 
+import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
 public class EmailServerSettings {
 	
-	@SerializedName("smpt_port")
+	@SerializedName("smtp_port")
 	private final int smtpPort;
 	@SerializedName("host_name")
 	private final String hostName;
@@ -43,6 +44,17 @@ public class EmailServerSettings {
 
 	public static Builder newBuilder() {
 		return new Builder();
+	}
+	
+	@Override
+	public String toString() {
+		return MoreObjects.toStringHelper(this)
+				.add("smtpPort" , smtpPort)
+				.add("hostName" , hostName)
+				.add("username" , username)
+				.add("password" , "*******")
+				.add("startTLSEnabled" , startTLSEnabled)
+				.toString();
 	}
 
 	public static class Builder {

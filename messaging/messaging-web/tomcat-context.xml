@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Context>
-
+	<Parameter name="email-settings-file" value="./email-settings.json" override="false"/>
 </Context>

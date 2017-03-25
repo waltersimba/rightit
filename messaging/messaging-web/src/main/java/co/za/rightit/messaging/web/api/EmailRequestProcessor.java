@@ -12,12 +12,11 @@ import com.google.inject.Singleton;
 
 import co.za.rightit.commons.event.EventService;
 import co.za.rightit.commons.event.EventSubscriber;
+import co.za.rightit.messaging.email.EmailAccount;
+import co.za.rightit.messaging.email.EmailAccountRepository;
 import co.za.rightit.messaging.email.EmailEvent;
 import co.za.rightit.messaging.email.EmailMessage;
 import co.za.rightit.messaging.email.EmailMessage.EmailContentType;
-import co.za.rightit.messaging.email.EmailServerSettings;
-import co.za.rightit.messaging.email.EmailAccount;
-import co.za.rightit.messaging.email.EmailAccountRepository;
 import co.za.rightit.messaging.web.model.ContactRequest;
 import co.za.rightit.messaging.web.model.EmailRequestEvent;
 
@@ -38,22 +37,23 @@ public class EmailRequestProcessor implements EventSubscriber {
 	public void onEmailRequestEvent(EmailRequestEvent evt) {
 		Optional<EmailAccount> optional = repository.findEmailAccount(evt.getDomainName());
 		if(optional.isPresent()) {
-			eventService.post(createEmailEvent(evt.getEmailRequest(), optional.get().getSettings()));
+			eventService.post(createEmailEvent(evt.getEmailRequest(), optional.get()));
 		} else {
 			throw new IllegalStateException(String.format("Email account with domain=%s not found", evt.getDomainName()));
 		}
 	}
 
-	private EmailEvent createEmailEvent(ContactRequest request, EmailServerSettings settings) {
+	private EmailEvent createEmailEvent(ContactRequest request, EmailAccount account) {
+		LOGGER.info("build email message for {}", request.getTo());
 		EmailMessage emailMessage = new EmailMessage.EmailMessageBuilder()
 				.withContentType(EmailContentType.TEXT)
 				.withMessage(String.format("%s\n\nContact name: %s\nPhone number: %s\nEmail address: %s\n", 
 						request.getMessage(), request.getContactName(), request.getPhoneNumber(), request.getTo()))
-				.withRecipient("sales@rightit.co.za")
-				.withSenderEmail("no-reply@rightit.co.za")
+				.withRecipient(account.getTo())
+				.withSenderEmail(account.getFrom())
 				.withSubject("Contact inquiry")
 				.withReplyTo(request.getTo())
-				.withEmailServerSettings(settings)
+				.withEmailServerSettings(account.getSettings())
 				.build();
 		return new EmailEvent(emailMessage);
 	}
