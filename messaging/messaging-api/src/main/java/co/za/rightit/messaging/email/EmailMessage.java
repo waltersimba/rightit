@@ -2,6 +2,7 @@ package co.za.rightit.messaging.email;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EmailMessage {
 
@@ -45,8 +46,8 @@ public class EmailMessage {
 		return message;
 	}
 	
-	public String getReplyTo() {
-		return replyTo;
+	public Optional<String> getReplyTo() {
+		return Optional.ofNullable(replyTo);
 	}
 	
 	public EmailServerSettings getSettings() {

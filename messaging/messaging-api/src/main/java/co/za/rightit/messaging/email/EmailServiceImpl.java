@@ -36,7 +36,10 @@ public class EmailServiceImpl implements EmailService {
 		for(String recipient : emailMessage.getRecipients()) {
 			email.addTo(recipient);
 		}
-		email.addReplyTo(emailMessage.getReplyTo());
+		Optional<String> replyTo = emailMessage.getReplyTo();
+		if(replyTo.isPresent()) {
+			email.addReplyTo(replyTo.get());
+		}
 		email.send();
 		LOGGER.info("sent email to \"{}\"", emailMessage.getRecipients());
 	}
