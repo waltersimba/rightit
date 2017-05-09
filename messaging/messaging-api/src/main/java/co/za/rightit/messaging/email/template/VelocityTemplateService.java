@@ -11,6 +11,8 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
+import com.google.common.base.Preconditions;
+
 public class VelocityTemplateService implements TemplateService {
 
 	private static final String TEMPLATE_EXTENSION = ".vm";
@@ -36,6 +38,9 @@ public class VelocityTemplateService implements TemplateService {
 	}
 	
 	public String generateContent(String templateName, Map<String, Object> variableMap) {
+		Preconditions.checkNotNull(templateName, "templateName");
+		Preconditions.checkNotNull(variableMap, "variableMap");
+		Preconditions.checkArgument(!variableMap.isEmpty(), "variableMap cannot be empty");
 		VelocityContext ctx = new VelocityContext();
 		for (Map.Entry<String, Object> data : variableMap.entrySet()) {
 			ctx.put(data.getKey(), data.getValue());
