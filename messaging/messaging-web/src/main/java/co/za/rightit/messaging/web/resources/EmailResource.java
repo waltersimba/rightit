@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import co.za.rightit.commons.event.EventService;
-import co.za.rightit.messaging.web.model.ContactRequest;
-import co.za.rightit.messaging.web.model.EmailRequestEvent;
+import co.za.rightit.messaging.web.model.EmailContactUsRequest;
+import co.za.rightit.messaging.web.model.EmailContactUsRequestEvent;
 
 @Path("/emails")
 public class EmailResource {
@@ -28,9 +28,10 @@ public class EmailResource {
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response email(@QueryParam("domain_name") String domainName, ContactRequest request) {
-		LOGGER.info("received email request: {}, domain={}", request, domainName);
-		eventService.post(new EmailRequestEvent(domainName, request));
+	@Path("contact-us")
+	public Response contactUs(@QueryParam("domain_name") String domainName, EmailContactUsRequest request) {
+		LOGGER.info("received email contact us request: {}, domain={}", request, domainName);
+		eventService.post(new EmailContactUsRequestEvent(domainName, request));
 		return Response.status(Status.ACCEPTED).build();
 	}
 

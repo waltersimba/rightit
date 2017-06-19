@@ -10,14 +10,14 @@ import co.za.rightit.messaging.email.CachingFileEmailAccountRepository;
 import co.za.rightit.messaging.email.EmailAccountRepository;
 import co.za.rightit.messaging.email.FileEmailAccountRepository;
 import co.za.rightit.messaging.email.template.TemplateServiceRepository;
-import co.za.rightit.messaging.web.api.EmailRequestProcessor;
+import co.za.rightit.messaging.web.api.EmailContactUsRequestProcessor;
 import co.za.rightit.messaging.web.model.ApplicationOptions;
 
 public class MessagingModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EmailRequestProcessor.class).asEagerSingleton();
+		bind(EmailContactUsRequestProcessor.class).asEagerSingleton();
 		bind(String.class).annotatedWith(Names.named("email-account-cache-spec")).toInstance("expireAfterAccess=30d");
 		bind(String.class).annotatedWith(Names.named("template-service-cache-spec")).toInstance("expireAfterAccess=1d");
 	}

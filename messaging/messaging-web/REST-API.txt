@@ -3,4 +3,4 @@ curl -i \
 --header "Content-Type:application/json" \
 --request POST \
 --data '{"to":"walter.simba@rightit.co.za", "message":"This is a test", "phoneNumber": "0722748171", "contactName":"Walter Simba"}' \
-http://localhost:8080/messaging/api/emails?domain_name=rightit.co.za
+http://localhost:8080/messaging/api/emails/contact-us?domain_name=rightit.co.za

@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Email;
 import com.google.common.base.MoreObjects;
 
 @XmlRootElement
-public class ContactRequest {
+public class EmailContactUsRequest {
 	
 	@NotNull(message = "The email address is required")
     @Email(message = "Email is not a valid")
