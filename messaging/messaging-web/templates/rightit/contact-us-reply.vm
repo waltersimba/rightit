@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Inquiry received</title>
+  </head>
+  <body>
+    Hi ${name},<p>
+
+    Thank you for being in contact with us.<p>
+
+    We're interested to hear how we can help you.<p>
+
+    We'll be in touch shortly the soonest.<p>
+
+    Regards,<p>
+
+    The Rightit team.
+  </body>	
+</html>

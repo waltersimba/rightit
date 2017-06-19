@@ -9,6 +9,7 @@ import com.google.inject.name.Names;
 import co.za.rightit.messaging.email.CachingFileEmailAccountRepository;
 import co.za.rightit.messaging.email.EmailAccountRepository;
 import co.za.rightit.messaging.email.FileEmailAccountRepository;
+import co.za.rightit.messaging.email.template.TemplateServiceRepository;
 import co.za.rightit.messaging.web.api.EmailRequestProcessor;
 import co.za.rightit.messaging.web.model.ApplicationOptions;
 
@@ -18,12 +19,19 @@ public class MessagingModule extends AbstractModule {
 	protected void configure() {
 		bind(EmailRequestProcessor.class).asEagerSingleton();
 		bind(String.class).annotatedWith(Names.named("email-account-cache-spec")).toInstance("expireAfterAccess=30d");
+		bind(String.class).annotatedWith(Names.named("template-service-cache-spec")).toInstance("expireAfterAccess=1d");
 	}
 	
 	@Singleton
 	@Provides
 	public EmailAccountRepository emailAccountRepository(ApplicationOptions options, @Named("email-account-cache-spec") String cacheSpec) {
 		return new CachingFileEmailAccountRepository(new FileEmailAccountRepository(options.getEmailAccountsFile()), cacheSpec);
+	}
+	
+	@Singleton
+	@Provides
+	public TemplateServiceRepository templateServiceRepository(@Named("email-account-cache-spec") String cacheSpec, EmailAccountRepository emailAccountRepository) {
+		return new TemplateServiceRepository(cacheSpec, emailAccountRepository);
 	}
 
 }

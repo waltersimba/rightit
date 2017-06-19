@@ -1,5 +1,7 @@
 package co.za.rightit.messaging.email;
 
+import java.nio.file.Path;
+
 import com.google.common.base.MoreObjects;
 
 public class EmailAccount {
@@ -8,6 +10,7 @@ public class EmailAccount {
 	private String from;
 	private String to;
 	private EmailServerSettings settings;
+	private String templatePath;
 	
 	public EmailAccount() {}
 
@@ -43,6 +46,14 @@ public class EmailAccount {
 		this.settings = settings;
 	}
 	
+	public String getTemplatePath() {
+		return templatePath;
+	}
+	
+	public void setTemplatePath(String templatePath) {
+		this.templatePath = templatePath;
+	}
+	
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
@@ -50,8 +61,8 @@ public class EmailAccount {
 				.add("from", from)
 				.add("to", to)
 				.add("settings", settings)
+				.add("template_path", templatePath)
 				.toString();
-				
 	}
 	
 }

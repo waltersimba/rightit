@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Contact inquiry</title>
+  </head>
+  <body>
+    Hi, 
+    <p><strong>Message:</strong><p>
+    ${message}
+    <p><strong>From:</strong> ${email_address}<p>
+    #if ($phone_number)
+    <strong>Phone:</strong> ${phone_number}<p>
+    #end	
+   Regards, <p>
+   The Rightit team
+  </body>	
+</html>

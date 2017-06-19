@@ -1,5 +1,8 @@
 package co.za.rightit.messaging.web.api;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -17,6 +20,8 @@ import co.za.rightit.messaging.email.EmailAccountRepository;
 import co.za.rightit.messaging.email.EmailEvent;
 import co.za.rightit.messaging.email.EmailMessage;
 import co.za.rightit.messaging.email.EmailMessage.EmailContentType;
+import co.za.rightit.messaging.email.template.TemplateService;
+import co.za.rightit.messaging.email.template.TemplateServiceRepository;
 import co.za.rightit.messaging.web.model.ContactRequest;
 import co.za.rightit.messaging.web.model.EmailRequestEvent;
 
@@ -26,11 +31,13 @@ public class EmailRequestProcessor implements EventSubscriber {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailRequestProcessor.class);
 	private final EventService eventService;
 	private final EmailAccountRepository repository;
+	private final TemplateServiceRepository templateServiceRepository;
 	
 	@Inject
-	public EmailRequestProcessor(EventService eventService, EmailAccountRepository repository) {
+	public EmailRequestProcessor(EventService eventService, EmailAccountRepository repository, TemplateServiceRepository templateServiceRepository) {
 		this.eventService = Preconditions.checkNotNull(eventService, "eventService");
 		this.repository = Preconditions.checkNotNull(repository, "repository");
+		this.templateServiceRepository = Preconditions.checkNotNull(templateServiceRepository, "templateServiceRepository");
 	}
 	
 	@Subscribe
@@ -46,9 +53,8 @@ public class EmailRequestProcessor implements EventSubscriber {
 	private EmailEvent createEmailEvent(ContactRequest request, EmailAccount account) {
 		LOGGER.info("build email message for {}", request.getTo());
 		EmailMessage emailMessage = new EmailMessage.EmailMessageBuilder()
-				.withContentType(EmailContentType.TEXT)
-				.withMessage(String.format("%s\n\nContact name: %s\nPhone number: %s\nEmail address: %s\n", 
-						request.getMessage(), request.getContactName(), request.getPhoneNumber(), request.getTo()))
+				.withContentType(EmailContentType.HTML)
+				.withMessage(generateContent(request, account.getDomain()))
 				.withRecipient(account.getTo())
 				.withSenderEmail(account.getFrom())
 				.withSubject("Contact inquiry")
@@ -56,6 +62,22 @@ public class EmailRequestProcessor implements EventSubscriber {
 				.withEmailServerSettings(account.getSettings())
 				.build();
 		return new EmailEvent(emailMessage);
+	}
+	
+	private String generateContent(ContactRequest request, String domain) {
+		final TemplateService templateService = templateServiceRepository.getTemplateService(domain);
+		return templateService.generateContent("contact-us-request", getTemplateVariables(request));
+	}
+	
+	@SuppressWarnings("serial")
+	private Map<String, Object> getTemplateVariables(ContactRequest request) {
+		return Collections.unmodifiableMap(new HashMap<String, String>() {
+			{
+				put("email_address", request.getTo());
+				put("phone_number", request.getPhoneNumber());
+				put("message", request.getMessage());
+			}
+		});
 	}
 
 	@Override

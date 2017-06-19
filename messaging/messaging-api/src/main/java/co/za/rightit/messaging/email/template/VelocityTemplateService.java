@@ -10,11 +10,14 @@ import java.util.Properties;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 
 public class VelocityTemplateService implements TemplateService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(VelocityTemplateService.class);
 	private static final String TEMPLATE_EXTENSION = ".vm";
 	private static final String DEFAULT_ENCODING = StandardCharsets.UTF_8.name();
 	private final String encoding;
@@ -38,6 +41,7 @@ public class VelocityTemplateService implements TemplateService {
 	}
 	
 	public String generateContent(String templateName, Map<String, Object> variableMap) {
+		LOGGER.debug("generating content,template={}", templateName);
 		Preconditions.checkNotNull(templateName, "templateName");
 		Preconditions.checkNotNull(variableMap, "variableMap");
 		Preconditions.checkArgument(!variableMap.isEmpty(), "variableMap cannot be empty");
