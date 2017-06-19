@@ -3,13 +3,18 @@
     <title>Inquiry received</title>
   </head>
   <body>
+    #if ($name)
     Hi ${name},<p>
-
+    #else
+    Hi,<p> 
+    #end
     Thank you for being in contact with us.<p>
 
-    We're interested to hear how we can help you.<p>
+    We're happy to help.<p>
 
-    We'll be in touch shortly the soonest.<p>
+    We'll be in touch soon.<p>
+
+    This is an auto generated email. Please do not reply.<p>
 
     Regards,<p>
 
